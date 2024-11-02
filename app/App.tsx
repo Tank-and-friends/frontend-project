@@ -26,7 +26,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import MessageScreen from './features/message/MessageScreen';
+import MessageDetail from './features/message/MessageDetail';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -79,7 +79,7 @@ function App(): React.JSX.Element {
       <Tab.Navigator>
         <Tab.Screen
           name="Home"
-          component={MessageScreen}
+          component={MessageDetail}
           options={{headerShown: false}}
         />
         <Tab.Screen

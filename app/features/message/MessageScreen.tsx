@@ -1,9 +1,8 @@
 import React, {PropsWithChildren} from 'react';
 import {FlatList, ScrollView, StyleSheet, View, Image} from 'react-native';
-import {Button, TextInput} from 'react-native-paper';
+import {Button, IconButton, TextInput} from 'react-native-paper';
 import MessageListItem from './components/MessageListItem';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-// import {Image} from 'react-native-paper/lib/typescript/components/im';
+import NoteImage from '../../assets/images/pensquare.png';
 type SectionProps = PropsWithChildren<{}>;
 
 const DATA = [
@@ -33,11 +32,10 @@ const MessageScreen = ({}: SectionProps) => {
   return (
     <View style={{flex: 1}}>
       <Image
-        source={require('../../assets/images/MessageBackground.png')}
+        src={require('../../assets/images/MessageBackground.png')}
         style={styles.backgroundImage}
         resizeMode="stretch"
       />
-      <Icon name={'cog'} color={'black'} size={24} />
       <TextInput
         placeholder="Bạn muốn tìm gì..."
         left={<TextInput.Icon icon={'menu'} />}
@@ -50,10 +48,18 @@ const MessageScreen = ({}: SectionProps) => {
         keyExtractor={item => item.name}
         ItemSeparatorComponent={() => <View style={{height: 10}} />}
       />
-      <Button style={styles.newMessageButton}>
-        {/* <Image source={require('../../assets/images/pen-square.png')}></Image> */}
-        dfd
-      </Button>
+      <IconButton
+        icon={() => (
+          <Image
+            src={NoteImage}
+            style={{width: 30, height: 30, tintColor: 'white'}}
+          />
+        )}
+        mode="contained"
+        containerColor="#C02135"
+        size={30}
+        style={styles.newMessageButton}
+      />
     </View>
   );
 };
@@ -67,20 +73,14 @@ const styles = StyleSheet.create({
   messageContainer: {
     position: 'relative',
   },
-  newMessageButton: {
-    position: 'static',
-    top: 711,
-    left: 350,
-    borderRadius: 28,
-    backgroundColor: '#C02135',
-    height: 56,
-    width: 56,
-    display: 'flex',
-    alignItems: 'center',
-  },
   listMessage: {
     marginTop: 30,
     paddingHorizontal: 25,
+  },
+  newMessageButton: {
+    position: 'absolute',
+    top: 570,
+    left: 280,
   },
 });
 
