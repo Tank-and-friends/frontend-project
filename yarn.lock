@@ -5134,10 +5134,10 @@ __metadata:
     react: 18.3.1
     react-native: 0.75.4
     react-native-gesture-handler: ^2.20.0
-    react-native-paper: ^5.12.5
+    react-native-paper: latest
     react-native-safe-area-context: ^4.11.0
     react-native-screens: ^3.34.0
-    react-native-vector-icons: ^10.2.0
+    react-native-vector-icons: latest
     react-redux: ^9.1.2
     react-test-renderer: 18.3.1
     typescript: 5.0.4
@@ -8154,7 +8154,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-paper@npm:^5.12.5":
+"react-native-paper@npm:latest":
   version: 5.12.5
   resolution: "react-native-paper@npm:5.12.5"
   dependencies:
@@ -8193,7 +8193,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-vector-icons@npm:^10.2.0":
+"react-native-vector-icons@npm:latest":
   version: 10.2.0
   resolution: "react-native-vector-icons@npm:10.2.0"
   dependencies:
