@@ -21,6 +21,7 @@ const createStyles = (yours: boolean) =>
   StyleSheet.create({
     contentFrame: {
       width: '100%',
+      marginTop: 4,
       flexDirection: yours ? 'row-reverse' : 'row',
     },
     contentWrapper: {

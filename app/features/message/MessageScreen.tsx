@@ -32,7 +32,7 @@ const MessageScreen = ({}: SectionProps) => {
   return (
     <View style={{flex: 1}}>
       <Image
-        src={require('../../assets/images/MessageBackground.png')}
+        source={require('../../assets/images/MessageBackground.png')}
         style={styles.backgroundImage}
         resizeMode="stretch"
       />
@@ -51,7 +51,7 @@ const MessageScreen = ({}: SectionProps) => {
       <IconButton
         icon={() => (
           <Image
-            src={NoteImage}
+            source={NoteImage}
             style={{width: 30, height: 30, tintColor: 'white'}}
           />
         )}

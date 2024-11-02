@@ -7,7 +7,7 @@ const DeletedMessage = ({}: Props) => {
   return (
     <View style={styles.contentFrame}>
       <View style={styles.contentWrapper}>
-        <Text>Tin nhắn này đã bị xóa</Text>
+        <Text style={styles.content}>Tin nhắn này đã bị xóa</Text>
       </View>
     </View>
   );
@@ -16,16 +16,19 @@ const DeletedMessage = ({}: Props) => {
 const styles = StyleSheet.create({
   contentFrame: {
     width: '100%',
+    marginTop: 4,
     flexDirection: 'row-reverse',
   },
   contentWrapper: {
     borderRadius: 20,
     padding: 12,
     borderColor: '#C02135',
+    borderWidth: 1,
   },
   content: {
     fontSize: 14,
     color: '#C02135',
+    fontStyle: 'italic',
   },
 });
 
