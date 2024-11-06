@@ -1,7 +1,7 @@
 import React from 'react';
 import {FlatList, ScrollView, StyleSheet, View, Image} from 'react-native';
 
-const ClassScreen = () => {
+const ClassRegisterScreen = () => {
   return (
     <View style={{flex: 1}}>
       <Image
@@ -22,4 +22,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ClassScreen;
+export default ClassRegisterScreen;
