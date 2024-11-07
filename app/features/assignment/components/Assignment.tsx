@@ -20,8 +20,10 @@ interface AssignmentProps {
 const Assignment: React.FC<AssignmentProps> = ({date, day, tasks}) => {
   return (
     <View style={styles.assignmentContainer}>
-      <Text style={styles.date}>{date}</Text>
-      <Text style={styles.day}>{day}</Text>
+      <View style={styles.abc}>
+        <Text style={styles.date}>{date}</Text>
+        <Text style={styles.day}>{day}</Text>
+      </View>
       {tasks.map((task, index) => (
         <Task
           key={index}
@@ -39,7 +41,7 @@ const Assignment: React.FC<AssignmentProps> = ({date, day, tasks}) => {
 
 const styles = StyleSheet.create({
   assignmentContainer: {
-    padding: 16,
+    paddingHorizontal: 16,
     borderRadius: 10,
     marginVertical: 10,
   },
@@ -50,6 +52,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '600',
     lineHeight: 28,
+    marginLeft: 15,
   },
   day: {
     color: '#EFF2EF',
@@ -58,6 +61,11 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '400',
     lineHeight: 16,
+    marginLeft: 20,
+  },
+  abc: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
   },
 });
 

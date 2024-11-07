@@ -1,5 +1,5 @@
 import React from 'react';
-import {TextInput} from 'react-native-paper';
+import {Text, TextInput} from 'react-native-paper';
 import {
   StyleSheet,
   View,
@@ -159,10 +159,16 @@ const AssignmentScreen = () => {
     <ImageBackground
       source={require('./MessageBackground.png')}
       style={styles.backgroundImage}
-      resizeMode="stretch">
+      resizeMode="cover">
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
+          <Text>Hello các bạn</Text>
+        </View>
+
+        {/* Body */}
+
+        <View style={styles.body}>
           <TextInput
             placeholder="Bạn muốn tìm gì..."
             left={<TextInput.Icon icon={'menu'} />}
@@ -170,12 +176,9 @@ const AssignmentScreen = () => {
             style={styles.textInput}
           />
 
-          <StatusButtonGroup />
-        </View>
-
-        {/* Body */}
-
-        <View style={styles.body}>
+          <View style={styles.statusGroup}>
+            <StatusButtonGroup />
+          </View>
           <View style={styles.listAssgnment}>
             <ScrollView contentContainerStyle={{}}>
               {assignments.map((item, index) => (
@@ -192,7 +195,8 @@ const AssignmentScreen = () => {
           </View>
         </View>
         {/* Footer */}
-        {/* <View></View> */}
+        {/* <View>
+        </View> */}
       </View>
     </ImageBackground>
   );
@@ -208,6 +212,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center', // Căn giữa nội dung theo chiều dọc
     width: '100%',
     height: '100%',
+    position: 'relative',
   },
   textInput: {
     margin: 16,
@@ -218,7 +223,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     width: '100%',
-    height: 217,
+    height: 87,
     // borderWidth: 1,
     // borderColor: 'green',
   },
@@ -229,8 +234,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     flex: 1,
-    top: 218,
-    height: '100%',
+    top: 78,
+    height: '91%',
   },
 
   listAssgnment: {
@@ -238,7 +243,10 @@ const styles = StyleSheet.create({
     height: '80%',
     // borderWidth: 2,
     // borderColor: 'black',
-    marginBottom: 200,
+  },
+
+  statusGroup: {
+    marginBottom: 5,
   },
 
   footer: {},

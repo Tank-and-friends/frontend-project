@@ -55,8 +55,10 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter',
     fontSize: 16,
     fontStyle: 'normal',
-    fontWeight: '600',
+    fontWeight: '900',
     lineHeight: 20,
+    marginBottom: 10,
+    marginTop: 5,
   },
   status: {
     color: '#071013',
@@ -65,12 +67,14 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '500',
     lineHeight: 16,
+    marginBottom: 5,
   },
   badge: {
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 4,
     marginLeft: 10,
+    marginTop: -40,
     backgroundColor: '#FF7F11',
   },
   badgeText: {
