@@ -27,6 +27,9 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import MessageDetail from './features/message/MessageDetail';
+import NewMessageScreen from './features/message/NewMessageScreen';
+import MessageScreen from './features/message/MessageScreen';
+import FriendPersonalInfo from './features/message/FriendPersonalInfo';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -84,7 +87,7 @@ function App(): React.JSX.Element {
         />
         <Tab.Screen
           name="Settings"
-          component={SettingsScreen}
+          component={FriendPersonalInfo}
           options={{headerShown: false}}
         />
       </Tab.Navigator>

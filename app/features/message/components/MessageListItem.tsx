@@ -5,8 +5,8 @@ import {Text} from 'react-native-paper';
 type SectionProps = PropsWithChildren<{
   item: {
     name: string;
-    time: string;
-    lastestMessage: string;
+    time?: string;
+    lastestMessage?: string;
   };
 }>;
 
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     shadowColor: '#00000ff',
     shadowOffset: {width: 4, height: 4},
     shadowRadius: 6,
-    elevation: 8,
+    elevation: 20,
   },
   avatarImage: {
     borderRadius: 17.5,
