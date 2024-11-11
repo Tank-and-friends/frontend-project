@@ -6,11 +6,18 @@ import avatarImage from '../../assets/images/bachmahoangtu.jpg';
 import coverImage from '../../assets/images/11.jpg';
 import chatIcon from '../../assets/images/chat.png';
 import {ScrollView} from 'react-native-gesture-handler';
+import {useNavigation} from '@react-navigation/native';
 const FriendPersonalInfo = () => {
+  const navigation = useNavigation();
   return (
     <View>
       <Appbar.Header style={styles.customAppBar}>
-        <Appbar.BackAction onPress={() => {}} color="white" />
+        <Appbar.BackAction
+          onPress={() => {
+            navigation.goBack();
+          }}
+          color="white"
+        />
         <Appbar.Content title="Thông tin tài khoản" color="white" />
       </Appbar.Header>
       <ScrollView>

@@ -1,6 +1,6 @@
 import React, {PropsWithChildren} from 'react';
 import {FlatList, ScrollView, StyleSheet, View, Image} from 'react-native';
-import {Button, IconButton, TextInput} from 'react-native-paper';
+import {Appbar, Button, IconButton, TextInput} from 'react-native-paper';
 import MessageListItem from './components/MessageListItem';
 import NoteImage from '../../assets/images/pensquare.png';
 type SectionProps = PropsWithChildren<{}>;
@@ -23,6 +23,10 @@ const DATA = [
 const NewMessageScreen = ({}: SectionProps) => {
   return (
     <View style={{flex: 1}}>
+      <Appbar.Header>
+        <Appbar.BackAction onPress={() => {}} color="white" />
+        <Appbar.Content title="Tin nhắn mới" color="white" />
+      </Appbar.Header>
       <Image
         source={require('../../assets/images/MessageBackground.png')}
         style={styles.backgroundImage}

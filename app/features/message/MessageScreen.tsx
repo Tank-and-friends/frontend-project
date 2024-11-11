@@ -3,6 +3,7 @@ import {FlatList, ScrollView, StyleSheet, View, Image} from 'react-native';
 import {Button, IconButton, TextInput} from 'react-native-paper';
 import MessageListItem from './components/MessageListItem';
 import NoteImage from '../../assets/images/pensquare.png';
+import { useNavigation } from '@react-navigation/native';
 type SectionProps = PropsWithChildren<{}>;
 
 const DATA = [
@@ -29,6 +30,7 @@ const DATA = [
 ];
 
 const MessageScreen = ({}: SectionProps) => {
+  const navigation = useNavigation()
   return (
     <View style={{flex: 1}}>
       <Image
@@ -59,6 +61,7 @@ const MessageScreen = ({}: SectionProps) => {
         containerColor="#C02135"
         size={30}
         style={styles.newMessageButton}
+        onPress={()=>navigation.navigate('NewMessageScreen')}
       />
     </View>
   );

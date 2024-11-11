@@ -30,6 +30,8 @@ import MessageDetail from './features/message/MessageDetail';
 import NewMessageScreen from './features/message/NewMessageScreen';
 import MessageScreen from './features/message/MessageScreen';
 import FriendPersonalInfo from './features/message/FriendPersonalInfo';
+import {createStackNavigator} from '@react-navigation/stack';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -61,37 +63,40 @@ function Section({children, title}: SectionProps): React.JSX.Element {
   );
 }
 
-const Tab = createBottomTabNavigator();
-
-function SettingsScreen() {
-  return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
+const Stack = createStackNavigator();
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
   return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen
-          name="Home"
-          component={MessageDetail}
-          options={{headerShown: false}}
-        />
-        <Tab.Screen
-          name="Settings"
-          component={FriendPersonalInfo}
-          options={{headerShown: false}}
-        />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="MessageScreen">
+          {/* Define your screens here */}
+          <Stack.Screen
+            name="MessageScreen"
+            component={MessageScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="MessageDetail"
+            component={MessageDetail}
+            options={{headerShown: false}}
+          />
+
+          <Stack.Screen
+            name="FriendPersonalInfo"
+            component={FriendPersonalInfo}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="NewMessageScreen"
+            component={NewMessageScreen}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
 

@@ -18,10 +18,13 @@ const TopNavBar = ({title}: Props) => {
         iconColor="white"
         onPress={() => navigation.goBack()}
         // containerColor="black"
-        style={styles.back}
       />
       <Image source={avatar} style={styles.avatar} />
-      <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">
+      <Text
+        style={styles.name}
+        numberOfLines={1}
+        ellipsizeMode="tail"
+        onPress={() => navigation.navigate('FriendPersonalInfo')}>
         {title}
       </Text>
       <IconButton icon="information-outline" iconColor="white" />

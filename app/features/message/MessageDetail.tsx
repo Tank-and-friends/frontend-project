@@ -1,4 +1,4 @@
-import React, {PropsWithChildren} from 'react';
+import React, {PropsWithChildren, useState} from 'react';
 import {
   Image,
   ScrollView,
@@ -15,102 +15,135 @@ import MessageTime from './components/MessageTime';
 import ImageMessage from './components/ImageMessage';
 import blockImage from '../../assets/images/ooui_block.png';
 import EmptyBodyMessage from './components/EmptyBodyMessage';
+import {useNavigation} from '@react-navigation/native';
 type Props = PropsWithChildren<{}>;
 
-const MessageDetail = ({}: Props) => {
+const MessageDetail = ({route}: Props) => {
+  const [isBlock, setIsBlock] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isTextFocus, setIsTextFocus] = useState(false);
+  const navigation = useNavigation();
+  const {newMessage} = route.params;
+  const togglePopup = () => {
+    setIsPopupOpen(!isPopupOpen);
+  };
+  const toggleBlock = () => {
+    setIsBlock(!isBlock);
+  };
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={{flex: 1, backgroundColor: 'white', position: 'relative'}}>
       <TopNavBar
         title="Nguyen Viet Hoang 20210000"
         // avatarSource={'../../assets/images/pensquare.png'}
       />
-      {/* <ScrollView style={styles.messageDetail}>
-        <MessageTime time="10 tháng 9, 9:00" />
-        <MessageContent yours={false} content="alooo" />
-        <MessageContent yours={false} content="alooo" />
-        <MessageContent yours={true} content="alooo" />
-        <MessageTime time="10 tháng 9, 9:00" />
-        <MessageContent yours={false} content="alooo" />
-        <ImageMessage />
-        <MessageContent yours={true} content="alooo" />
-        <DeletedMessage />
-        <View style={styles.status}>
-          <Icon source="eye-outline" size={15} color="#C02135" />
-        </View> */}
-      {/* <View style={styles.moreInfoPopup}>
-          <Button
-            contentStyle={{justifyContent: 'flex-start', overflow: 'visible'}}
-            style={styles.moreInfoItem}
-            textColor="black"
-            icon="account">
-            Thông tin tài khoản
-          </Button>
+      <View style={styles.moreInfoPopup}>
+        <Button
+          contentStyle={{justifyContent: 'flex-start', overflow: 'visible'}}
+          style={styles.moreInfoItem}
+          textColor="black"
+          icon="account"
+          onPress={() => navigation.navigate('FriendPersonalInfo')}>
+          Thông tin tài khoản
+        </Button>
+        {!isBlock ? (
           <Button
             contentStyle={{justifyContent: 'flex-start'}}
             style={styles.moreInfoItem}
             textColor="black"
-            icon="minus-circle">
+            icon="minus-circle"
+            onPress={toggleBlock}>
             Chặn
           </Button>
+        ) : (
           <Button
             contentStyle={{justifyContent: 'flex-start'}}
             style={styles.moreInfoItem}
             textColor="black"
-            icon="minus-circle-off">
+            icon="minus-circle-off"
+            onPress={toggleBlock}>
             Bỏ chặn
           </Button>
-        </View> */}
-      {/* </ScrollView> */}
-      <EmptyBodyMessage />
-      <View style={styles.messageInput}>
-        <IconButton
-          icon="image"
-          size={24}
-          iconColor="#C02135"
-          style={{marginHorizontal: 0}}
-        />
-        <IconButton
-          icon="camera"
-          size={24}
-          iconColor="#C02135"
-          style={{marginHorizontal: 0}}
-        />
-        <View style={styles.inputWrapper}>
-          <TextInput
-            mode="outlined"
-            outlineStyle={{
-              borderRadius: 20,
-              borderColor: '#C02135',
-              height: 'auto',
-            }}
-            contentStyle={{}}
-            style={styles.textInput}
-            placeholder="Nhập tin nhắn"
-            right={
-              <TextInput.Icon
-                icon={'emoticon-happy-outline'}
-                color={'#C02135'}
-              />
-            }
-            // multiline
+        )}
+      </View>
+      {!newMessage ? (
+        <ScrollView style={styles.messageDetail}>
+          <MessageTime time="10 tháng 9, 9:00" />
+          <MessageContent yours={false} content="alooo" />
+          <MessageContent yours={false} content="alooo" />
+          <MessageContent yours={true} content="alooo" />
+          <MessageTime time="10 tháng 9, 9:00" />
+          <MessageContent yours={false} content="alooo" />
+          <ImageMessage />
+          <MessageContent yours={true} content="alooo" />
+          <DeletedMessage />
+          <View style={styles.status}>
+            <Icon source="eye-outline" size={15} color="#C02135" />
+          </View>
+        </ScrollView>
+      ) : (
+        <EmptyBodyMessage />
+      )}
+      {!isBlock ? (
+        <View style={styles.messageInput}>
+          <IconButton
+            icon="image"
+            size={24}
+            iconColor="#C02135"
+            style={{marginHorizontal: 0}}
+          />
+          <IconButton
+            icon="camera"
+            size={24}
+            iconColor="#C02135"
+            style={{marginHorizontal: 0}}
+          />
+          <View style={styles.inputWrapper}>
+            <TextInput
+              mode="outlined"
+              outlineStyle={{
+                borderRadius: 20,
+                borderColor: '#C02135',
+                height: 'auto',
+              }}
+              contentStyle={{}}
+              style={styles.textInput}
+              placeholder="Nhập tin nhắn"
+              onFocus={() => {
+                setIsTextFocus(true);
+              }}
+              onBlur={() => {
+                setIsTextFocus(false);
+              }}
+              right={
+                <TextInput.Icon
+                  icon={'emoticon-happy-outline'}
+                  color={'#C02135'}
+                />
+              }
+              // multiline
+            />
+          </View>
+          <IconButton
+            icon={!isTextFocus ? 'heart' : 'send'}
+            size={24}
+            iconColor="#C02135"
+            style={{marginHorizontal: 0}}
           />
         </View>
-        <IconButton
-          icon="heart"
-          size={24}
-          iconColor="#C02135"
-          style={{marginHorizontal: 0}}
-        />
-      </View>
-      {/* <View style={styles.blockWrapper}>
-        <Text style={styles.blockNotification}>Bạn đã chặn Hoang</Text>
-        <Text style={styles.blockNotification2}>
-          Các bạn sẽ không thể nhắn tin cho nhau trong đoạn chat này
-        </Text>
-        <Button style={styles.unBlockButton} textColor="white">
-          Bỏ chặn
-        </Button>
-      </View> */}
+      ) : (
+        <View style={styles.blockWrapper}>
+          <Text style={styles.blockNotification}>Bạn đã chặn Hoang</Text>
+          <Text style={styles.blockNotification2}>
+            Các bạn sẽ không thể nhắn tin cho nhau trong đoạn chat này
+          </Text>
+          <Button
+            style={styles.unBlockButton}
+            textColor="white"
+            onPress={toggleBlock}>
+            Bỏ chặn
+          </Button>
+        </View>
+      )}
       {/* <View style={styles.utilities}>
         <TouchableOpacity style={styles.utility}>
           <Icon
@@ -190,12 +223,13 @@ const styles = StyleSheet.create({
   },
   moreInfoPopup: {
     position: 'absolute',
-    top: -30,
-    right: -16,
+    top: 65,
+    right: 5,
     minWidth: 186,
     paddingVertical: 5,
     backgroundColor: 'white',
     elevation: 10,
+    zIndex: 10,
   },
   moreInfoItem: {
     fontSize: 13,
