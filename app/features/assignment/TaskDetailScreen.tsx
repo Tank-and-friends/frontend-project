@@ -8,8 +8,14 @@ import {
 } from 'react-native';
 
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
+interface TaskDetailData {
+  title: string;
+  date: string;
+  deadline: string;
+  content: string;
+}
 
-const TaskDetailScreen = () => {
+const TaskDetailScreen: React.FC<TaskDetailData> = ({title, date, deadline,content}) => {
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -36,34 +42,20 @@ const TaskDetailScreen = () => {
         <View style={styles.taskTitleContainer}>
           <View>
             <View style={styles.title}>
-              <Text style={styles.taskTitle}>Bài tập số 1</Text>
+              <Text style={styles.taskTitle}>{title}</Text>
               <View style={[styles.badge, {backgroundColor: '#FF7F11'}]} /* eslint-disable-line react-native/no-inline-styles */>
                 <Text style={styles.badgeText}>Chưa nộp bài</Text>
                 <EvilIcons name="clock" size={24} color="black" />
               </View>
             </View>
             <Text style={styles.deadline}>
-              Đến hạn vào ngày 28/10/2024 lúc 23:59
+              Đến hạn vào ngày {date} lúc {deadline}
             </Text>
             <View style={styles.line} />
             <Text style={styles.text}>Nội dung</Text>
             <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
               <Text style={styles.text1}>
-                Dưới đây là nội dung bài tập bla bla Lorem ipsum dolor sit amet,
-                consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                commodo consequat. Duis aute irure dolor in reprehenderit in
-                voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                qui officia deserunt mollit anim id est laborum. tetur
-                adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                consequat. Duis aute irure dolor in reprehenderit in voluptate
-                velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-                sint occaecat cupidatat non proident, sunt in culpa qui officia
-                deserunt mollit anim id est laborumww.
+                {content}
               </Text>
             </ScrollView>
 
@@ -102,27 +94,13 @@ const TaskDetailScreen = () => {
               </View>
             </View>
             <Text style={styles.deadline}>
-              Đến hạn vào ngày 28/10/2024 lúc 23:59
+              Đến hạn vào ngày {date} lúc {deadline}
             </Text>
             <View style={styles.line} />
             <Text style={styles.text}>Nội dung</Text>
             <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
               <Text style={styles.text1}>
-                Dưới đây là nội dung bài tập bla bla Lorem ipsum dolor sit amet,
-                consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                commodo consequat. Duis aute irure dolor in reprehenderit in
-                voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                qui officia deserunt mollit anim id est laborum. tetur
-                adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                consequat. Duis aute irure dolor in reprehenderit in voluptate
-                velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-                sint occaecat cupidatat non proident, sunt in culpa qui officia
-                deserunt mollit anim id est laborumww.
+                {content}
               </Text>
             </ScrollView>
 
