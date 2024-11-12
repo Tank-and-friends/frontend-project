@@ -1,83 +1,36 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
-// import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  useColorScheme,
-} from 'react-native';
-
-import {
-  Colors,
-} from 'react-native/Libraries/NewAppScreen';
-import AssignmentScreen from './features/assignment/AssignmentScreen';
-
-// type SectionProps = PropsWithChildren<{
-//   title: string;
-// }>;
-
-// function Section({children, title}: SectionProps): React.JSX.Element {
-//   const isDarkMode = useColorScheme() === 'dark';
-//   return (
-//     <View style={styles.sectionContainer}>
-//       <Text
-//         style={[
-//           styles.sectionTitle,
-//           {
-//             color: isDarkMode ? Colors.white : Colors.black,
-//           },
-//         ]}>
-//         {title}
-//       </Text>
-//       <Text
-//         style={[
-//           styles.sectionDescription,
-//           {
-//             color: isDarkMode ? Colors.light : Colors.dark,
-//           },
-//         ]}>
-//         {children}
-//       </Text>
-//     </View>
-//   );
-// }
+import { SafeAreaView, StyleSheet, useColorScheme, View } from 'react-native';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
+import TaskDetailScreen from './features/assignment/TaskDetailScreen';
+// import AssignmentScreen from './features/assignment/AssignmentScreen';
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    flex: 1,  // Ensures it takes up full height
   };
 
   return (
     <SafeAreaView style={backgroundStyle}>
-        <AssignmentScreen />
+      <View style={styles.container}>
+        <TaskDetailScreen />
+        {/* <AssignmentScreen /> */}
+      </View>
     </SafeAreaView>
   );
 }
 
-// const styles = StyleSheet.create({
-//   sectionContainer: {
-//     marginTop: 32,
-//     paddingHorizontal: 24,
-//   },
-//   sectionTitle: {
-//     fontSize: 24,
-//     fontWeight: '600',
-//   },
-//   sectionDescription: {
-//     marginTop: 8,
-//     fontSize: 18,
-//     fontWeight: '400',
-//   },
-//   highlight: {
-//     fontWeight: '700',
-//   },
-// });
+const styles = StyleSheet.create({
+  scrollViewContainer: {
+    flexGrow: 1,
+    padding: 0,
+  },
+  container: {
+    flex: 1,
+    padding: 0,
+  },
+});
 
 export default App;
