@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -6,8 +6,10 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native';
+import {Checkbox, TextInput} from 'react-native-paper';
 
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 // interface TaskDetailData {
 //   title: string;
 //   date: string;
@@ -15,26 +17,16 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 //   content: string;
 // }
 
-const TaskDetailScreen: React.FC = ({ route }: any) => {
-  const { title, date, deadline, content } = route.params;
+const CreateAssignmentScreen = () => {
+  // const [text, onChangeText] = React.useState('');
+
+  const [isFocused, setIsFocused] = useState(false);
+
+  const [isChecked, setIsChecked] = useState(false);
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton}>
-          {/* Back Icon */}
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Phát triển ứng dụng đa nền tảng</Text>
-
-        <Text style={styles.headerTitle}>Phát triển ứng dụng đa nền tảng</Text>
-
-        <Text style={styles.headerTitle}>Phát triển ứng dụng đa nền tảng</Text>
-
-        <Text style={styles.headerTitle}>Phát triển ứng dụng đa nền tảng</Text>
-        <TouchableOpacity style={styles.settingsButton}>
-          {/* Settings Icon */}
-        </TouchableOpacity>
-      </View>
+      {/* <View style={styles.header}></View> */}
 
       {/* Task Title */}
 
@@ -43,46 +35,58 @@ const TaskDetailScreen: React.FC = ({ route }: any) => {
         <View style={styles.taskTitleContainer}>
           <View>
             <View style={styles.title}>
-              <Text style={styles.taskTitle}>{title}</Text>
-              <View
-                style={[
-                  styles.badge,
-                  {backgroundColor: '#FF7F11'}, /* eslint-disable-line react-native/no-inline-styles */
-                ]}
-              >
-                <Text style={styles.badgeText}>Chưa nộp bài</Text>
-                <EvilIcons name="clock" size={24} color="black" />
-              </View>
+              <TextInput
+                placeholder={isFocused ? '' : 'Tên bài tập'}
+                style={styles.textInput}
+                underlineColor="transparent"
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+                placeholderTextColor="rgba(7, 16, 19, 0.5)"
+              />
             </View>
-            <Text style={styles.deadline}>
-              Đến hạn vào ngày {date} lúc {deadline}
-            </Text>
+
             <View style={styles.line} />
             <Text style={styles.text}>Nội dung</Text>
-            <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
-              <Text style={styles.text1}>{content}</Text>
-            </ScrollView>
+
+            <TextInput
+              style={styles.input}
+              underlineColor="transparent"
+              multiline
+            />
 
             <Text style={styles.text}>Tài liệu liên quan</Text>
-          </View>
-        </View>
 
-        <View style={styles.taskTitleContainer}>
-          <View>
-            <View style={styles.title}>
-              <Text style={styles.text}>Bài nộp của tôi</Text>
-              <TouchableOpacity>
-                <Text style={styles.addAssignment}>Thêm +</Text>
+            <View style={styles.button3}>
+              <TouchableOpacity style={styles.button4}>
+                <Icon name="upload" size={10} />
+                <Text style={styles.buttonText}>Tải lên tài liệu</Text>
               </TouchableOpacity>
             </View>
-            <View style={styles.line} />
-            {/* Cuộn các tài liệu đã nộp (Có thể đổi thành tăng dần kích thước) */}
-            {/* <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
 
-            </ScrollView> */}
+            <Text style={styles.text}>Thời hạn nộp bài</Text>
+
+            <View style={styles.timeOfDeadline}>
+              <View style={styles.day}>
+                <Text style={styles.text1}>Ngày</Text>
+                <TextInput style={styles.input} underlineColor="transparent" />
+              </View>
+              <View style={styles.day}>
+                <Text style={styles.text1}>Giờ</Text>
+                <TextInput style={styles.input} underlineColor="transparent" />
+              </View>
+            </View>
+
+            <View style={styles.checkBox}>
+              <Text style={styles.text}>Cho phép nộp bài muộn</Text>
+              <Checkbox
+                status={isChecked ? 'checked' : 'unchecked'}
+                onPress={() => setIsChecked(!isChecked)}
+              />
+            </View>
+
             <View style={styles.button1}>
               <TouchableOpacity style={styles.button2}>
-                <Text style={styles.buttonText}>Nộp bài</Text>
+                <Text style={styles.buttonText}>Đăng bài tập</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -115,14 +119,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ccc',
-    borderWidth: 2,
-    borderColor: 'green',
+    // borderWidth: 2,
+    // borderColor: 'green',
   },
   title: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingRight: 15,
     alignItems: 'center',
+    // borderWidth: 2,
+    // borderColor: 'green',
   },
   header: {
     borderWidth: 2,
@@ -279,6 +285,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 10,
   },
   button2: {
     backgroundColor: '#FF7F11',
@@ -289,11 +296,68 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  button3: {
+    paddingVertical: 2,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+    marginRight: 15,
+    marginBottom: 20,
+  },
+  button4: {
+    flexDirection: 'row',
+    backgroundColor: '#C02135',
+    paddingHorizontal: 20,
+    borderRadius: 10, // bo tròn các góc cho giống nút trong ảnh\
+    width: '100%',
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   buttonText: {
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+    marginLeft: 10,
+  },
+
+  input: {
+    margin: 0,
+    flexShrink: 1,
+    marginRight: 15,
+    backgroundColor: '#EFF2EF',
+    borderWidth: 1,
+    borderColor: '#D9D9D9',
+    borderRadius: 4,
+    marginTop: 8,
+    paddingHorizontal: 4,
+    height: 35,
+    marginBottom: 20,
+  },
+  textInput: {
+    borderRadius: 10,
+    backgroundColor: '#EFF2EF',
+    borderWidth: 0,
+    paddingRight: 0,
+    width: '100%',
+    paddingHorizontal: 0,
+    fontSize: 24,
+  },
+  checkBox: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingRight: 10,
+  },
+  timeOfDeadline: {
+    marginTop: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  day: {
+    width: '50%',
   },
 });
 
-export default TaskDetailScreen;
+export default CreateAssignmentScreen;
