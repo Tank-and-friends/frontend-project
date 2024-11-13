@@ -8,14 +8,15 @@ import {
 } from 'react-native';
 
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-interface TaskDetailData {
-  title: string;
-  date: string;
-  deadline: string;
-  content: string;
-}
+// interface TaskDetailData {
+//   title: string;
+//   date: string;
+//   deadline: string;
+//   content: string;
+// }
 
-const TaskDetailScreen: React.FC<TaskDetailData> = ({title, date, deadline,content}) => {
+const TaskDetailScreen: React.FC = ({ route }: any) => {
+  const { title, date, deadline, content } = route.params;
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -43,7 +44,12 @@ const TaskDetailScreen: React.FC<TaskDetailData> = ({title, date, deadline,conte
           <View>
             <View style={styles.title}>
               <Text style={styles.taskTitle}>{title}</Text>
-              <View style={[styles.badge, {backgroundColor: '#FF7F11'}]} /* eslint-disable-line react-native/no-inline-styles */>
+              <View
+                style={[
+                  styles.badge,
+                  {backgroundColor: '#FF7F11'}, /* eslint-disable-line react-native/no-inline-styles */
+                ]}
+              >
                 <Text style={styles.badgeText}>Chưa nộp bài</Text>
                 <EvilIcons name="clock" size={24} color="black" />
               </View>
@@ -54,9 +60,7 @@ const TaskDetailScreen: React.FC<TaskDetailData> = ({title, date, deadline,conte
             <View style={styles.line} />
             <Text style={styles.text}>Nội dung</Text>
             <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
-              <Text style={styles.text1}>
-                {content}
-              </Text>
+              <Text style={styles.text1}>{content}</Text>
             </ScrollView>
 
             <Text style={styles.text}>Tài liệu liên quan</Text>
@@ -81,30 +85,6 @@ const TaskDetailScreen: React.FC<TaskDetailData> = ({title, date, deadline,conte
                 <Text style={styles.buttonText}>Nộp bài</Text>
               </TouchableOpacity>
             </View>
-          </View>
-        </View>
-
-        <View style={styles.taskTitleContainer}>
-          <View>
-            <View style={styles.title}>
-              <Text style={styles.taskTitle}>Bài tập số 2</Text>
-              <View style={[styles.badge, {backgroundColor: '#FF7F11'}]} /* eslint-disable-line react-native/no-inline-styles */>
-                <Text style={styles.badgeText}>Chưa nộp bài</Text>
-                <EvilIcons name="clock" size={24} color="black" />
-              </View>
-            </View>
-            <Text style={styles.deadline}>
-              Đến hạn vào ngày {date} lúc {deadline}
-            </Text>
-            <View style={styles.line} />
-            <Text style={styles.text}>Nội dung</Text>
-            <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
-              <Text style={styles.text1}>
-                {content}
-              </Text>
-            </ScrollView>
-
-            <Text style={styles.text}>Tài liệu liên quan</Text>
           </View>
         </View>
       </ScrollView>

@@ -2,7 +2,22 @@ import React from 'react';
 import {SafeAreaView, StyleSheet, useColorScheme, View} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import TaskDetailScreen from './features/assignment/TaskDetailScreen';
-// import AssignmentScreen from './features/assignment/AssignmentScreen';
+import AssignmentScreen from './features/assignment/AssignmentScreen';
+
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+
+export type RootStackParamList = {
+  AssignmentScreen: undefined;
+  TaskDetailScreen: {
+    title: string;
+    date: string;
+    deadline: string;
+    content: string;
+  };
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -15,7 +30,7 @@ function App(): React.JSX.Element {
   return (
     <SafeAreaView style={backgroundStyle}>
       <View style={styles.container}>
-        <TaskDetailScreen
+        {/* <TaskDetailScreen
           title="Bài tập số 3"
           date="28/10/2023"
           deadline="23:59"
@@ -34,8 +49,23 @@ function App(): React.JSX.Element {
                 velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
                 sint occaecat cupidatat non proident, sunt in culpa qui officia
                 deserunt mollit anim id est laborumww."
-        />
+        /> */}
         {/* <AssignmentScreen /> */}
+
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="AssignmentScreen"
+              component={AssignmentScreen}
+              options={{title: 'Assignments'}}
+            />
+            <Stack.Screen
+              name="TaskDetailScreen"
+              component={TaskDetailScreen}
+              options={({route}) => ({title: route.params.title})}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
       </View>
     </SafeAreaView>
   );

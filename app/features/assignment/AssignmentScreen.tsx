@@ -11,34 +11,6 @@ import StatusButtonGroup from './components/StatusButtonGroup';
 import Assignment from './components/Assignment';
 
 const AssignmentScreen = () => {
-  // const sampleAssignment = {
-  //   date: '28 tháng 10',
-  //   day: 'Thứ 2',
-  //   tasks: [
-  //     {
-  //       title: 'Bài tập số 1',
-  //       status: 'Đến hạn lúc 23:59',
-  //       statusColor: '#FF7F11',
-  //       hasBadge: true,
-  //       badgeText: 'Đã nộp',
-  //       badgeColor: '#FF7F11',
-  //     },
-  //     {
-  //       title: 'Read Chapter 5 - History',
-  //       status: 'Overdue',
-  //       statusColor: '#C62828',
-  //       hasBadge: true,
-  //       badgeText: 'Late',
-  //       badgeColor: '#C62828',
-  //     },
-  //     {
-  //       title: 'Finish Science Project',
-  //       status: 'Completed',
-  //       statusColor: '#388E3C',
-  //       hasBadge: false,
-  //     },
-  //   ],
-  // };
 
   const assignments = [
     {
