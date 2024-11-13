@@ -24,7 +24,7 @@ export const Connected = ({
       <View style={[styles.segmentControl, isSegmented && styles.firstSegment]}>
         {leftItemMarkup}
       </View>
-      <View style={isSegmented && styles.segmentControl}>{primaryItemMarkup}</View>
+      <View style={[styles.primarySegment, isSegmented && styles.segmentControl]}>{primaryItemMarkup}</View>
       <View style={[styles.segmentControl, isSegmented && styles.lastSegment]}>
         {rightItemMarkup}
       </View>
@@ -36,6 +36,9 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     gap: 8,
+    backgroundColor: 'red',
+    alignItems: 'center',
+    flexDirection: 'row'
   },
   segmented: {
     gap: 0,
@@ -43,12 +46,20 @@ const styles = StyleSheet.create({
   segmentControl: {
     borderRadius: 0,
   },
+  primarySegment: {
+    backgroundColor: 'black',
+    flex: 1
+  },
   firstSegment: {
     borderTopLeftRadius: 6,
     borderBottomLeftRadius: 6,
+    minWidth: 10,
+    backgroundColor: 'orange'
   },
   lastSegment: {
     borderTopRightRadius: 6,
     borderBottomRightRadius: 6,
+    minWidth: 10,
+    backgroundColor: 'orange'
   },
 });

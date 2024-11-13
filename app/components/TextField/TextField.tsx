@@ -6,11 +6,14 @@ import {
   TextInputFocusEventData,
   TextInputKeyPressEventData,
   StyleSheet,
+  Text,
 } from 'react-native';
 import {HelperText, TextInput} from 'react-native-paper';
 import {Action} from '../../types';
 import {useUniqueId} from '../../utils/uniqueId';
 import {Connected} from './Connected';
+
+import IonIcons from 'react-native-vector-icons/Ionicons';
 
 export type TextInputProps = {
   /** id của form input */
@@ -37,7 +40,7 @@ export type TextInputProps = {
   /** Buộc focus vào input của TextField */
   focused?: boolean;
   /** Nội dung custom label */
-  customLabel?: React.ReactNode;
+  customLabel?: React.ReactNode|string;
   /** Hành động của custom label */
   labelAction?: Action;
   /** Thông tin mô tả form input */
@@ -178,6 +181,7 @@ export const TextField = ({
         icon="close-circle"
         onPress={handleClearButtonClick}
         color={disabled ? 'rgba(0, 0, 0, 0.26)' : 'rgba(0, 0, 0, 0.54)'}
+        style={styles.clearButton}
       />
     ) : null;
 
@@ -251,7 +255,7 @@ export const TextField = ({
     onKeyPress: handleKeyPress,
   };
 
-  const input = <TextInput mode="outlined" {...argsInput} {...rest} />;
+  const input = <TextInput style={{flex:1}} mode="outlined" {...argsInput} {...rest} />;
 
   const characterCount = normalizedValue?.length ?? 0;
   const characterCountMarkup = showCharacterCount ? (
@@ -264,10 +268,15 @@ export const TextField = ({
 
   const suffixMarkup = suffix ? <View>{suffix}</View> : null;
 
-  const customlabelMarkup = customLabel ? <View>{customLabel}</View> : null;
+  const customlabelMarkup = customLabel ? (
+    <View style={{flexDirection: 'row', paddingLeft: 20, paddingVertical: 8}}>
+      <Text style={{color: 'black', fontWeight: '500', fontSize: 16}}>{customLabel}</Text>
+      {requiredIndicator && <Text style={{color: '#EE4747', fontWeight: '500', fontSize: 16}}> *</Text>}
+    </View>
+  ) : null;
 
   const helpTextMarkup = helpText ? (
-    <HelperText type="info" visible>{helpText}</HelperText>
+    <HelperText type="info" visible style={{paddingLeft: 20, paddingBottom: 8}}>{helpText}</HelperText>
   ) : null;
 
   return (
@@ -276,14 +285,16 @@ export const TextField = ({
       <Connected
         left={connectedLeft}
         right={connectedRight}
-        segmented={connectedSegmented}>
-        <View style={borderless && styles.borderless}>
-          {prefixMarkup}
-          {input}
-          {suffixMarkup}
-          {clearButtonMarkup}
-          {characterCountMarkup}
+        segmented={connectedSegmented}
+        children={
+          <View style={[styles.borderless, styles.inputContainer]}>
+            {prefixMarkup}
+            {input}
+            {suffixMarkup}
+            {clearButtonMarkup}
+            {characterCountMarkup}
         </View>
+        }>
       </Connected>
       {helpTextMarkup}
     </View>
@@ -297,9 +308,18 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     flexDirection: 'column',
-    gap: 8,
-    height: 100,
+    alignContent: 'center',
   },
+  inputContainer: {
+    backgroundColor: 'gray',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 4,
+    flex: 1
+  },
+  clearButton: {
+    left: 350
+  }
 });
 
 function getRows(multiline?: boolean | number) {
