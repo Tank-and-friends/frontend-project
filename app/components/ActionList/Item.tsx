@@ -12,7 +12,7 @@ import {Button, HelperText, Tooltip} from 'react-native-paper';
 import {PopoverContext} from '../Popover/context';
 
 const getStyles = (
-  $disbale?: boolean,
+  $disable?: boolean,
   $active?: boolean,
   $destructive?: boolean,
 ) =>
@@ -29,7 +29,8 @@ const getStyles = (
       borderRadius: 6,
       borderTopWidth: 1,
       borderTopColor: 'transparent',
-      color: $destructive ? 'red' : $disbale ? '#a3a8af' : 'inherit',
+      color: $destructive ? '#d32f2f' : $disable ? '#a3a8af' : 'inherit',
+      borderColor: $disable ? '#e0e0e0' : 'transparent',
     },
   });
 
@@ -65,19 +66,19 @@ export const Item = ({
   }
 
   const contentMarkup = (
-    <>
-      <Text>{contentText}</Text>
-      {helpText && (
-        <HelperText type="info" variant="bodyMedium">
-          {helpText}
-        </HelperText>
-      )}
-    </>
+    <View style={styles.textWrapper}>
+        <Text style={[{ color: 'black', fontSize: 13, fontWeight: '400' }, destructive && styles.destructiveText]}>{contentText}</Text>
+        {helpText && (
+          <HelperText type="info" variant="bodyMedium">
+            {helpText}
+          </HelperText>
+        )}
+    </View>
   );
 
   const suffixMarkup = suffix ? <View>{suffix}</View> : null;
 
-  const textMarkup = <View style={styles.text}>{contentMarkup}</View>;
+  const textMarkup = <View style={styles.textWrapper}>{contentMarkup}</View>;
 
   const contentElement = (
     <View style={[styles.content, {flexWrap: truncate ? 'nowrap' : 'wrap'}]}>
@@ -220,9 +221,20 @@ const styles = StyleSheet.create({
   },
   content: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
     gap: 8,
-    paddingHorizontal: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
+  destructiveText: {
+    color: '#d32f2f',
+  },
+  textWrapper: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    overflow: 'hidden',
   },
 });

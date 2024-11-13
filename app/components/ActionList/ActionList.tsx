@@ -48,9 +48,14 @@ export const ActionList = ({
 const styles = StyleSheet.create({
   actionList: {
     margin: 0,
-    padding: 0,
-    maxWidth: 150,
-    backgroundColor: 'white',
-    borderRadius: 6,
+    padding: 10,
+    maxWidth: '60%',
+    backgroundColor: '#f9f9f9',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
 });

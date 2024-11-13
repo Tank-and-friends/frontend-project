@@ -30,7 +30,7 @@ export const Section = ({
         <View key={item.id ?? `${content}-${index}`}>
           <Item
             {...item}
-            content={content}
+            content={content} 
             helpText={helpText}
             onAction={handleAction(onAction)}
           />
@@ -41,7 +41,7 @@ export const Section = ({
 
   const titlemarkup = section.title ? (
     <View style={styles.textWrapper}>
-      <Text variant="bodyMedium">{section.title}</Text>
+      <Text style={{ color: 'black', fontSize: 14, fontWeight: '700' }}>{section.title}</Text>
     </View>
   ) : null;
 
@@ -64,15 +64,17 @@ export const Section = ({
 
 const styles = StyleSheet.create({
   textWrapper: {
-    paddingHorizontal: 4,
-    paddingTop: 4,
-    paddingBottom: 2,
+    paddingHorizontal: 10,
+    paddingTop: 10,
+    paddingBottom: 4,
   },
-  subSection: {
-    padding: 8,
-  },
+  // subSection: {
+  //   padding: 8,
+  // },
   otherSection: {
     borderTopWidth: 1,
-    borderColor: '#e8eaeb',
+    borderColor: '#e0e0e0',
+    marginTop: 10,
   },
+
 });

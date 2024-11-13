@@ -19,6 +19,9 @@ import {TextField} from './components/TextField/TextField';
 import {TextInput as DepsTextInput, Icon, Text} from 'react-native-paper';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import {UniqueIdProvider} from './utils/uniqueId';
+import { ActionListItemDescriptor, ActionListSection } from './types';
+import { ActionList } from './components/ActionList';
+
 
 function App(): React.JSX.Element {
   const [text, setText] = useState<string>('');
@@ -70,6 +73,36 @@ function App(): React.JSX.Element {
           />
           <IonIcons name="close-circle" size={20} color="#000" />
           <NativeTextInput /> */}
+
+          {/* ActionList with items */}
+          <ActionList
+          sections={[
+            {
+              title: 'Hành động',
+              items: [
+                {
+                  icon: <IonIcons name="checkmark" size={20} color="green" />,
+                  content: 'Điểm danh',
+                  onAction: () => {
+                    console.log('Điểm danh');
+                  },
+                  helpText: 'Để điểm danh đó'
+                },
+                {
+                  content: 'Xin nghỉ phép',
+                  onAction: () => {
+                    console.log('Xin nghỉ phép');
+                  },
+                },
+              ],
+            },
+            {title: 'Activity', items: [
+              {content: 'Activity 1'},
+              {content: 'Activity 23456'},
+            ]},
+          ]}
+        />
+
         </ScrollView>
       </SafeAreaView>
     </UniqueIdProvider>
