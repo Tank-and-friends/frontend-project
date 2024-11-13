@@ -176,7 +176,7 @@ export const TextField = ({
   };
 
   const clearButtonMarkup =
-    clearButton && focus && value ? (
+    clearButton && value ? (
       <TextInput.Icon
         icon="close-circle"
         onPress={handleClearButtonClick}
