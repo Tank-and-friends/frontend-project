@@ -1,6 +1,8 @@
-import React, {PropsWithChildren, useState} from 'react';
+import React, {PropsWithChildren, useRef, useState} from 'react';
 import {
+  Dimensions,
   Image,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -18,72 +20,176 @@ import EmptyBodyMessage from './components/EmptyBodyMessage';
 import {useNavigation} from '@react-navigation/native';
 type Props = PropsWithChildren<{}>;
 
+const {height} = Dimensions.get('window');
 const MessageDetail = ({route}: Props) => {
   const [isBlock, setIsBlock] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isTextFocus, setIsTextFocus] = useState(false);
+  const [isOpenUtilities, setIsOpenUtilities] = useState(false);
+  const [selectedMessage, setSelectedMessage] = useState(null);
   const navigation = useNavigation();
   const {newMessage} = route.params;
+  const scrollView = useRef<ScrollView | null>();
+
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
+  };
+  const toggleUtilities = () => {
+    setIsOpenUtilities(!isOpenUtilities);
   };
   const toggleBlock = () => {
     setIsBlock(!isBlock);
   };
+  const handleLongPress = () => {
+    setIsOpenUtilities(!isOpenUtilities);
+  };
+
   return (
-    <View style={{flex: 1, backgroundColor: 'white', position: 'relative'}}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: 'white',
+        position: 'relative',
+      }}>
       <TopNavBar
         title="Nguyen Viet Hoang 20210000"
         // avatarSource={'../../assets/images/pensquare.png'}
+        onOpenPopup={togglePopup}
       />
-      <View style={styles.moreInfoPopup}>
-        <Button
-          contentStyle={{justifyContent: 'flex-start', overflow: 'visible'}}
-          style={styles.moreInfoItem}
-          textColor="black"
-          icon="account"
-          onPress={() => navigation.navigate('FriendPersonalInfo')}>
-          Thông tin tài khoản
-        </Button>
-        {!isBlock ? (
-          <Button
-            contentStyle={{justifyContent: 'flex-start'}}
-            style={styles.moreInfoItem}
-            textColor="black"
-            icon="minus-circle"
-            onPress={toggleBlock}>
-            Chặn
-          </Button>
-        ) : (
-          <Button
-            contentStyle={{justifyContent: 'flex-start'}}
-            style={styles.moreInfoItem}
-            textColor="black"
-            icon="minus-circle-off"
-            onPress={toggleBlock}>
-            Bỏ chặn
-          </Button>
-        )}
-      </View>
-      {!newMessage ? (
-        <ScrollView style={styles.messageDetail}>
-          <MessageTime time="10 tháng 9, 9:00" />
-          <MessageContent yours={false} content="alooo" />
-          <MessageContent yours={false} content="alooo" />
-          <MessageContent yours={true} content="alooo" />
-          <MessageTime time="10 tháng 9, 9:00" />
-          <MessageContent yours={false} content="alooo" />
-          <ImageMessage />
-          <MessageContent yours={true} content="alooo" />
-          <DeletedMessage />
-          <View style={styles.status}>
-            <Icon source="eye-outline" size={15} color="#C02135" />
+      {isPopupOpen && (
+        <Pressable style={styles.overlay} onPress={togglePopup}>
+          <View>
+            <View style={styles.moreInfoPopup}>
+              <Button
+                contentStyle={{
+                  justifyContent: 'flex-start',
+                  overflow: 'visible',
+                }}
+                style={styles.moreInfoItem}
+                textColor="black"
+                icon="account"
+                onPress={() => navigation.navigate('FriendPersonalInfo')}>
+                Thông tin tài khoản
+              </Button>
+              {!isBlock ? (
+                <Button
+                  contentStyle={{justifyContent: 'flex-start'}}
+                  style={styles.moreInfoItem}
+                  textColor="black"
+                  icon="minus-circle"
+                  onPress={toggleBlock}>
+                  Chặn
+                </Button>
+              ) : (
+                <Button
+                  contentStyle={{justifyContent: 'flex-start'}}
+                  style={styles.moreInfoItem}
+                  textColor="black"
+                  icon="minus-circle-off"
+                  onPress={toggleBlock}>
+                  Bỏ chặn
+                </Button>
+              )}
+            </View>
           </View>
-        </ScrollView>
+        </Pressable>
+      )}
+
+      {!newMessage ? (
+        <View style={styles.messageDetail}>
+          <ScrollView
+            ref={scrollView}
+            onContentSizeChange={() =>
+              scrollView.current?.scrollToEnd({animated: false})
+            }
+            showsVerticalScrollIndicator={false}
+            style={{
+              position: 'relative',
+              paddingHorizontal: 20,
+            }}>
+            <MessageTime time="10 tháng 9, 9:00" />
+            <MessageContent
+              yours={false}
+              content="alooo"
+              onLongPress={handleLongPress}
+            />
+            <MessageContent
+              yours={false}
+              content="alooo"
+              onLongPress={handleLongPress}
+            />
+            <MessageContent
+              yours={true}
+              content="alooo"
+              onLongPress={handleLongPress}
+            />
+            <MessageContent
+              yours={true}
+              content="alooo"
+              onLongPress={handleLongPress}
+            />
+
+            <MessageContent
+              yours={true}
+              content="alooo"
+              onLongPress={handleLongPress}
+            />
+            <MessageContent
+              yours={true}
+              content="alooo"
+              onLongPress={handleLongPress}
+            />
+            <MessageContent
+              yours={true}
+              content="alooo"
+              onLongPress={handleLongPress}
+            />
+            <MessageTime time="10 tháng 9, 9:00" />
+            <MessageContent
+              yours={false}
+              content="alooo"
+              onLongPress={handleLongPress}
+            />
+            <ImageMessage />
+
+            <MessageContent
+              yours={true}
+              content="alooo"
+              onLongPress={handleLongPress}
+            />
+
+            <MessageContent
+              yours={true}
+              content="alooo"
+              onLongPress={handleLongPress}
+            />
+
+            <DeletedMessage />
+            <View style={styles.status}>
+              <Icon source="eye-outline" size={15} color="#C02135" />
+            </View>
+          </ScrollView>
+        </View>
       ) : (
         <EmptyBodyMessage />
       )}
-      {!isBlock ? (
+      {isOpenUtilities && (
+        <Pressable style={styles.overlay} onPress={handleLongPress} />
+      )}
+      {isBlock ? (
+        <View style={styles.blockWrapper}>
+          <Text style={styles.blockNotification}>Bạn đã chặn Hoang</Text>
+          <Text style={styles.blockNotification2}>
+            Các bạn sẽ không thể nhắn tin cho nhau trong đoạn chat này
+          </Text>
+          <Button
+            style={styles.unBlockButton}
+            textColor="white"
+            onPress={toggleBlock}>
+            Bỏ chặn
+          </Button>
+        </View>
+      ) : !isOpenUtilities ? (
         <View style={styles.messageInput}>
           <IconButton
             icon="image"
@@ -110,6 +216,7 @@ const MessageDetail = ({route}: Props) => {
               placeholder="Nhập tin nhắn"
               onFocus={() => {
                 setIsTextFocus(true);
+                scrollView.current?.scrollToEnd();
               }}
               onBlur={() => {
                 setIsTextFocus(false);
@@ -131,57 +238,45 @@ const MessageDetail = ({route}: Props) => {
           />
         </View>
       ) : (
-        <View style={styles.blockWrapper}>
-          <Text style={styles.blockNotification}>Bạn đã chặn Hoang</Text>
-          <Text style={styles.blockNotification2}>
-            Các bạn sẽ không thể nhắn tin cho nhau trong đoạn chat này
-          </Text>
-          <Button
-            style={styles.unBlockButton}
-            textColor="white"
-            onPress={toggleBlock}>
-            Bỏ chặn
-          </Button>
+        <View style={styles.utilities}>
+          <TouchableOpacity style={styles.utility} onPress={handleLongPress}>
+            <Icon
+              source="reply"
+              size={30}
+              color="white"
+              // style={styles.utilityIcon}
+            />
+            <Text style={styles.utilityText}>Phản hồi</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.utility} onPress={handleLongPress}>
+            <Icon
+              source="text-box-multiple"
+              size={27}
+              color="white"
+              // style={styles.utilityIcon}
+            />
+            <Text style={styles.utilityText}>Sap chép</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.utility} onPress={handleLongPress}>
+            <Icon
+              source="trash-can-outline"
+              size={30}
+              color="white"
+              // style={styles.utilityIcon}
+            />
+            <Text style={styles.utilityText}>Xóa</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.utility} onPress={handleLongPress}>
+            <Icon
+              source="dots-horizontal"
+              size={30}
+              color="white"
+              // style={styles.utilityIcon}
+            />
+            <Text style={styles.utilityText}>Xem thêm</Text>
+          </TouchableOpacity>
         </View>
       )}
-      {/* <View style={styles.utilities}>
-        <TouchableOpacity style={styles.utility}>
-          <Icon
-            source="reply"
-            size={30}
-            color="white"
-            // style={styles.utilityIcon}
-          />
-          <Text style={styles.utilityText}>Phản hồi</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.utility}>
-          <Icon
-            source="text-box-multiple"
-            size={27}
-            color="white"
-            // style={styles.utilityIcon}
-          />
-          <Text style={styles.utilityText}>Sap chép</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.utility}>
-          <Icon
-            source="trash-can-outline"
-            size={30}
-            color="white"
-            // style={styles.utilityIcon}
-          />
-          <Text style={styles.utilityText}>Xóa</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.utility}>
-          <Icon
-            source="dots-horizontal"
-            size={30}
-            color="white"
-            // style={styles.utilityIcon}
-          />
-          <Text style={styles.utilityText}>Xem thêm</Text>
-        </TouchableOpacity>
-      </View> */}
     </View>
   );
 };
@@ -189,12 +284,10 @@ const MessageDetail = ({route}: Props) => {
 const styles = StyleSheet.create({
   messageDetail: {
     flex: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 6,
     display: 'flex',
     flexDirection: 'column-reverse',
+    paddingVertical: 6,
     rowGap: 6,
-    position: 'relative',
   },
   messageInput: {
     minHeight: 48,
@@ -219,7 +312,7 @@ const styles = StyleSheet.create({
   status: {
     position: 'absolute',
     right: -15,
-    bottom: -3,
+    bottom: 0,
   },
   moreInfoPopup: {
     position: 'absolute',
@@ -271,6 +364,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 75,
     backgroundColor: '#C02135',
+    zIndex: 10,
   },
   utility: {
     width: '25%',
@@ -281,6 +375,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: 'white',
     marginTop: 10,
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 9,
   },
 });
 

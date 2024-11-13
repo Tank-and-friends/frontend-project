@@ -1,18 +1,21 @@
 import React, {PropsWithChildren} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Pressable, StyleSheet, Text, View} from 'react-native';
 
 type Props = PropsWithChildren<{
   yours: boolean;
   content: string;
+  onLongPress: () => void;
 }>;
 
-const MessageContent = ({yours, content}: Props) => {
+const MessageContent = ({yours, content, onLongPress}: Props) => {
   const styles = createStyles(yours);
   return (
     <View style={styles.contentFrame}>
-      <View style={styles.contentWrapper}>
-        <Text style={styles.content}>{content}</Text>
-      </View>
+      <Pressable onLongPress={onLongPress}>
+        <View style={styles.contentWrapper}>
+          <Text style={styles.content}>{content}</Text>
+        </View>
+      </Pressable>
     </View>
   );
 };

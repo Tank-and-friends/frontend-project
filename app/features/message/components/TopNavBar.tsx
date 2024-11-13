@@ -7,9 +7,10 @@ import avatar from '../../../assets/images/pensquare.png';
 type Props = PropsWithChildren<{
   title: string;
   //   avatarSource: string;
+  onOpenPopup: () => void;
 }>;
 
-const TopNavBar = ({title}: Props) => {
+const TopNavBar = ({title, onOpenPopup}: Props) => {
   const navigation = useNavigation();
   return (
     <View style={styles.customHeaderWrapper}>
@@ -27,7 +28,11 @@ const TopNavBar = ({title}: Props) => {
         onPress={() => navigation.navigate('FriendPersonalInfo')}>
         {title}
       </Text>
-      <IconButton icon="information-outline" iconColor="white" />
+      <IconButton
+        icon="information-outline"
+        iconColor="white"
+        onPress={onOpenPopup}
+      />
     </View>
   );
 };
@@ -43,9 +48,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   avatar: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: 35,
+    height: 35,
+    borderRadius: 17.5,
     backgroundColor: 'white',
   },
   name: {

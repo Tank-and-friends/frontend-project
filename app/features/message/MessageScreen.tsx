@@ -1,4 +1,4 @@
-import React, {PropsWithChildren} from 'react';
+import React, {PropsWithChildren, useRef} from 'react';
 import {FlatList, ScrollView, StyleSheet, View, Image} from 'react-native';
 import {Button, IconButton, TextInput} from 'react-native-paper';
 import MessageListItem from './components/MessageListItem';

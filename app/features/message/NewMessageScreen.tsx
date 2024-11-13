@@ -24,8 +24,8 @@ const NewMessageScreen = ({}: SectionProps) => {
   return (
     <View style={{flex: 1}}>
       <Appbar.Header>
-        <Appbar.BackAction onPress={() => {}} color="white" />
-        <Appbar.Content title="Tin nhắn mới" color="white" />
+        <Appbar.BackAction onPress={() => {}} />
+        <Appbar.Content title="Tin nhắn mới" />
       </Appbar.Header>
       <Image
         source={require('../../assets/images/MessageBackground.png')}
@@ -43,18 +43,6 @@ const NewMessageScreen = ({}: SectionProps) => {
         renderItem={({item}) => <MessageListItem item={item} />}
         keyExtractor={item => item.name}
         ItemSeparatorComponent={() => <View style={{height: 10}} />}
-      />
-      <IconButton
-        icon={() => (
-          <Image
-            source={NoteImage}
-            style={{width: 30, height: 30, tintColor: 'white'}}
-          />
-        )}
-        mode="contained"
-        containerColor="#C02135"
-        size={30}
-        style={styles.newMessageButton}
       />
     </View>
   );

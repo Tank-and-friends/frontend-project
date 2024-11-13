@@ -27,9 +27,11 @@ const MessageListItem = ({item}: SectionProps) => {
         <View style={styles.avatarImage} />
         <View style={styles.textContentContainer}>
           <Text style={{fontWeight: 'bold', fontSize: 14}}>{item.name}</Text>
-          <Text style={{fontSize: 10, marginTop: 3}}>
-            {item.lastestMessage}
-          </Text>
+          {item.lastestMessage && (
+            <Text style={{fontSize: 10, marginTop: 3}}>
+              {item.lastestMessage}
+            </Text>
+          )}
         </View>
         <Text style={styles.time}>{item.time}</Text>
       </View>
