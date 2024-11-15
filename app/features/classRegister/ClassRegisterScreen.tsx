@@ -3,6 +3,7 @@ import { View, Image, StyleSheet, ScrollView } from 'react-native';
 import { Icon, IconButton, Text, TextInput, Button } from 'react-native-paper';
 import TopComponent from './components/TopComponent';
 import OpenClasses from './components/OpenClasses';
+import RegisteredClasses from './components/RegisteredClasses';
 
 const ClassRegisterScreen = () => {
   const [activeScreen, setActiveScreen] = useState('Screen1');
@@ -53,9 +54,7 @@ const ClassRegisterScreen = () => {
         {activeScreen === 'Screen1' ? (
           <OpenClasses/>
         ) : (
-          <View style={styles.classContainer}>
-            <Text>Welcome to Screen 2</Text>
-          </View>
+          <RegisteredClasses/>
         )}
       </ScrollView>
     </View>
