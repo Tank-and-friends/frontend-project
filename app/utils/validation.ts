@@ -7,11 +7,21 @@ export const validateEmail = (email: string): string => {
     return '';
   };
   export const validatePassword = (password: string): string => {
-    if (password.length < 6) {
-      return 'Mật khẩu phải có ít nhất 6 ký tự';
+    if (password.length < 8) {
+      return 'Mật khẩu phải có ít nhất 8 ký tự';
     }
-    return '';
+    if (!/[A-Z]/.test(password)) {
+      return 'Mật khẩu phải chứa ít nhất một chữ cái viết hoa';
+    }
+    if (!/\d/.test(password)) {
+      return 'Mật khẩu phải chứa ít nhất một chữ số';
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      return 'Mật khẩu phải chứa ít nhất một ký tự đặc biệt';
+    }
+    return ''; // Trả về chuỗi rỗng nếu mật khẩu hợp lệ
   };
+
   export const validateBirthDate = (birthDate: string): string => {
     if (!birthDate) {
       return 'Ngày sinh không được để trống';

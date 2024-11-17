@@ -1,5 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 interface DatePickerProps {
@@ -9,12 +15,17 @@ interface DatePickerProps {
   isRequired?: boolean;
 }
 
-const DatePicker: React.FC<DatePickerProps> = ({ label, value, onChange, isRequired = false }) => {
+const DatePicker: React.FC<DatePickerProps> = ({
+  label,
+  value,
+  onChange,
+  isRequired = false,
+}) => {
   const [showPicker, setShowPicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const handleDateChange = (event: any, date?: Date) => {
-    console.log("handleDateChange triggered", date);
+    console.log('handleDateChange triggered', date);
     if (date) {
       const currentDate = date || selectedDate;
       setShowPicker(false);
@@ -31,10 +42,11 @@ const DatePicker: React.FC<DatePickerProps> = ({ label, value, onChange, isRequi
         <Text style={styles.label}>{label}</Text>
         {isRequired && <Text style={styles.asterisk}>*</Text>}
       </View>
-      <TouchableOpacity onPress={() => {
-        console.log("Date picker opened");
-        setShowPicker(true);
-      }}>
+      <TouchableOpacity
+        onPress={() => {
+          console.log('Date picker opened');
+          setShowPicker(true);
+        }}>
         <TextInput
           style={styles.input}
           value={value}
