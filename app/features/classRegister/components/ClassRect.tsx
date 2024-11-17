@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
 
     elevation: 5,
 
-    position: 'relative',  // Important for positioning the Box
+    position: 'relative',
   },
   classTitle: {
     width: '90%',
