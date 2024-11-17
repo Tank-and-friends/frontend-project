@@ -1,13 +1,20 @@
 import { View, Text, StyleSheet } from 'react-native';
 
-export default function ClassRect({
-    classTitle,
-    classTime,
-    classCode,
-    status,
-  }) {
 
-    const getStatusColor = (status) => {
+type ClassRectProps = {
+  classTitle: string;
+  classTime: string;
+  classCode: string;
+  status: string;
+};
+
+export default function ClassRect({
+  classTitle,
+  classTime,
+  classCode,
+  status,
+}: ClassRectProps) {
+    const getStatusColor = (status: string) => {
         switch (status) {
             case 'Thành công':
             return '#21A366';
@@ -15,6 +22,15 @@ export default function ClassRect({
             return '#FF7F11';
             case 'Thất bại':
             return '#C02135';
+
+            case 'Còn chỗ':
+            return '#21A366';
+            case 'Trùng lịch':
+            return '#BF5A67';
+            case 'Hết chỗ':
+            return '#C02135';
+  
+
             default:
             return '#9e9e9e';
         }

@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { View, Image, StyleSheet, ScrollView } from 'react-native';
-import { Icon, IconButton, Text, TextInput, Button } from 'react-native-paper';
+import { Button } from 'react-native-paper';
+import { createStackNavigator } from '@react-navigation/stack';
 import TopComponent from './components/TopComponent';
 import OpenClasses from './components/OpenClasses';
 import RegisteredClasses from './components/RegisteredClasses';
+import ClassList from './components/ClassList'; // Adjust the import path as needed
 
-const ClassRegisterScreen = () => {
+const Stack = createStackNavigator();
+
+const ClassRegisterMain = ({ navigation }: any) => {
   const [activeScreen, setActiveScreen] = useState('Screen1');
 
   return (
@@ -15,7 +19,7 @@ const ClassRegisterScreen = () => {
         style={styles.backgroundImage}
         resizeMode="stretch"
       />
-      <TopComponent/>
+      <TopComponent />
       <View style={styles.buttonContainer}>
         <Button
           mode="contained"
@@ -25,8 +29,8 @@ const ClassRegisterScreen = () => {
             activeScreen === 'Screen1' && styles.activeButton,
           ]}
           labelStyle={[
-            {fontSize: 12},
-            activeScreen === 'Screen1' && {fontSize: 12, fontWeight: 'bold'},
+            { fontSize: 12 },
+            activeScreen === 'Screen1' && { fontSize: 12, fontWeight: 'bold' },
           ]}
         >
           Danh sách lớp mở
@@ -39,25 +43,43 @@ const ClassRegisterScreen = () => {
             activeScreen === 'Screen2' && styles.activeButton,
           ]}
           labelStyle={[
-            {fontSize: 12},
-            activeScreen === 'Screen2' && {fontSize: 12, fontWeight: 'bold'},
+            { fontSize: 12 },
+            activeScreen === 'Screen2' && { fontSize: 12, fontWeight: 'bold' },
           ]}
         >
           Lớp đã đăng ký
         </Button>
       </View>
 
-      <ScrollView contentContainerStyle={styles.scrollableContent} 
+      <ScrollView
+        contentContainerStyle={styles.scrollableContent}
         style={styles.scrollableContent}
         showsHorizontalScrollIndicator={false}
-        > 
+      >
         {activeScreen === 'Screen1' ? (
-          <OpenClasses/>
+          <OpenClasses navigation={navigation} /> // Pass navigation here
         ) : (
-          <RegisteredClasses/>
+          <RegisteredClasses />
         )}
       </ScrollView>
     </View>
+  );
+};
+
+const ClassRegisterScreen = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="ClassRegisterMain"
+        component={ClassRegisterMain}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ClassList"
+        component={ClassList}
+        options={{ title: 'Class List' }}
+      />
+    </Stack.Navigator>
   );
 };
 
@@ -71,24 +93,18 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     position: 'relative',
-    width: '100%'
-  },
-  classContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'yellow'
+    width: '100%',
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     marginVertical: 10,
-    width: '100%'
+    width: '100%',
   },
   switchButton: {
     marginHorizontal: 5,
     width: '45%',
-    backgroundColor: '#BA1B30'
+    backgroundColor: '#BA1B30',
   },
   activeButton: {
     backgroundColor: '#FF7F11',
@@ -97,10 +113,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     width: '100%',
   },
-  screenContent: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  }
 });
 
 export default ClassRegisterScreen;

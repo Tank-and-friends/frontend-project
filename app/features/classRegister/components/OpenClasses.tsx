@@ -4,13 +4,31 @@ import React from 'react';
 import ClassSquare from './ClassSquare';
 
 const classGroups = [
-  { title: 'Lớp đại cương',},
-  { title: 'Lớp không đại cương',},
-  { title: 'Lớp xém đại cương',},
+  { title: 'Lớp đại cương',
+    classes: [
+      {className: 'Giải tích I'},
+      {className: 'Giải tích II'},
+      {className: 'Giải tích III'}
+    ]
+  },
+  { title: 'Lớp không đại cương',
+    classes: [
+      {className: 'Giải không tích I'},
+      {className: 'Giải không tích II'},
+      {className: 'Giải không tích III'}
+    ]
+  },
+  { title: 'Lớp xém đại cương',
+    classes: [
+      {className: 'Giải xém tích I'},
+      {className: 'Giải xém tích II'},
+      {className: 'Giải xém tích III'}
+    ]
+  },
 ];
 
 
-export default function OpenClasses() {
+export default function OpenClasses({ navigation }: any) {
   return (
     <View>
       {classGroups.map((group, index)=>(
@@ -41,9 +59,15 @@ export default function OpenClasses() {
             showsHorizontalScrollIndicator={false}
             style={{ alignSelf: 'flex-start' }}
             >
-              <ClassSquare/>
-              <ClassSquare/>
-              <ClassSquare/>
+              {group.classes.map((cls, idx) => (
+                <ClassSquare
+                  key={idx}
+                  onPress={() =>
+                    navigation.navigate('ClassList', { className: cls.className })
+                  }
+                  className={cls.className}
+                />
+              ))}
             </ScrollView>
           </View>
         </View>

@@ -64,6 +64,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     gap: 20,
-    paddingVertical: 10,          // Add padding to top and bottom for spacing
+    paddingVertical: 10,
   },
 })
