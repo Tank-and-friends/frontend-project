@@ -4,23 +4,23 @@ import IonIcons from 'react-native-vector-icons/Ionicons';
 const BottomNavBar = () => {
   return (
     <View style={styles.bottomBar}>
-      <TouchableOpacity style={styles.utility}>
+      <TouchableOpacity style={styles.bottomBarOption}>
         <IonIcons name="notifications-outline" size={28} color="white" />
         <Text style={styles.utilityText}>Thông báo</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.utility}>
+      <TouchableOpacity style={styles.bottomBarOption}>
         <Icon source="message-outline" size={28} color="white" />
         <Text style={styles.utilityText}>Tin nhắn</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.utility}>
+      <TouchableOpacity style={styles.bottomBarOption}>
         <Icon source="account-group" size={28} color="white" />
         <Text style={styles.utilityText}>Lớp học</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.utility}>
+      <TouchableOpacity style={styles.bottomBarOption}>
         <Icon source="plus" size={28} color="white" />
         <Text style={styles.utilityText}>Đăng ký lớp</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.utilityClick}>
+      <TouchableOpacity style={styles.bottomBarChosenOption}>
         <Icon source="calendar" size={28} color="#C02135" />
         <Text style={styles.utilityTextClick}>Lịch</Text>
       </TouchableOpacity>
@@ -42,14 +42,14 @@ const styles = StyleSheet.create({
     zIndex: 10,
     elevation: 10,
   },
-  utility: {
+  bottomBarOption: {
     width: '20%',
     flexDirection: 'column',
     alignItems: 'center',
     height: '100%',
     justifyContent: 'center',
   },
-  utilityClick: {
+  bottomBarChosenOption: {
     width: '20%',
     flexDirection: 'column',
     alignItems: 'center',
