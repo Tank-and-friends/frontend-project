@@ -8,32 +8,15 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, useColorScheme, View} from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 import MessageDetail from './features/message/MessageDetail';
 import NewMessageScreen from './features/message/NewMessageScreen';
 import MessageScreen from './features/message/MessageScreen';
 import FriendPersonalInfo from './features/message/FriendPersonalInfo';
 import {createStackNavigator} from '@react-navigation/stack';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import IonIcons from 'react-native-vector-icons/Ionicons';
 import ListMaterial from './features/material/ListMaterial';
 import DetailMaterial from './features/material/DetailMaterial';
 import {UniqueIdProvider} from './utils/uniqueId';
@@ -41,6 +24,10 @@ import BottomNavBar from './components/BottomNavBar/BottomNavBar';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import UserInfoNavigator from './features/userInfo/UserInfoNavigator';
 import AuthNavigator from './features/auth/AuthNavigator';
+import TaskDetailScreen from './features/assignment/TaskDetailScreen';
+import AssignmentScreen from './features/assignment/AssignmentScreen';
+import CreateAssignmentScreen from './features/assignment/CreateAssignmentScreen';
+import NotificationScreen from './features/notification/NotificationScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -68,8 +55,28 @@ const DummyScreen = () => (
   </View>
 );
 
-// App Component
-const App = () => {
+export type RootStackParamList = {
+  CreateAssignmentScreen: undefined;
+  AssignmentScreen: undefined;
+  NotificationScreen: undefined;
+  TaskDetailScreen: {
+    title: string;
+    date: string;
+    deadline: string;
+    content: string;
+  };
+};
+
+const AssignmentStack = createStackNavigator<RootStackParamList>();
+
+function App(): React.JSX.Element {
+  const isDarkMode = useColorScheme() === 'dark';
+
+  const backgroundStyle = {
+    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    flex: 1, // Ensures it takes up full height
+  };
+
   return (
     <SafeAreaProvider>
       <UniqueIdProvider>
@@ -118,14 +125,43 @@ const App = () => {
 
             <UserInfoNavigator />
             <AuthNavigator />
+            {/* assignment and notification navigator */}
+            <AssignmentStack.Navigator>
+              <AssignmentStack.Screen
+                name="NotificationScreen"
+                component={NotificationScreen}
+              />
+              <AssignmentStack.Screen
+                name="CreateAssignmentScreen"
+                component={CreateAssignmentScreen}
+              />
+              <AssignmentStack.Screen
+                name="AssignmentScreen"
+                component={AssignmentScreen}
+                options={{title: 'Assignments'}}
+              />
+              <AssignmentStack.Screen
+                name="TaskDetailScreen"
+                component={TaskDetailScreen}
+                options={({route}) => ({title: route.params.title})}
+              />
+            </AssignmentStack.Navigator>
           </NavigationContainer>
         </GestureHandlerRootView>
       </UniqueIdProvider>
     </SafeAreaProvider>
   );
-};
+}
 
 const styles = StyleSheet.create({
+  scrollViewContainer: {
+    flexGrow: 1,
+    padding: 0,
+  },
+  container: {
+    flex: 1,
+    padding: 0,
+  },
   center: {
     flex: 1,
     justifyContent: 'center',
