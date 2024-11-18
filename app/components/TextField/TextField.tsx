@@ -311,7 +311,6 @@ const styles = StyleSheet.create({
     alignContent: 'center',
   },
   inputContainer: {
-    backgroundColor: 'gray',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 4,
