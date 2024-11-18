@@ -1,23 +1,8 @@
 import React, {PropsWithChildren, useRef, useState} from 'react';
 import TopNavBar from './components/TopNavBar';
 import {useNavigation} from '@react-navigation/native';
-import {
-  Dimensions,
-  Image,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {
-  Button,
-  DefaultTheme,
-  Modal,
-  PaperProvider,
-  Portal,
-} from 'react-native-paper';
+import {ScrollView, StyleSheet, View} from 'react-native';
+import {Button, Modal, PaperProvider, Portal} from 'react-native-paper';
 import TransparentBackground from '../../components/TransparentBackground';
 import RenamePopup from './components/RenamePopup';
 

@@ -30,6 +30,7 @@ import CreateAssignmentScreen from './features/assignment/CreateAssignmentScreen
 import NotificationScreen from './features/notification/NotificationScreen';
 import ClassRegisterScreen from './features/classRegister/ClassRegisterScreen';
 import ClassScreen from './features/class/ClassScreen';
+import {RootStacks} from './navigation';
 
 const Tab = createBottomTabNavigator();
 
@@ -41,7 +42,7 @@ const TabNavigation = () => {
     <Tab.Navigator
       screenOptions={{headerShown: false}}
       tabBar={props => <BottomNavBar {...props} />}>
-      <Tab.Screen name="Notifications" component={DummyScreen} />
+      <Tab.Screen name="Notifications" component={NotificationScreen} />
       <Tab.Screen name="Messages" component={MessageScreen} />
       <Tab.Screen name="Classes" component={ClassScreen} />
       <Tab.Screen name="Register" component={ClassRegisterScreen} />
@@ -148,6 +149,8 @@ function App(): React.JSX.Element {
                 options={({route}) => ({title: route.params.title})}
               />
             </AssignmentStack.Navigator>
+            {/* absense-form navigation */}
+            <RootStacks />
           </NavigationContainer>
         </GestureHandlerRootView>
       </UniqueIdProvider>
