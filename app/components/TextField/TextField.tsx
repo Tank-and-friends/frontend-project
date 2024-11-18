@@ -255,7 +255,7 @@ export const TextField = ({
     onKeyPress: handleKeyPress,
   };
 
-  const input = <TextInput style={{flex:1}} mode="outlined" {...argsInput} {...rest} />;
+  const input = <TextInput style={{flex:1, ...(prefix && {paddingLeft: 30})}} mode="outlined" {...argsInput} {...rest} />;
 
   const characterCount = normalizedValue?.length ?? 0;
   const characterCountMarkup = showCharacterCount ? (
@@ -264,9 +264,9 @@ export const TextField = ({
     </View>
   ) : null;
 
-  const prefixMarkup = prefix ? <View>{prefix}</View> : null;
+  const prefixMarkup = prefix ? <View style={{position: 'absolute', left: 15}}>{prefix}</View> : null;
 
-  const suffixMarkup = suffix ? <View>{suffix}</View> : null;
+  const suffixMarkup = suffix ? <View style={{position: 'absolute', right: 15}}>{suffix}</View> : null;
 
   const customlabelMarkup = customLabel ? (
     <View style={{flexDirection: 'row', paddingLeft: 20, paddingVertical: 8}}>
@@ -288,8 +288,8 @@ export const TextField = ({
         segmented={connectedSegmented}
         children={
           <View style={[styles.borderless, styles.inputContainer]}>
-            {prefixMarkup}
             {input}
+            {prefixMarkup}
             {suffixMarkup}
             {clearButtonMarkup}
             {characterCountMarkup}

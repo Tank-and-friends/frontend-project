@@ -57,6 +57,8 @@ function App(): React.JSX.Element {
             // connectedLeft={<IonIcons name="close-circle" size={20} color="#000" />}
             // connectedRight={<IonIcons name="close-circle" size={20} color="#000" />}
             // error={textError}
+            prefix={<IonIcons name="close-circle" size={30} color="#000" />}
+            suffix={<IonIcons name="close-circle" size={30} color="#000" />}
             clearButton={true}
             requiredIndicator={true}
             onClearButtonClick={() => setText('')}
@@ -81,7 +83,7 @@ function App(): React.JSX.Element {
               title: 'Hành động',
               items: [
                 {
-                  icon: <IonIcons name="checkmark" size={20} color="green" />,
+                  // icon: <IonIcons name="checkmark" size={20} color="green" />,
                   content: 'Điểm danh',
                   onAction: () => {
                     console.log('Điểm danh');
