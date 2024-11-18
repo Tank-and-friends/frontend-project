@@ -39,6 +39,8 @@ import DetailMaterial from './features/material/DetailMaterial';
 import {UniqueIdProvider} from './utils/uniqueId';
 import BottomNavBar from './components/BottomNavBar/BottomNavBar';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import UserInfoNavigator from './features/userInfo/UserInfoNavigator';
+import AuthNavigator from './features/auth/AuthNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -110,6 +112,8 @@ const App = () => {
                 options={{headerShown: false}}
               />
             </Stack.Navigator>
+            <UserInfoNavigator />
+            <AuthNavigator />
           </NavigationContainer>
         </GestureHandlerRootView>
       </UniqueIdProvider>
