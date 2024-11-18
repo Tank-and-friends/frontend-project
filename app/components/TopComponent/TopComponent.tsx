@@ -1,9 +1,7 @@
 import {View, Image, StyleSheet} from 'react-native';
-import {Icon, IconButton, Text, TextInput} from 'react-native-paper';
-import IonIcons from 'react-native-vector-icons/Ionicons';
+import {IconButton, Text, } from 'react-native-paper';
 import avatar from '../../assets/images/bachmahoangtu.jpg';
 import React from 'react';
-import {TextField} from '../TextField/TextField';
 
 export default function TopComponent() {
   return (
