@@ -1,29 +1,49 @@
+import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Icon} from 'react-native-paper';
+
 import IonIcons from 'react-native-vector-icons/Ionicons';
-const BottomNavBar = () => {
+const BottomNavBar = ({state, descriptors, navigation}: any) => {
+  const icons = [
+    {name: 'notifications-outline', label: 'Thông báo', route: 'Notifications'},
+    {name: 'message-outline', label: 'Tin nhắn', route: 'Messages'},
+    {name: 'account-group', label: 'Lớp học', route: 'Classes'},
+    {name: 'plus', label: 'Đăng ký lớp', route: 'Register'},
+    {name: 'calendar', label: 'Lịch', route: 'Calendar'},
+  ];
+
   return (
     <View style={styles.bottomBar}>
-      <TouchableOpacity style={styles.bottomBarOption}>
-        <IonIcons name="notifications-outline" size={28} color="white" />
-        <Text style={styles.utilityText}>Thông báo</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.bottomBarOption}>
-        <Icon source="message-outline" size={28} color="white" />
-        <Text style={styles.utilityText}>Tin nhắn</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.bottomBarOption}>
-        <Icon source="account-group" size={28} color="white" />
-        <Text style={styles.utilityText}>Lớp học</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.bottomBarOption}>
-        <Icon source="plus" size={28} color="white" />
-        <Text style={styles.utilityText}>Đăng ký lớp</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.bottomBarChosenOption}>
-        <Icon source="calendar" size={28} color="#C02135" />
-        <Text style={styles.utilityTextClick}>Lịch</Text>
-      </TouchableOpacity>
+      {icons.map((icon, index) => {
+        const isFocused = state.index === index;
+
+        return (
+          <TouchableOpacity
+            key={icon.route}
+            style={
+              isFocused ? styles.bottomBarChosenOption : styles.bottomBarOption
+            }
+            onPress={() => navigation.navigate(icon.route)}>
+            {index === 0 ? (
+              <IonIcons
+                name={icon.name}
+                size={28}
+                color={isFocused ? '#C02135' : 'white'}
+              />
+            ) : (
+              <Icon
+                source={icon.name}
+                size={28}
+                color={isFocused ? '#C02135' : 'white'}
+              />
+            )}
+            <Text
+              style={isFocused ? styles.utilityTextClick : styles.utilityText}>
+              {icon.label}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
     </View>
   );
 };
@@ -39,8 +59,8 @@ const styles = StyleSheet.create({
     height: 70,
     backgroundColor: '#C02135',
     borderRadius: 20,
-    zIndex: 10,
     elevation: 10,
+    position: 'absolute',
   },
   bottomBarOption: {
     width: '20%',
@@ -70,5 +90,11 @@ const styles = StyleSheet.create({
     marginTop: 6,
     fontWeight: '500',
   },
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
+
 export default BottomNavBar;

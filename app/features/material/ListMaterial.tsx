@@ -100,28 +100,7 @@ const ListMaterial = ({}: Props) => {
           size={30}
           style={styles.uploadMaterialButton}
         />
-        <View style={styles.bottomBar}>
-          <TouchableOpacity style={styles.utility}>
-            <IonIcons name="notifications-outline" size={28} color="white" />
-            <Text style={styles.utilityText}>Thông báo</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.utility}>
-            <Icon source="message-outline" size={28} color="white" />
-            <Text style={styles.utilityText}>Tin nhắn</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.utility}>
-            <Icon source="account-group" size={28} color="white" />
-            <Text style={styles.utilityText}>Lớp học</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.utility}>
-            <Icon source="plus" size={28} color="white" />
-            <Text style={styles.utilityText}>Đăng ký lớp</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.utilityClick}>
-            <Icon source="calendar" size={28} color="#C02135" />
-            <Text style={styles.utilityTextClick}>Lịch</Text>
-          </TouchableOpacity>
-        </View>
+
         <Portal>
           <Modal
             visible={visible}
@@ -200,6 +179,7 @@ const styles = StyleSheet.create({
     padding: 20,
     height: 240,
     display: 'flex',
+    zIndex: 1000,
     flexDirection: 'column',
     justifyContent: 'space-between',
   },
