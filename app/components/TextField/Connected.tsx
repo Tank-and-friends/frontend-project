@@ -36,7 +36,6 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     gap: 8,
-    backgroundColor: 'red',
     alignItems: 'center',
     flexDirection: 'row'
   },
@@ -47,19 +46,16 @@ const styles = StyleSheet.create({
     borderRadius: 0,
   },
   primarySegment: {
-    backgroundColor: 'black',
     flex: 1
   },
   firstSegment: {
     borderTopLeftRadius: 6,
     borderBottomLeftRadius: 6,
     minWidth: 10,
-    backgroundColor: 'orange'
   },
   lastSegment: {
     borderTopRightRadius: 6,
     borderBottomRightRadius: 6,
     minWidth: 10,
-    backgroundColor: 'orange'
   },
 });
