@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  ColorValue,
   NativeSyntheticEvent,
   TextInput as NativeTextInput,
   StyleSheet,
@@ -73,6 +74,8 @@ export type TextInputProps = {
   autoFocus?: boolean;
   /** Placeholder trong input của TextField */
   placeholder?: string;
+  /** Màu của placeholder trong input */
+  placeholderTextColor?: ColorValue;
   /**
    * Cho phép hoàn thành tự động bởi trình duyệt của TextField
    * @default "off"
@@ -129,6 +132,7 @@ export const TextField = ({
   readOnly,
   autoFocus,
   placeholder,
+  placeholderTextColor = '#a3a8af',
   autoComplete = 'off',
   maxLength,
   minLength,
@@ -235,6 +239,7 @@ export const TextField = ({
     readOnly,
     autoFocus,
     placeholder,
+    placeholderTextColor,
     autoComplete,
     ref: textInputRef,
     minLength,
@@ -255,8 +260,17 @@ export const TextField = ({
 
   const input = (
     <TextInput
-      style={{flex: 1, ...(prefix && {paddingLeft: 30})}}
+      style={{
+        flex: 1,
+        ...(prefix && {paddingLeft: 30}),
+        ...(!!multiline && {paddingVertical: 10}),
+      }}
+      outlineStyle={{
+        borderRadius: 10,
+        borderColor: '#d3d5d7'
+      }}
       mode="outlined"
+      multiline={!!multiline}
       {...argsInput}
       {...rest}
     />
@@ -270,7 +284,9 @@ export const TextField = ({
   ) : null;
 
   const prefixMarkup = prefix ? (
-    <View style={{position: 'absolute', left: 15}}>{prefix}</View>
+    <View style={{position: 'absolute', left: 20, alignItems: 'center'}}>
+      {prefix}
+    </View>
   ) : null;
 
   const suffixMarkup = suffix ? (
