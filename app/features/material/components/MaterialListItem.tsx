@@ -1,12 +1,8 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {PropsWithChildren} from 'react';
 import {View, StyleSheet, Image, GestureResponderEvent} from 'react-native';
-import {Icon, IconButton, Text} from 'react-native-paper';
-import {
-  GestureHandlerRootView,
-  Pressable,
-  TouchableOpacity,
-} from 'react-native-gesture-handler';
+import {IconButton, Text} from 'react-native-paper';
+import {Pressable} from 'react-native-gesture-handler';
 import excel from '../../../assets/images/excel.png';
 import img from '../../../assets/images/img.png';
 import pdf from '../../../assets/images/pdf.png';
@@ -37,33 +33,31 @@ const MaterialListItem = ({item}: Props) => {
     }
   };
   return (
-    <GestureHandlerRootView>
-      <Pressable>
-        <View style={styles.itemContainer}>
-          {fileSymbol(item.type)}
-          <Pressable
-            style={styles.textContentContainer}
-            onPress={() => {
-              navigation.navigate('DetailMaterial');
-            }}>
-            <View>
-              <Text style={{fontWeight: 'bold', fontSize: 14}}>
-                {item.name}.{item.type}
-              </Text>
-              <Text style={{fontSize: 10, marginTop: 3, color: '#b6b6b6'}}>
-                Người sửa đối: {item.lastestModified}
-              </Text>
-            </View>
-          </Pressable>
-          <IconButton
-            icon="dots-vertical"
-            style={{margin: 0}}
-            size={20}
-            onPress={item.showModal}
-          />
-        </View>
-      </Pressable>
-    </GestureHandlerRootView>
+    <Pressable>
+      <View style={styles.itemContainer}>
+        {fileSymbol(item.type)}
+        <Pressable
+          style={styles.textContentContainer}
+          onPress={() => {
+            navigation.navigate('DetailMaterial');
+          }}>
+          <View>
+            <Text style={{fontWeight: 'bold', fontSize: 14}}>
+              {item.name}.{item.type}
+            </Text>
+            <Text style={{fontSize: 10, marginTop: 3, color: '#b6b6b6'}}>
+              Người sửa đối: {item.lastestModified}
+            </Text>
+          </View>
+        </Pressable>
+        <IconButton
+          icon="dots-vertical"
+          style={{margin: 0}}
+          size={20}
+          onPress={item.showModal}
+        />
+      </View>
+    </Pressable>
   );
 };
 

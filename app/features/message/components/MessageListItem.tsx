@@ -2,13 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import React, {PropsWithChildren} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Text} from 'react-native-paper';
-import MessageDetail from '../MessageDetail';
-import {
-  GestureHandlerRootView,
-  Pressable,
-  TouchableOpacity,
-} from 'react-native-gesture-handler';
-import NewMessageScreen from '../NewMessageScreen';
+import {Pressable} from 'react-native-gesture-handler';
 
 type SectionProps = PropsWithChildren<{
   item: {
@@ -21,27 +15,25 @@ type SectionProps = PropsWithChildren<{
 const MessageListItem = ({item}: SectionProps) => {
   const navigation = useNavigation();
   return (
-    <GestureHandlerRootView>
-      <Pressable
-        onPress={() => {
-          navigation.navigate('MessageDetail', {
-            newMessage: item.time == undefined,
-          });
-        }}>
-        <View style={styles.itemContainer}>
-          <View style={styles.avatarImage} />
-          <View style={styles.textContentContainer}>
-            <Text style={{fontWeight: 'bold', fontSize: 14}}>{item.name}</Text>
-            {item.lastestMessage && (
-              <Text style={{fontSize: 10, marginTop: 3}}>
-                {item.lastestMessage}
-              </Text>
-            )}
-          </View>
-          <Text style={styles.time}>{item.time}</Text>
+    <Pressable
+      onPress={() => {
+        navigation.navigate('MessageDetail', {
+          newMessage: item.time == undefined,
+        });
+      }}>
+      <View style={styles.itemContainer}>
+        <View style={styles.avatarImage} />
+        <View style={styles.textContentContainer}>
+          <Text style={{fontWeight: 'bold', fontSize: 14}}>{item.name}</Text>
+          {item.lastestMessage && (
+            <Text style={{fontSize: 10, marginTop: 3}}>
+              {item.lastestMessage}
+            </Text>
+          )}
         </View>
-      </Pressable>
-    </GestureHandlerRootView>
+        <Text style={styles.time}>{item.time}</Text>
+      </View>
+    </Pressable>
   );
 };
 

@@ -38,6 +38,7 @@ import ListMaterial from './features/material/ListMaterial';
 import DetailMaterial from './features/material/DetailMaterial';
 import {UniqueIdProvider} from './utils/uniqueId';
 import BottomNavBar from './components/BottomNavBar/BottomNavBar';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const Tab = createBottomTabNavigator();
 
@@ -68,49 +69,51 @@ const DummyScreen = () => (
 // App Component
 const App = () => {
   return (
-    <UniqueIdProvider>
-      <SafeAreaProvider>
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen
-              name="Home"
-              component={TabNavigation}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="MessageScreen"
-              component={MessageScreen}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="MessageDetail"
-              component={MessageDetail}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="FriendPersonalInfo"
-              component={FriendPersonalInfo}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="NewMessageScreen"
-              component={NewMessageScreen}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="ListMaterial"
-              component={ListMaterial}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="DetailMaterial"
-              component={DetailMaterial}
-              options={{headerShown: false}}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </SafeAreaProvider>
-    </UniqueIdProvider>
+    <SafeAreaProvider>
+      <UniqueIdProvider>
+        <GestureHandlerRootView>
+          <NavigationContainer>
+            <Stack.Navigator>
+              <Stack.Screen
+                name="Home"
+                component={TabNavigation}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="MessageScreen"
+                component={MessageScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="MessageDetail"
+                component={MessageDetail}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="FriendPersonalInfo"
+                component={FriendPersonalInfo}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="NewMessageScreen"
+                component={NewMessageScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="ListMaterial"
+                component={ListMaterial}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="DetailMaterial"
+                component={DetailMaterial}
+                options={{headerShown: false}}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </GestureHandlerRootView>
+      </UniqueIdProvider>
+    </SafeAreaProvider>
   );
 };
 
