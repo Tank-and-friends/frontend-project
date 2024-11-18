@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     alignContent: 'center',
-    gap: 0
+    gap: 0,
   },
   inputContainer: {
     flexDirection: 'row',

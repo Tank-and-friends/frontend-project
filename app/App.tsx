@@ -57,7 +57,7 @@ function App(): React.JSX.Element {
             // connectedLeft={<IonIcons name="close-circle" size={20} color="#000" />}
             // connectedRight={<IonIcons name="close-circle" size={20} color="#000" />}
             // error={textError}
-            // prefix={<IonIcons name="close-circle" size={30} color="#000" />}
+            prefix={<IonIcons name="search" size={25} color="#000" />}
             // suffix={<IonIcons name="close-circle" size={30} color="#000" />}
             clearButton={true}
             requiredIndicator={true}
