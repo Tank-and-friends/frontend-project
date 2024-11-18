@@ -5,18 +5,18 @@
  * @format
  */
 
+import React,{ PropsWithChildren, useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
-import React from 'react';
-import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
   ScrollView,
   StatusBar,
-  StyleSheet,
-  Text,
   useColorScheme,
+  TextInput as NativeTextInput,
   View,
+  Text,
+  StyleSheet,
 } from 'react-native';
 
 import {
@@ -62,11 +62,14 @@ function Section({children, title}: SectionProps): React.JSX.Element {
 const Tab = createBottomTabNavigator();
 
 function App(): React.JSX.Element {
+  const [text, setText] = useState<string>('');
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    // backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: 'white',
   };
+  console.log(text);
 
   return (
     <NavigationContainer>
