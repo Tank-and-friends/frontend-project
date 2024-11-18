@@ -1,19 +1,17 @@
 import React from 'react';
 import {
-  View,
-  TextInput as NativeTextInput,
   NativeSyntheticEvent,
-  TextInputFocusEventData,
-  TextInputKeyPressEventData,
+  TextInput as NativeTextInput,
   StyleSheet,
   Text,
+  TextInputFocusEventData,
+  TextInputKeyPressEventData,
+  View,
 } from 'react-native';
 import {HelperText, TextInput} from 'react-native-paper';
 import {Action} from '../../types';
 import {useUniqueId} from '../../utils/uniqueId';
 import {Connected} from './Connected';
-
-import IonIcons from 'react-native-vector-icons/Ionicons';
 
 export type TextInputProps = {
   /** id của form input */
@@ -40,7 +38,7 @@ export type TextInputProps = {
   /** Buộc focus vào input của TextField */
   focused?: boolean;
   /** Nội dung custom label */
-  customLabel?: React.ReactNode|string;
+  customLabel?: React.ReactNode | string;
   /** Hành động của custom label */
   labelAction?: Action;
   /** Thông tin mô tả form input */
@@ -255,7 +253,14 @@ export const TextField = ({
     onKeyPress: handleKeyPress,
   };
 
-  const input = <TextInput style={{flex:1, ...(prefix && {paddingLeft: 30})}} mode="outlined" {...argsInput} {...rest} />;
+  const input = (
+    <TextInput
+      style={{flex: 1, ...(prefix && {paddingLeft: 30})}}
+      mode="outlined"
+      {...argsInput}
+      {...rest}
+    />
+  );
 
   const characterCount = normalizedValue?.length ?? 0;
   const characterCountMarkup = showCharacterCount ? (
@@ -264,19 +269,32 @@ export const TextField = ({
     </View>
   ) : null;
 
-  const prefixMarkup = prefix ? <View style={{position: 'absolute', left: 15}}>{prefix}</View> : null;
+  const prefixMarkup = prefix ? (
+    <View style={{position: 'absolute', left: 15}}>{prefix}</View>
+  ) : null;
 
-  const suffixMarkup = suffix ? <View style={{position: 'absolute', right: 15}}>{suffix}</View> : null;
+  const suffixMarkup = suffix ? (
+    <View style={{position: 'absolute', right: 15}}>{suffix}</View>
+  ) : null;
 
   const customlabelMarkup = customLabel ? (
     <View style={{flexDirection: 'row', paddingLeft: 20, paddingVertical: 8}}>
-      <Text style={{color: 'black', fontWeight: '500', fontSize: 16}}>{customLabel}</Text>
-      {requiredIndicator && <Text style={{color: '#EE4747', fontWeight: '500', fontSize: 16}}> *</Text>}
+      <Text style={{color: 'black', fontWeight: '500', fontSize: 16}}>
+        {customLabel}
+      </Text>
+      {requiredIndicator && (
+        <Text style={{color: '#EE4747', fontWeight: '500', fontSize: 16}}>
+          {' '}
+          *
+        </Text>
+      )}
     </View>
   ) : null;
 
   const helpTextMarkup = helpText ? (
-    <HelperText type="info" visible style={{paddingLeft: 20, paddingBottom: 8}}>{helpText}</HelperText>
+    <HelperText type="info" visible style={{paddingLeft: 20, paddingBottom: 8}}>
+      {helpText}
+    </HelperText>
   ) : null;
 
   return (
@@ -287,15 +305,16 @@ export const TextField = ({
         right={connectedRight}
         segmented={connectedSegmented}
         children={
-          <View style={[styles.borderless, styles.inputContainer]}>
+          <View
+            style={[styles.inputContainer, borderless && styles.borderless]}>
             {input}
             {prefixMarkup}
             {suffixMarkup}
             {clearButtonMarkup}
             {characterCountMarkup}
-        </View>
-        }>
-      </Connected>
+          </View>
+        }
+      />
       {helpTextMarkup}
     </View>
   );
@@ -306,20 +325,18 @@ const styles = StyleSheet.create({
     borderWidth: 0,
   },
   container: {
-    display: 'flex',
     flexDirection: 'column',
-    alignContent: 'center',
-    gap: 0,
+    justifyContent: 'space-between',
+    position: 'relative',
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 4,
-    flex: 1
   },
   clearButton: {
-    left: 350
-  }
+    left: 350,
+  },
 });
 
 function getRows(multiline?: boolean | number) {

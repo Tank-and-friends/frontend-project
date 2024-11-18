@@ -1,14 +1,12 @@
-import { IconSource } from './icon';
+import React from 'react';
 
 export interface Action {
   /** id của action */
   id?: string;
   /** url của action */
   url?: string;
-  /** Buộc mở link trong tab mới */
-  external?: boolean;
   /** Action icon */
-  icon?: IconSource;
+  icon?: React.ReactNode;
   /** Nội dung của action */
   content?: string;
   /** Callback của action */
@@ -42,7 +40,7 @@ export interface ActionListItemDescriptor
   /** Dòng mô tả của hành động */
   helpText?: React.ReactNode;
   /** Icon của hành động */
-  icon?: IconSource;
+  icon?: React.ReactNode;
   /** Phần từ đứng trước tên hành động */
   prefix?: React.ReactNode;
   /** Phần từ đứng sau tên hành động */
@@ -51,8 +49,6 @@ export interface ActionListItemDescriptor
   ellipsis?: boolean;
   /** Hành động đang active */
   active?: boolean;
-  /** role của hành động */
-  role?: string;
   /** truncate nội dung */
   truncate?: boolean;
 }
