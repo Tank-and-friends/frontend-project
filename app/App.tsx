@@ -75,12 +75,14 @@ const App = () => {
       <UniqueIdProvider>
         <GestureHandlerRootView>
           <NavigationContainer>
+            {/* tab navigation */}
             <Stack.Navigator>
               <Stack.Screen
                 name="Home"
                 component={TabNavigation}
                 options={{headerShown: false}}
               />
+              {/* message navigation */}
               <Stack.Screen
                 name="MessageScreen"
                 component={MessageScreen}
@@ -101,6 +103,7 @@ const App = () => {
                 component={NewMessageScreen}
                 options={{headerShown: false}}
               />
+              {/* material navigation */}
               <Stack.Screen
                 name="ListMaterial"
                 component={ListMaterial}
@@ -112,6 +115,7 @@ const App = () => {
                 options={{headerShown: false}}
               />
             </Stack.Navigator>
+
             <UserInfoNavigator />
             <AuthNavigator />
           </NavigationContainer>
