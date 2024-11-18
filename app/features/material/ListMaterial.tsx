@@ -8,6 +8,7 @@ import {
   Text,
   GestureResponderEvent,
   TouchableOpacity,
+  ImageBackground,
 } from 'react-native';
 import {
   Button,
@@ -24,6 +25,7 @@ import {TextField} from '../../components/TextField/TextField';
 import RenamePopup from './components/RenamePopup';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import BackgroundImage from '../../assets/images/MaterialBackground.png';
+import TopComponent from '../../components/TopComponent/TopComponent';
 type Props = PropsWithChildren<{}>;
 
 const ListMaterial = ({}: Props) => {
@@ -73,81 +75,79 @@ const ListMaterial = ({}: Props) => {
   return (
     <PaperProvider>
       <View style={{flex: 1}}>
-        <Image
+        <ImageBackground
           source={BackgroundImage}
           style={styles.backgroundImage}
-          resizeMode="stretch"
-        />
-        <TextInput
-          placeholder="Bạn muốn tìm gì..."
-          left={<TextInput.Icon icon={'menu'} />}
-          right={
-            <TextInput.Icon icon={() => <IonIcons name="search" size={20} />} />
-          }
-        />
-        <FlatList
-          data={DATA}
-          style={styles.listMessage}
-          renderItem={({item}) => <MaterialListItem item={item} />}
-          keyExtractor={item => item.name}
-          ItemSeparatorComponent={() => <View style={{height: 10}} />}
-        />
-        <IconButton
-          icon="plus"
-          mode="contained"
-          iconColor="white"
-          containerColor="#C02135"
-          size={30}
-          style={styles.uploadMaterialButton}
-        />
+          resizeMode="stretch">
+          <TopComponent />
+          <TextField
+            prefix={<IonIcons name="search" size={20} />}
+            placeholder="Bạn muốn tìm gì ..."
+          />
+          <FlatList
+            data={DATA}
+            style={styles.listMessage}
+            renderItem={({item}) => <MaterialListItem item={item} />}
+            keyExtractor={item => item.name}
+            ItemSeparatorComponent={() => <View style={{height: 10}} />}
+          />
+          <IconButton
+            icon="plus"
+            mode="contained"
+            iconColor="white"
+            containerColor="#C02135"
+            size={30}
+            style={styles.uploadMaterialButton}
+          />
 
-        <Portal>
-          <Modal
-            visible={visible}
-            onDismiss={hideModal}
-            contentContainerStyle={styles.moreModal}>
-            <Button
-              style={styles.optionsModalButton}
-              icon="open-in-new"
-              mode="text"
-              textColor="black"
-              contentStyle={{justifyContent: 'flex-start'}}
-              onPress={() => {
-                hideModal();
-                navigation.navigate('DetailMaterial');
-              }}>
-              Mở
-            </Button>
-            <Button
-              style={styles.optionsModalButton}
-              icon="download"
-              mode="text"
-              textColor="black"
-              contentStyle={{justifyContent: 'flex-start'}}
-              onPress={() => console.log('Pressed')}>
-              Lưu về máy
-            </Button>
-            <Button
-              icon="form-textarea"
-              style={styles.optionsModalButton}
-              mode="text"
-              textColor="black"
-              contentStyle={{justifyContent: 'flex-start'}}
-              onPress={showRenameModal}>
-              Đổi tên
-            </Button>
-            <Button
-              icon="trash-can-outline"
-              style={styles.optionsModalButton}
-              mode="text"
-              textColor="black"
-              contentStyle={{justifyContent: 'flex-start'}}
-              onPress={() => console.log('Pressed')}>
-              Xóa
-            </Button>
-          </Modal>
-          <RenamePopup isVisible={rename} hideModal={hideRenameModal} />
-        </Portal>
+          <Portal>
+            <Modal
+              visible={visible}
+              onDismiss={hideModal}
+              contentContainerStyle={styles.moreModal}>
+              <Button
+                style={styles.optionsModalButton}
+                icon="open-in-new"
+                mode="text"
+                textColor="black"
+                contentStyle={{justifyContent: 'flex-start'}}
+                onPress={() => {
+                  hideModal();
+                  navigation.navigate('DetailMaterial');
+                }}>
+                Mở
+              </Button>
+              <Button
+                style={styles.optionsModalButton}
+                icon="download"
+                mode="text"
+                textColor="black"
+                contentStyle={{justifyContent: 'flex-start'}}
+                onPress={() => console.log('Pressed')}>
+                Lưu về máy
+              </Button>
+              <Button
+                icon="form-textarea"
+                style={styles.optionsModalButton}
+                mode="text"
+                textColor="black"
+                contentStyle={{justifyContent: 'flex-start'}}
+                onPress={showRenameModal}>
+                Đổi tên
+              </Button>
+              <Button
+                icon="trash-can-outline"
+                style={styles.optionsModalButton}
+                mode="text"
+                textColor="black"
+                contentStyle={{justifyContent: 'flex-start'}}
+                onPress={() => console.log('Pressed')}>
+                Xóa
+              </Button>
+            </Modal>
+            <RenamePopup isVisible={rename} hideModal={hideRenameModal} />
+          </Portal>
+        </ImageBackground>
       </View>
     </PaperProvider>
   );
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   },
   uploadMaterialButton: {
     position: 'absolute',
-    bottom: 200,
+    bottom: 150,
     right: 20,
   },
   moreModal: {

@@ -12,6 +12,9 @@ import MessageListItem from './components/MessageListItem';
 import NoteImage from '../../assets/images/pensquare.png';
 import Background from '../../assets/images/MessageBackground.png';
 import {useNavigation} from '@react-navigation/native';
+import TopComponent from '../../components/TopComponent/TopComponent';
+import {TextField} from '../../components/TextField/TextField';
+import IonIcons from 'react-native-vector-icons/Ionicons';
 type SectionProps = PropsWithChildren<{}>;
 
 const DATA = [
@@ -45,11 +48,12 @@ const MessageScreen = ({}: SectionProps) => {
         source={Background}
         style={styles.backgroundImage}
         resizeMode="cover">
-        <TextInput
-          placeholder="Bạn muốn tìm gì..."
-          left={<TextInput.Icon icon={'menu'} />}
-          right={<TextInput.Icon icon={'search-web'} />}
+        <TopComponent />
+        <TextField
+          prefix={<IonIcons name="search" size={20} />}
+          placeholder="Bạn muốn tìm gì ..."
         />
+
         <FlatList
           data={DATA}
           style={styles.listMessage}
@@ -89,8 +93,8 @@ const styles = StyleSheet.create({
   },
   newMessageButton: {
     position: 'absolute',
-    top: 570,
-    left: 280,
+    bottom: 150,
+    right: 20,
   },
 });
 
