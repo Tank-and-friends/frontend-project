@@ -61,6 +61,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     elevation: 10,
     position: 'absolute',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 0},
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
   },
   bottomBarOption: {
     width: '20%',

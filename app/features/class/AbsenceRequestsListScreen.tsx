@@ -9,8 +9,8 @@ type ParamsList = {
   ClassFeatures: {
     screen: string;
     params: {
-      screen: string,
-    }
+      screen: string;
+    };
   };
 };
 
@@ -21,7 +21,7 @@ export const AbsenceRequestsListScreen = () => {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={require('../../assets/images/background.png')}
+        source={require('../../assets/images/Background.png')}
         style={styles.backgroundImage}
         resizeMode="cover">
         <Appbar.Header mode="small" style={styles.header}>

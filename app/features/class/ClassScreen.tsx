@@ -1,14 +1,35 @@
+import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {FlatList, ScrollView, StyleSheet, View, Image} from 'react-native';
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  View,
+  Image,
+  ImageBackground,
+} from 'react-native';
+import {Button} from 'react-native-paper';
 
 const ClassScreen = () => {
+  const navigation = useNavigation();
   return (
     <View style={{flex: 1}}>
-      <Image
+      <ImageBackground
         source={require('../../assets/images/Background.png')}
         style={styles.backgroundImage}
-        resizeMode="stretch"
-      />
+        resizeMode="stretch">
+        <Button
+          mode="contained"
+          onPress={() => navigation.navigate('AssignmentScreen')}>
+          Bài tập
+        </Button>
+        <Button
+          mode="contained"
+          onPress={() => navigation.navigate('ListMaterial')}>
+          Tài liệu
+        </Button>
+        <Button mode="contained">Điểm danh</Button>
+      </ImageBackground>
     </View>
   );
 };

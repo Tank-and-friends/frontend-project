@@ -9,9 +9,10 @@ import {
 } from 'react-native';
 import StatusButtonGroup from './components/StatusButtonGroup';
 import Assignment from './components/Assignment';
-
+import {TextField} from '../../components/TextField/TextField';
+import IonIcons from 'react-native-vector-icons/Ionicons';
+import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
 const AssignmentScreen = () => {
-
   const assignments = [
     {
       date: '28 tháng 10',
@@ -133,43 +134,33 @@ const AssignmentScreen = () => {
       style={styles.backgroundImage}
       resizeMode="cover">
       <View style={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Text>Hello các bạn</Text>
+        <TopNavWithoutAvatar title="Bài tập" />
+        <TextField
+          prefix={<IonIcons name="search" size={20} />}
+          placeholder="Bạn muốn tìm gì ..."
+        />
+
+        <View style={styles.statusGroup}>
+          <StatusButtonGroup />
         </View>
-
-        {/* Body */}
-
-        <View style={styles.body}>
-          <TextInput
-            placeholder="Bạn muốn tìm gì..."
-            left={<TextInput.Icon icon={'menu'} />}
-            right={<TextInput.Icon icon={'search-web'} />}
-            style={styles.textInput}
-          />
-
-          <View style={styles.statusGroup}>
-            <StatusButtonGroup />
-          </View>
-          <View style={styles.listAssgnment}>
-            <ScrollView contentContainerStyle={{}}>
-              {assignments.map((item, index) => (
-                <Pressable key={index}>
-                  <Assignment
-                    key={index}
-                    date={item.date}
-                    day={item.day}
-                    tasks={item.tasks}
-                  />
-                </Pressable>
-              ))}
-            </ScrollView>
-          </View>
+        <View style={styles.listAssgnment}>
+          <ScrollView contentContainerStyle={{}}>
+            {assignments.map((item, index) => (
+              <Pressable key={index}>
+                <Assignment
+                  key={index}
+                  date={item.date}
+                  day={item.day}
+                  tasks={item.tasks}
+                />
+              </Pressable>
+            ))}
+          </ScrollView>
         </View>
-        {/* Footer */}
-        {/* <View>
-        </View> */}
       </View>
+      {/* Footer */}
+      {/* <View>
+        </View> */}
     </ImageBackground>
   );
 };
@@ -177,8 +168,6 @@ const AssignmentScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // borderWidth: 1,
-    // borderColor: "blue",
   },
   backgroundImage: {
     justifyContent: 'center', // Căn giữa nội dung theo chiều dọc

@@ -48,7 +48,7 @@ const MessageScreen = ({}: SectionProps) => {
         source={Background}
         style={styles.backgroundImage}
         resizeMode="cover">
-        <TopComponent />
+        <TopComponent title="Tin nhắn" />
         <TextField
           prefix={<IonIcons name="search" size={20} />}
           placeholder="Bạn muốn tìm gì ..."

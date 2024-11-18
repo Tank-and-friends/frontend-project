@@ -1,8 +1,19 @@
 import React, {PropsWithChildren} from 'react';
-import {FlatList, ScrollView, StyleSheet, View, Image} from 'react-native';
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  View,
+  Image,
+  ImageBackground,
+} from 'react-native';
 import {Appbar, Button, IconButton, TextInput} from 'react-native-paper';
 import MessageListItem from './components/MessageListItem';
 import NoteImage from '../../assets/images/pensquare.png';
+import {TextField} from '../../components/TextField/TextField';
+import IonIcons from 'react-native-vector-icons/Ionicons';
+import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
+
 type SectionProps = PropsWithChildren<{}>;
 
 const DATA = [
@@ -23,27 +34,24 @@ const DATA = [
 const NewMessageScreen = ({}: SectionProps) => {
   return (
     <View style={{flex: 1}}>
-      <Appbar.Header>
-        <Appbar.BackAction onPress={() => {}} />
-        <Appbar.Content title="Tin nhắn mới" />
-      </Appbar.Header>
-      <Image
+      <ImageBackground
         source={require('../../assets/images/MessageBackground.png')}
         style={styles.backgroundImage}
-        resizeMode="stretch"
-      />
-      <TextInput
-        placeholder="Bạn muốn tìm gì..."
-        left={<TextInput.Icon icon={'menu'} />}
-        right={<TextInput.Icon icon={'search-web'} />}
-      />
-      <FlatList
-        data={DATA}
-        style={styles.listMessage}
-        renderItem={({item}) => <MessageListItem item={item} />}
-        keyExtractor={item => item.name}
-        ItemSeparatorComponent={() => <View style={{height: 10}} />}
-      />
+        resizeMode="cover">
+        <TopNavWithoutAvatar title="Tin nhắn mới" />
+
+        <TextField
+          prefix={<IonIcons name="search" size={20} />}
+          placeholder="Bạn muốn tìm gì ..."
+        />
+        <FlatList
+          data={DATA}
+          style={styles.listMessage}
+          renderItem={({item}) => <MessageListItem item={item} />}
+          keyExtractor={item => item.name}
+          ItemSeparatorComponent={() => <View style={{height: 10}} />}
+        />
+      </ImageBackground>
     </View>
   );
 };

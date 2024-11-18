@@ -26,6 +26,7 @@ import RenamePopup from './components/RenamePopup';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import BackgroundImage from '../../assets/images/MaterialBackground.png';
 import TopComponent from '../../components/TopComponent/TopComponent';
+import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
 type Props = PropsWithChildren<{}>;
 
 const ListMaterial = ({}: Props) => {
@@ -79,7 +80,7 @@ const ListMaterial = ({}: Props) => {
           source={BackgroundImage}
           style={styles.backgroundImage}
           resizeMode="stretch">
-          <TopComponent />
+          <TopNavWithoutAvatar title="Tài liệu" />
           <TextField
             prefix={<IonIcons name="search" size={20} />}
             placeholder="Bạn muốn tìm gì ..."

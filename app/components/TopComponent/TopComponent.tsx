@@ -1,9 +1,13 @@
 import {View, Image, StyleSheet} from 'react-native';
-import {IconButton, Text, } from 'react-native-paper';
+import {IconButton, Text} from 'react-native-paper';
 import avatar from '../../assets/images/bachmahoangtu.jpg';
-import React from 'react';
+import React, {PropsWithChildren} from 'react';
 
-export default function TopComponent() {
+type Props = PropsWithChildren<{
+  title: string;
+}>;
+
+export default function TopComponent({title}: Props) {
   return (
     <View style={{width: '100%'}}>
       <View style={styles.topContainer}>
@@ -15,7 +19,7 @@ export default function TopComponent() {
             fontSize: 24,
             fontFamily: 'Inter',
           }}>
-          Đăng ký lớp
+          {title}
         </Text>
         <IconButton
           icon="cog-outline"

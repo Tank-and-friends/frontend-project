@@ -31,6 +31,7 @@ import NotificationScreen from './features/notification/NotificationScreen';
 import ClassRegisterScreen from './features/classRegister/ClassRegisterScreen';
 import ClassScreen from './features/class/ClassScreen';
 import {RootStacks} from './navigation';
+import {AbsenceRequestsListScreen} from './features/class/AbsenceRequestsListScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -46,7 +47,7 @@ const TabNavigation = () => {
       <Tab.Screen name="Messages" component={MessageScreen} />
       <Tab.Screen name="Classes" component={ClassScreen} />
       <Tab.Screen name="Register" component={ClassRegisterScreen} />
-      <Tab.Screen name="Calendar" component={DummyScreen} />
+      <Tab.Screen name="Calendar" component={AbsenceRequestsListScreen} />
     </Tab.Navigator>
   );
 };
@@ -85,8 +86,8 @@ function App(): React.JSX.Element {
       <UniqueIdProvider>
         <GestureHandlerRootView>
           <NavigationContainer>
-            {/* tab navigation */}
             <Stack.Navigator>
+              {/* tab navigation */}
               <Stack.Screen
                 name="Home"
                 component={TabNavigation}
@@ -124,12 +125,29 @@ function App(): React.JSX.Element {
                 component={DetailMaterial}
                 options={{headerShown: false}}
               />
+              <AssignmentStack.Screen
+                name="NotificationScreen"
+                component={NotificationScreen}
+              />
+              <AssignmentStack.Screen
+                name="CreateAssignmentScreen"
+                component={CreateAssignmentScreen}
+              />
+              <AssignmentStack.Screen
+                name="AssignmentScreen"
+                component={AssignmentScreen}
+                options={{headerShown: false}}
+              />
+              <AssignmentStack.Screen
+                name="TaskDetailScreen"
+                component={TaskDetailScreen}
+                options={({route}) => ({title: route.params.title})}
+              />
             </Stack.Navigator>
-
-            <UserInfoNavigator />
-            <AuthNavigator />
+            {/* <UserInfoNavigator /> */}
+            {/* <AuthNavigator /> */}
             {/* assignment and notification navigator */}
-            <AssignmentStack.Navigator>
+            {/* <AssignmentStack.Navigator>
               <AssignmentStack.Screen
                 name="NotificationScreen"
                 component={NotificationScreen}
@@ -148,9 +166,13 @@ function App(): React.JSX.Element {
                 component={TaskDetailScreen}
                 options={({route}) => ({title: route.params.title})}
               />
-            </AssignmentStack.Navigator>
+            </AssignmentStack.Navigator> */}
             {/* absense-form navigation */}
-            <RootStacks />
+            <Stack.Screen
+              name="RootStacks"
+              component={RootStacks}
+              options={{headerShown: false}}
+            />
           </NavigationContainer>
         </GestureHandlerRootView>
       </UniqueIdProvider>

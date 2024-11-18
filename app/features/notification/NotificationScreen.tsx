@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  ImageBackground,
   ScrollView,
   StyleSheet,
   Text,
@@ -8,7 +9,9 @@ import {
 } from 'react-native';
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import TaskNotification from './components/TaskNotification';
-
+import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
+import TopComponent from '../../components/TopComponent/TopComponent';
+import background from '../../assets/images/Background.png';
 const NotificationScreen = () => {
   const notifications = [
     {
@@ -23,43 +26,47 @@ const NotificationScreen = () => {
   // const [unRead, setUnRead] = useState(false);
   // const textColor = unRead ? '#B6B6B6' : '#020202';
   return (
-    <View style={styles.container}>
-      {/* Content */}
-      <ScrollView style={styles.contentContainer}>
-        {notifications.map((item, index) => (
-          <TaskNotification
-            key={index}
-            subject={item.subject}
-            time={item.time}
-            notificationName={item.notificationName}
-            notificationText={item.notificationText}
-            onMarkRead={item.onMarkRead}
-          />
-        ))}
-      </ScrollView>
-      {/* Footer */}
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerButton}>
-          <Icon3 name="pencil-outline" size={25} color="white" />
-          <Text>Đánh dấu đã đọc</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <Icon3 name="trash-can-outline" size={25} color="white" />
-          <Text>Xóa</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <Icon3 name="dots-horizontal" size={25} color="white" />
-          <Text>Xem thêm</Text>
-        </TouchableOpacity>
+    <ImageBackground
+      source={background}
+      style={styles.backgroundImage}
+      resizeMode="cover">
+      <View style={styles.container}>
+        <TopComponent title="Thông báo" />
+        <ScrollView style={styles.contentContainer}>
+          {notifications.map((item, index) => (
+            <TaskNotification
+              key={index}
+              subject={item.subject}
+              time={item.time}
+              notificationName={item.notificationName}
+              notificationText={item.notificationText}
+              onMarkRead={item.onMarkRead}
+            />
+          ))}
+        </ScrollView>
+        {/* Footer */}
+        <View style={styles.footer}>
+          <TouchableOpacity style={styles.footerButton}>
+            <Icon3 name="pencil-outline" size={25} color="white" />
+            <Text>Đánh dấu đã đọc</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.footerButton}>
+            <Icon3 name="trash-can-outline" size={25} color="white" />
+            <Text>Xóa</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.footerButton}>
+            <Icon3 name="dots-horizontal" size={25} color="white" />
+            <Text>Xem thêm</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ccc',
   },
   title: {
     flexDirection: 'row',
@@ -178,6 +185,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 0,
     /* Footer button styling */
+  },
+  backgroundImage: {
+    justifyContent: 'center', // Căn giữa nội dung theo chiều dọc
+    width: '100%',
+    height: '100%',
+    position: 'relative',
   },
 });
 
