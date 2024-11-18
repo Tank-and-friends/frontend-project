@@ -28,6 +28,8 @@ import TaskDetailScreen from './features/assignment/TaskDetailScreen';
 import AssignmentScreen from './features/assignment/AssignmentScreen';
 import CreateAssignmentScreen from './features/assignment/CreateAssignmentScreen';
 import NotificationScreen from './features/notification/NotificationScreen';
+import ClassRegisterScreen from './features/classRegister/ClassRegisterScreen';
+import ClassScreen from './features/class/ClassScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -41,8 +43,8 @@ const TabNavigation = () => {
       tabBar={props => <BottomNavBar {...props} />}>
       <Tab.Screen name="Notifications" component={DummyScreen} />
       <Tab.Screen name="Messages" component={MessageScreen} />
-      <Tab.Screen name="Classes" component={DummyScreen} />
-      <Tab.Screen name="Register" component={ListMaterial} />
+      <Tab.Screen name="Classes" component={ClassScreen} />
+      <Tab.Screen name="Register" component={ClassRegisterScreen} />
       <Tab.Screen name="Calendar" component={DummyScreen} />
     </Tab.Navigator>
   );
