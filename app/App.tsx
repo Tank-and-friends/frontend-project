@@ -5,16 +5,14 @@
  * @format
  */
 
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
-import {StyleSheet, Text, useColorScheme, View} from 'react-native';
+import {useColorScheme} from 'react-native';
 
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {UniqueIdProvider} from './utils/uniqueId';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {RootStacks} from './navigation';
+import {UniqueIdProvider} from './utils/uniqueId';
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -30,21 +28,5 @@ function App(): React.JSX.Element {
     </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  scrollViewContainer: {
-    flexGrow: 1,
-    padding: 0,
-  },
-  container: {
-    flex: 1,
-    padding: 0,
-  },
-  center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default App;
