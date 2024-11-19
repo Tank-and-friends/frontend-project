@@ -28,7 +28,11 @@ const ClassScreen = () => {
           onPress={() => navigation.navigate('ListMaterial')}>
           Tài liệu
         </Button>
-        <Button mode="contained">Điểm danh</Button>
+        <Button
+          mode="contained"
+          onPress={() => navigation.navigate('AbsenseRequestListScreen')}>
+          Điểm danh
+        </Button>
       </ImageBackground>
     </View>
   );

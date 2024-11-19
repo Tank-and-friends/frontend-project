@@ -32,6 +32,15 @@ import ClassRegisterScreen from './features/classRegister/ClassRegisterScreen';
 import ClassScreen from './features/class/ClassScreen';
 import {RootStacks} from './navigation';
 import {AbsenceRequestsListScreen} from './features/class/AbsenceRequestsListScreen';
+import AccountInfoScreen from './features/userInfo/AccountInfoScreen';
+import AccountUpdateScreen from './features/userInfo/AccountUpdateScreen2';
+import PasswordChangeScreen from './features/userInfo/PasswordChangeScreen';
+import LoginScreen from './features/auth/LoginScreen';
+import PasswordScreen from './features/auth/PasswordScreen';
+import LoginAccountScreen from './features/auth/LoginAccountScreen';
+import SignupScreen from './features/auth/SignupScreen';
+import SignupCreateScreen from './features/auth/SignupCreateScreen';
+import VerifyEmailScreen from './features/auth/VerifyEmailScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -47,7 +56,7 @@ const TabNavigation = () => {
       <Tab.Screen name="Messages" component={MessageScreen} />
       <Tab.Screen name="Classes" component={ClassScreen} />
       <Tab.Screen name="Register" component={ClassRegisterScreen} />
-      <Tab.Screen name="Calendar" component={AbsenceRequestsListScreen} />
+      <Tab.Screen name="Calendar" component={LoginScreen} />
     </Tab.Navigator>
   );
 };
@@ -125,7 +134,7 @@ function App(): React.JSX.Element {
                 component={DetailMaterial}
                 options={{headerShown: false}}
               />
-              <AssignmentStack.Screen
+              {/* <AssignmentStack.Screen
                 name="NotificationScreen"
                 component={NotificationScreen}
               />
@@ -143,11 +152,54 @@ function App(): React.JSX.Element {
                 component={TaskDetailScreen}
                 options={({route}) => ({title: route.params.title})}
               />
-            </Stack.Navigator>
-            {/* <UserInfoNavigator /> */}
-            {/* <AuthNavigator /> */}
-            {/* assignment and notification navigator */}
-            {/* <AssignmentStack.Navigator>
+            </Stack.Navigator> */}
+              <Stack.Screen
+                name="AccountInfoScreen"
+                component={AccountInfoScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="AccountUpdateScreen"
+                component={AccountUpdateScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="PasswordChangeScreen"
+                component={PasswordChangeScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="LoginAccountScreen"
+                component={LoginAccountScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="LoginScreen"
+                component={LoginScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="PasswordScreen"
+                component={PasswordScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="SignupScreen"
+                component={SignupScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="SignupCreateScreen"
+                component={SignupCreateScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="VerifyEmailScreen"
+                component={VerifyEmailScreen}
+                options={{headerShown: false}}
+              />
+              {/* assignment and notification navigator */}
+              {/* <AssignmentStack.Navigator>
               <AssignmentStack.Screen
                 name="NotificationScreen"
                 component={NotificationScreen}
@@ -167,12 +219,13 @@ function App(): React.JSX.Element {
                 options={({route}) => ({title: route.params.title})}
               />
             </AssignmentStack.Navigator> */}
-            {/* absense-form navigation */}
-            <Stack.Screen
-              name="RootStacks"
-              component={RootStacks}
-              options={{headerShown: false}}
-            />
+              {/* absense-form navigation */}
+              <Stack.Screen
+                name="RootStacks"
+                component={RootStacks}
+                options={{headerShown: false}}
+              />
+            </Stack.Navigator>
           </NavigationContainer>
         </GestureHandlerRootView>
       </UniqueIdProvider>
