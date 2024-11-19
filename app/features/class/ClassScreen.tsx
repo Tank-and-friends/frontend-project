@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/core';
+import {NavigationProp, useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {
   FlatList,
@@ -10,8 +10,20 @@ import {
 } from 'react-native';
 import {Button} from 'react-native-paper';
 
+export type ParamList = {
+  ClassStacks: {
+    screen: string;
+  };
+  MaterialNavigation: {
+    screen: string;
+  };
+  AssignmentNavigation: {
+    screen: string;
+  };
+};
+
 const ClassScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<ParamList>>();
   return (
     <View style={{flex: 1}}>
       <ImageBackground
@@ -20,17 +32,29 @@ const ClassScreen = () => {
         resizeMode="stretch">
         <Button
           mode="contained"
-          onPress={() => navigation.navigate('AssignmentScreen')}>
+          onPress={() =>
+            navigation.navigate('AssignmentNavigation', {
+              screen: 'AssignmentScreen',
+            })
+          }>
           Bài tập
         </Button>
         <Button
           mode="contained"
-          onPress={() => navigation.navigate('ListMaterial')}>
+          onPress={() =>
+            navigation.navigate('MaterialNavigation', {
+              screen: 'ListMaterial',
+            })
+          }>
           Tài liệu
         </Button>
         <Button
           mode="contained"
-          onPress={() => navigation.navigate('AbsenseRequestListScreen')}>
+          onPress={() =>
+            navigation.navigate('ClassStacks', {
+              screen: 'AbsenceRequestsListScreen',
+            })
+          }>
           Điểm danh
         </Button>
       </ImageBackground>

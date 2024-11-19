@@ -8,9 +8,7 @@ type ParamList = {
   MessageScreen: undefined;
   NewMessageScreen: undefined;
   MessageDetail: {
-    params: {
-      newMessage: boolean;
-    };
+    newMessage: boolean;
   };
   FriendPersonalInfo: undefined;
 };

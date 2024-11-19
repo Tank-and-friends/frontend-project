@@ -1,7 +1,10 @@
+import {
+  NavigationProp,
+  RouteProp,
+  useNavigation,
+} from '@react-navigation/native';
 import React, {PropsWithChildren, useRef, useState} from 'react';
 import {
-  Dimensions,
-  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -10,15 +13,13 @@ import {
   View,
 } from 'react-native';
 import {Button, Icon, IconButton, TextInput} from 'react-native-paper';
-import TopNavBar from './components/TopNavBar';
-import MessageContent from './components/MessageContent';
 import DeletedMessage from './components/DeletedMessage';
-import MessageTime from './components/MessageTime';
-import ImageMessage from './components/ImageMessage';
-import blockImage from '../../assets/images/ooui_block.png';
 import EmptyBodyMessage from './components/EmptyBodyMessage';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-type Props = PropsWithChildren<{newMessage: boolean}>;
+import ImageMessage from './components/ImageMessage';
+import MessageContent from './components/MessageContent';
+import MessageTime from './components/MessageTime';
+import TopNavBar from './components/TopNavBar';
+type Props = PropsWithChildren<{route: RouteProp<RouteProps>}>;
 
 type ParamList = {
   MessageNavigation: {
@@ -26,7 +27,13 @@ type ParamList = {
   };
 };
 
-const MessageDetail = ({newMessage}: Props) => {
+type RouteProps = {
+  MessageDetail: {
+    newMessage: boolean;
+  };
+};
+
+const MessageDetail = ({route}: Props) => {
   const [isBlock, setIsBlock] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isTextFocus, setIsTextFocus] = useState(false);
@@ -34,7 +41,7 @@ const MessageDetail = ({newMessage}: Props) => {
   const [selectedMessage, setSelectedMessage] = useState(null);
   const navigation = useNavigation<NavigationProp<ParamList>>();
   const scrollView = useRef<ScrollView | null>();
-
+  const {newMessage} = route.params;
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
   };

@@ -1,10 +1,13 @@
-import React, { useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../../App';
+import React, {useRef} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity, Animated} from 'react-native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '../AssignmentNavigation';
 
-import { useNavigation } from '@react-navigation/native';
-type TaskNavigationProp = StackNavigationProp<RootStackParamList, 'TaskDetailScreen'>;
+type TaskNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'TaskDetailScreen'
+>;
 interface TaskProps {
   title: string;
   status: string;
@@ -45,18 +48,28 @@ const Task: React.FC<TaskProps> = ({
   };
 
   const handlePress = () => {
-    navigation.navigate('TaskDetailScreen', { title, date, deadline: status, content });
+    navigation.navigate('TaskDetailScreen', {
+      title,
+      date,
+      deadline: status,
+      content,
+    });
   };
 
   return (
-    <TouchableOpacity onPressIn={handlePressIn} onPressOut={handlePressOut} onPress={handlePress} activeOpacity={0.99}>
-      <Animated.View style={[styles.container, { transform: [{ scale: scaleAnim }] }]}>
+    <TouchableOpacity
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      onPress={handlePress}
+      activeOpacity={0.99}>
+      <Animated.View
+        style={[styles.container, {transform: [{scale: scaleAnim}]}]}>
         <View style={styles.taskContent}>
           <Text style={styles.title}>{title}</Text>
-          <Text style={[styles.status, { color: statusColor }]}>{status}</Text>
+          <Text style={[styles.status, {color: statusColor}]}>{status}</Text>
         </View>
         {hasBadge && badgeText && (
-          <View style={[styles.badge, { backgroundColor: badgeColor }]}>
+          <View style={[styles.badge, {backgroundColor: badgeColor}]}>
             <Text style={styles.badgeText}>{badgeText}</Text>
           </View>
         )}
@@ -75,7 +88,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     shadowColor: '#000',
     shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: {width: 0, height: 1},
     shadowRadius: 3,
     elevation: 3,
     // borderWidth: 2,

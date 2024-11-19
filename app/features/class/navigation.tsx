@@ -25,6 +25,11 @@ export const ClassStacks = () => {
         component={AbsenceRequestsListScreen}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name="ClassFeaturesStacks"
+        component={ClassFeaturesStacks}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };

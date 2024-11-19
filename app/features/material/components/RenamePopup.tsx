@@ -1,5 +1,5 @@
 import {PropsWithChildren} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {
   Button,
   Modal,
@@ -7,6 +7,7 @@ import {
   Portal,
   TextInput,
 } from 'react-native-paper';
+import {TextField} from '../../../components/TextField/TextField';
 type Props = PropsWithChildren<{
   isVisible: boolean;
   hideModal: () => void;
@@ -18,24 +19,31 @@ const RenamePopup = ({isVisible, hideModal}: Props) => {
       visible={isVisible}
       onDismiss={hideModal}
       contentContainerStyle={styles.renameModal}>
-      <TextInput />
-      <Button
-        mode="contained"
-        style={{borderRadius: 4, backgroundColor: '#C02135'}}>
-        Lưu
-      </Button>
+      <TextField customLabel="Đổi tên" requiredIndicator={true} />
+      <View style={{paddingHorizontal: 12}}>
+        <Button mode="contained" style={styles.saveButton}>
+          Lưu
+        </Button>
+      </View>
     </Modal>
   );
 };
 const styles = StyleSheet.create({
   renameModal: {
     alignSelf: 'center',
-    height: 180,
+    height: 210,
     backgroundColor: 'white',
     borderRadius: 5,
     width: 350,
     justifyContent: 'space-between',
     padding: 20,
+    paddingBottom: 30,
+  },
+  saveButton: {
+    borderRadius: 4,
+    backgroundColor: '#C02135',
+    alignSelf: 'center',
+    width: '100%',
   },
 });
 export default RenamePopup;

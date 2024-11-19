@@ -2,18 +2,29 @@ import {View, Image, StyleSheet, Pressable} from 'react-native';
 import {IconButton, Text} from 'react-native-paper';
 import avatar from '../../assets/images/bachmahoangtu.jpg';
 import React, {PropsWithChildren} from 'react';
-import {useNavigation} from '@react-navigation/core';
+import {NavigationProp, useNavigation} from '@react-navigation/core';
 
 type Props = PropsWithChildren<{
   title: string;
 }>;
 
+type ParamList = {
+  UserInfoNavigation: {
+    screen: string;
+  };
+};
+
 export default function TopComponent({title}: Props) {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<ParamList>>();
   return (
     <View style={{width: '100%'}}>
       <View style={styles.topContainer}>
-        <Pressable onPress={() => navigation.navigate('AccountInfoScreen')}>
+        <Pressable
+          onPress={() =>
+            navigation.navigate('UserInfoNavigation', {
+              screen: 'AccountInfoScreen',
+            })
+          }>
           <Image source={avatar} style={styles.profileImage} />
         </Pressable>
         <Text

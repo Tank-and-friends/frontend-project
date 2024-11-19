@@ -1,8 +1,14 @@
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import React, {PropsWithChildren} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {IconButton} from 'react-native-paper';
 import avatar from '../../../assets/images/pensquare.png';
+
+type ParamList = {
+  MessageNavigation: {
+    screen: string;
+  };
+};
 
 type Props = PropsWithChildren<{
   title: string;
@@ -11,7 +17,7 @@ type Props = PropsWithChildren<{
 }>;
 
 const TopNavBar = ({title, onOpenPopup}: Props) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<ParamList>>();
   return (
     <View style={styles.customHeaderWrapper}>
       <IconButton
@@ -25,7 +31,11 @@ const TopNavBar = ({title, onOpenPopup}: Props) => {
         style={styles.name}
         numberOfLines={1}
         ellipsizeMode="tail"
-        onPress={() => navigation.navigate('FriendPersonalInfo')}>
+        onPress={() =>
+          navigation.navigate('MessageNavigation', {
+            screen: 'FriendPersonalInfo',
+          })
+        }>
         {title}
       </Text>
       <IconButton

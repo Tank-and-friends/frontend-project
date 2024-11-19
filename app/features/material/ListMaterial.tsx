@@ -1,36 +1,35 @@
-import React, {PropsWithChildren, useRef} from 'react';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import React, {PropsWithChildren} from 'react';
 import {
   FlatList,
-  ScrollView,
+  GestureResponderEvent,
+  ImageBackground,
   StyleSheet,
   View,
-  Image,
-  Text,
-  GestureResponderEvent,
-  TouchableOpacity,
-  ImageBackground,
 } from 'react-native';
 import {
   Button,
-  Icon,
   IconButton,
   Modal,
   PaperProvider,
   Portal,
-  TextInput,
 } from 'react-native-paper';
-import {useNavigation} from '@react-navigation/native';
-import MaterialListItem from './components/MaterialListItem';
-import {TextField} from '../../components/TextField/TextField';
-import RenamePopup from './components/RenamePopup';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import BackgroundImage from '../../assets/images/MaterialBackground.png';
-import TopComponent from '../../components/TopComponent/TopComponent';
+import {TextField} from '../../components/TextField/TextField';
 import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
+import MaterialListItem from './components/MaterialListItem';
+import RenamePopup from './components/RenamePopup';
 type Props = PropsWithChildren<{}>;
 
+type ParamList = {
+  MaterialNavigation: {
+    screen: string;
+  };
+};
+
 const ListMaterial = ({}: Props) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<ParamList>>();
   const [visible, setVisible] = React.useState(false);
   const [rename, setRename] = React.useState(false);
 
@@ -114,7 +113,9 @@ const ListMaterial = ({}: Props) => {
                 contentStyle={{justifyContent: 'flex-start'}}
                 onPress={() => {
                   hideModal();
-                  navigation.navigate('DetailMaterial');
+                  navigation.navigate('MaterialNavigation', {
+                    screen: 'DetailMaterial',
+                  });
                 }}>
                 Mở
               </Button>

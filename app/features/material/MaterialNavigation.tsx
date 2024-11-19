@@ -2,7 +2,12 @@ import {createStackNavigator} from '@react-navigation/stack';
 import ListMaterial from './ListMaterial';
 import DetailMaterial from './DetailMaterial';
 
-const Stack = createStackNavigator();
+type ParamList = {
+  ListMaterial: undefined;
+  DetailMaterial: undefined;
+};
+
+const Stack = createStackNavigator<ParamList>();
 
 const MaterialNavigation = () => {
   return (

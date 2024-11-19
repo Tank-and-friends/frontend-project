@@ -6,10 +6,13 @@ import {Chip} from './components/Chip';
 import {AbsenceRequestsList} from './components/AbsenceRequestsList';
 
 type ParamsList = {
-  ClassFeatures: {
+  ClassStacks: {
     screen: string;
     params: {
       screen: string;
+      params: {
+        screen: string;
+      };
     };
   };
 };
@@ -127,10 +130,13 @@ export const AbsenceRequestsListScreen = () => {
             size={50}
             style={styles.createBtn}
             onPress={() =>
-              navigation.navigate('ClassFeatures', {
-                screen: 'AbsenceRequest',
+              navigation.navigate('ClassStacks', {
+                screen: 'ClassFeaturesStacks',
                 params: {
-                  screen: 'CreateAbsenceRequest',
+                  screen: 'AbsenceRequestStacks',
+                  params: {
+                    screen: 'CreateAbsenseForm',
+                  },
                 },
               })
             }

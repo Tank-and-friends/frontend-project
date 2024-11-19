@@ -1,10 +1,10 @@
-import React, {PropsWithChildren, useRef, useState} from 'react';
-import TopNavBar from './components/TopNavBar';
 import {useNavigation} from '@react-navigation/native';
+import React, {PropsWithChildren, useRef, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {Button, Modal, PaperProvider, Portal} from 'react-native-paper';
 import TransparentBackground from '../../components/TransparentBackground';
 import RenamePopup from './components/RenamePopup';
+import TopNavBar from './components/TopNavBar';
 
 type Props = PropsWithChildren<{}>;
 

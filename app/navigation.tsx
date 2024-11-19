@@ -1,7 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {HomeTabs} from './features/home/navigation';
-import {ClassFeaturesStacks} from './features/class/navigation';
+import {ClassStacks} from './features/class/navigation';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import BottomNavBar from './components/BottomNavBar/BottomNavBar';
 import NotificationScreen from './features/notification/NotificationScreen';
@@ -17,7 +17,7 @@ import AssignmentNavigation from './features/assignment/AssignmentNavigation';
 
 export type RootStackParamList = {
   Home: undefined;
-  ClassFeatures: undefined;
+  ClassFeaturesStacks: undefined;
   MessageNavigation: undefined;
   MaterialNavigation: undefined;
   UserInfoNavigator: undefined;
@@ -25,6 +25,7 @@ export type RootStackParamList = {
   AssignmentNavigation: undefined;
   NotificationScreen: undefined;
   ClassRegisterScreen: undefined;
+  ClassStacks: undefined;
 };
 
 const Tab = createBottomTabNavigator();
@@ -38,7 +39,7 @@ const TabNavigation = () => {
       <Tab.Screen name="Messages" component={MessageScreen} />
       <Tab.Screen name="Classes" component={ClassScreen} />
       <Tab.Screen name="Register" component={ClassRegisterScreen} />
-      <Tab.Screen name="Calendar" component={LoginAccountScreen} />
+      <Tab.Screen name="Calendar" component={ClassStacks} />
     </Tab.Navigator>
   );
 };
@@ -86,6 +87,11 @@ export const RootStacks = () => {
       <Stack.Screen
         name="ClassRegisterScreen"
         component={ClassRegisterScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ClassStacks"
+        component={ClassStacks}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

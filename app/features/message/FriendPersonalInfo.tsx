@@ -7,6 +7,7 @@ import coverImage from '../../assets/images/11.jpg';
 import chatIcon from '../../assets/images/chat.png';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
+
 const FriendPersonalInfo = () => {
   const navigation = useNavigation();
   return (

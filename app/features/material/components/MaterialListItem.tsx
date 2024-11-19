@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import React, {PropsWithChildren} from 'react';
 import {View, StyleSheet, Image, GestureResponderEvent} from 'react-native';
 import {IconButton, Text} from 'react-native-paper';
@@ -7,6 +7,7 @@ import excel from '../../../assets/images/excel.png';
 import img from '../../../assets/images/img.png';
 import pdf from '../../../assets/images/pdf.png';
 import word from '../../../assets/images/word.png';
+
 type Props = PropsWithChildren<{
   item: {
     name: string;
@@ -16,8 +17,14 @@ type Props = PropsWithChildren<{
   };
 }>;
 
+type ParamList = {
+  MaterialNavigation: {
+    screen: string;
+  };
+};
+
 const MaterialListItem = ({item}: Props) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<ParamList>>();
   const fileSymbol = (type: string) => {
     switch (type) {
       case 'jpg':
@@ -39,7 +46,9 @@ const MaterialListItem = ({item}: Props) => {
         <Pressable
           style={styles.textContentContainer}
           onPress={() => {
-            navigation.navigate('DetailMaterial');
+            navigation.navigate('MaterialNavigation', {
+              screen: 'DetailMaterial',
+            });
           }}>
           <View>
             <Text style={{fontWeight: 'bold', fontSize: 14}}>

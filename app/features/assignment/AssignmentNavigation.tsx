@@ -26,7 +26,7 @@ const AssignmentNavigation = () => {
       <Stack.Screen
         name="AssignmentScreen"
         component={AssignmentScreen}
-        options={{title: 'Assignments'}}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="TaskDetailScreen"
