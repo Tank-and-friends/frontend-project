@@ -75,23 +75,6 @@ const ClassRegisterMain = ({navigation}: any) => {
   );
 };
 
-const ClassRegisterScreen = () => {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="ClassRegisterMain"
-        component={ClassRegisterMain}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="ClassList"
-        component={ClassList}
-        options={{title: 'Class List'}}
-      />
-    </Stack.Navigator>
-  );
-};
-
 const styles = StyleSheet.create({
   backgroundImage: {
     position: 'absolute',
@@ -124,4 +107,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ClassRegisterScreen;
+export default ClassRegisterMain;

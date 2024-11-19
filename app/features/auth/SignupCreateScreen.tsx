@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ScrollView,
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import LabeledInput from '../../components/LabeledInput';
@@ -48,50 +55,56 @@ const SignupCreateScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => handleGoBack()}>
-        <Ionicons name="chevron-back-outline" size={20} color="#000" />
-      </TouchableOpacity>
-      <Image source={require('../../assets/image.png')} style={styles.image} />
-      <Text style={styles.title}>Tạo tài khoản</Text>
-      <LabeledInput
-        label="Email"
-        placeholder="Nhập email"
-        isRequired
-        keyboardType="email-address"
-        value={email}
-        onChangeText={handleEmailChange}
-        errorMessage={emailError}
-      />
-      <LabeledInput
-        label="Mật khẩu"
-        secureTextEntry={true}
-        isRequired
-        value={password}
-        onChangeText={handlePasswordChange}
-        errorMessage={passwordError}
-      />
-      <DatePickerInput
-        label="Ngày sinh"
-        value={birthDate}
-        onChange={handleDateChange}
-        isRequired
-      />
-
-      <TouchableOpacity
-        style={[
-          styles.continueButton,
-          {
-            backgroundColor:
-              !passwordError && !emailError ? '#C02135' : '#8C8C8C',
-          },
-        ]}
-        onPress={handleContinue}
-        disabled={!!emailError || !!passwordError}>
-        <Text style={styles.continueButtonText}>Tiếp tục</Text>
-      </TouchableOpacity>
+    <View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.container}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => handleGoBack()}>
+            <Ionicons name="chevron-back-outline" size={20} color="#000" />
+          </TouchableOpacity>
+          <Image
+            source={require('../../assets/image.png')}
+            style={styles.image}
+          />
+          <Text style={styles.title}>Tạo tài khoản</Text>
+          <LabeledInput
+            label="Email"
+            placeholder="Nhập email"
+            isRequired
+            keyboardType="email-address"
+            value={email}
+            onChangeText={handleEmailChange}
+            errorMessage={emailError}
+          />
+          <LabeledInput
+            label="Mật khẩu"
+            secureTextEntry={true}
+            isRequired
+            value={password}
+            onChangeText={handlePasswordChange}
+            errorMessage={passwordError}
+          />
+          <DatePickerInput
+            label="Ngày sinh"
+            value={birthDate}
+            onChange={handleDateChange}
+            isRequired
+          />
+          <TouchableOpacity
+            style={[
+              styles.continueButton,
+              {
+                backgroundColor:
+                  !passwordError && !emailError ? '#C02135' : '#8C8C8C',
+              },
+            ]}
+            onPress={handleContinue}
+            disabled={!!emailError || !!passwordError}>
+            <Text style={styles.continueButtonText}>Tiếp tục</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -99,9 +112,9 @@ const SignupCreateScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
+    padding: 24,
   },
   backButton: {
     alignSelf: 'flex-start',

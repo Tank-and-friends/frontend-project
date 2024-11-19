@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import React, {PropsWithChildren} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Text} from 'react-native-paper';
@@ -12,13 +12,25 @@ type SectionProps = PropsWithChildren<{
   };
 }>;
 
+type ParamList = {
+  MessageNavigation: {
+    screen: string;
+    params: {
+      newMessage: boolean;
+    };
+  };
+};
+
 const MessageListItem = ({item}: SectionProps) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<ParamList>>();
   return (
     <Pressable
       onPress={() => {
-        navigation.navigate('MessageDetail', {
-          newMessage: item.time == undefined,
+        navigation.navigate('MessageNavigation', {
+          screen: 'MessageDetail',
+          params: {
+            newMessage: item.time === undefined,
+          },
         });
       }}>
       <View style={styles.itemContainer}>

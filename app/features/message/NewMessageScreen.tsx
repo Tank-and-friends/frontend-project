@@ -1,18 +1,14 @@
-import React, {PropsWithChildren} from 'react';
+import React, { PropsWithChildren } from 'react';
 import {
   FlatList,
-  ScrollView,
-  StyleSheet,
-  View,
-  Image,
   ImageBackground,
+  StyleSheet,
+  View
 } from 'react-native';
-import {Appbar, Button, IconButton, TextInput} from 'react-native-paper';
-import MessageListItem from './components/MessageListItem';
-import NoteImage from '../../assets/images/pensquare.png';
-import {TextField} from '../../components/TextField/TextField';
 import IonIcons from 'react-native-vector-icons/Ionicons';
+import { TextField } from '../../components/TextField/TextField';
 import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
+import MessageListItem from './components/MessageListItem';
 
 type SectionProps = PropsWithChildren<{}>;
 

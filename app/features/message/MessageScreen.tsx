@@ -1,21 +1,20 @@
-import React, {PropsWithChildren, useRef} from 'react';
-import {
-  FlatList,
-  ScrollView,
-  StyleSheet,
-  View,
-  Image,
-  ImageBackground,
-} from 'react-native';
-import {Button, IconButton, TextInput} from 'react-native-paper';
-import MessageListItem from './components/MessageListItem';
-import NoteImage from '../../assets/images/pensquare.png';
-import Background from '../../assets/images/MessageBackground.png';
-import {useNavigation} from '@react-navigation/native';
-import TopComponent from '../../components/TopComponent/TopComponent';
-import {TextField} from '../../components/TextField/TextField';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import React, {PropsWithChildren} from 'react';
+import {FlatList, Image, ImageBackground, StyleSheet, View} from 'react-native';
+import {IconButton} from 'react-native-paper';
 import IonIcons from 'react-native-vector-icons/Ionicons';
+import Background from '../../assets/images/MessageBackground.png';
+import NoteImage from '../../assets/images/pensquare.png';
+import {TextField} from '../../components/TextField/TextField';
+import TopComponent from '../../components/TopComponent/TopComponent';
+import MessageListItem from './components/MessageListItem';
 type SectionProps = PropsWithChildren<{}>;
+
+type ParamList = {
+  MessageNavigation: {
+    screen: string;
+  };
+};
 
 const DATA = [
   {
@@ -41,7 +40,7 @@ const DATA = [
 ];
 
 const MessageScreen = ({}: SectionProps) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<ParamList>>();
   return (
     <View style={{flex: 1}}>
       <ImageBackground
@@ -72,7 +71,11 @@ const MessageScreen = ({}: SectionProps) => {
           containerColor="#C02135"
           size={30}
           style={styles.newMessageButton}
-          onPress={() => navigation.navigate('NewMessageScreen')}
+          onPress={() =>
+            navigation.navigate('MessageNavigation', {
+              screen: 'NewMessageScreen',
+            })
+          }
         />
       </ImageBackground>
     </View>

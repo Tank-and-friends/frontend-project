@@ -17,18 +17,22 @@ import MessageTime from './components/MessageTime';
 import ImageMessage from './components/ImageMessage';
 import blockImage from '../../assets/images/ooui_block.png';
 import EmptyBodyMessage from './components/EmptyBodyMessage';
-import {useNavigation} from '@react-navigation/native';
-type Props = PropsWithChildren<{}>;
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+type Props = PropsWithChildren<{newMessage: boolean}>;
 
-const {height} = Dimensions.get('window');
-const MessageDetail = ({route}: Props) => {
+type ParamList = {
+  MessageNavigation: {
+    screen: string;
+  };
+};
+
+const MessageDetail = ({newMessage}: Props) => {
   const [isBlock, setIsBlock] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isTextFocus, setIsTextFocus] = useState(false);
   const [isOpenUtilities, setIsOpenUtilities] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState(null);
-  const navigation = useNavigation();
-  const {newMessage} = route.params;
+  const navigation = useNavigation<NavigationProp<ParamList>>();
   const scrollView = useRef<ScrollView | null>();
 
   const togglePopup = () => {
@@ -68,7 +72,11 @@ const MessageDetail = ({route}: Props) => {
                 style={styles.moreInfoItem}
                 textColor="black"
                 icon="account"
-                onPress={() => navigation.navigate('FriendPersonalInfo')}>
+                onPress={() =>
+                  navigation.navigate('MessageNavigation', {
+                    screen: 'FriendPersonalInfo',
+                  })
+                }>
                 Thông tin tài khoản
               </Button>
               {!isBlock ? (
