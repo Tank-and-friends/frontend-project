@@ -3,25 +3,26 @@ import {IconButton, Text} from 'react-native-paper';
 import avatar from '../../assets/images/bachmahoangtu.jpg';
 import React, {PropsWithChildren} from 'react';
 import {NavigationProp, useNavigation} from '@react-navigation/core';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../../features/userInfo/UserInfoNavigator';
 
 type Props = PropsWithChildren<{
   title: string;
 }>;
 
-type ParamList = {
-  UserInfoNavigation: {
+type ParamsList = {
+  UserInfoNavigator: {
     screen: string;
   };
 };
-
 export default function TopComponent({title}: Props) {
-  const navigation = useNavigation<NavigationProp<ParamList>>();
+  const navigation = useNavigation<NavigationProp<ParamsList>>();
   return (
     <View style={{width: '100%'}}>
       <View style={styles.topContainer}>
         <Pressable
           onPress={() =>
-            navigation.navigate('UserInfoNavigation', {
+            navigation.navigate('UserInfoNavigator', {
               screen: 'AccountInfoScreen',
             })
           }>
