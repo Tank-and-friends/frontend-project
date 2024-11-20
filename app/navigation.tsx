@@ -1,19 +1,21 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {HomeTabs} from './features/home/navigation';
-import {ClassStacks} from './features/class/navigation';
+import {ClassNavigator, ClassStacks} from './features/class/navigation';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import BottomNavBar from './components/BottomNavBar/BottomNavBar';
 import NotificationScreen from './features/notification/NotificationScreen';
 import MessageScreen from './features/message/MessageScreen';
 import ClassScreen from './features/class/ClassScreen';
 import ClassRegisterScreen from './features/classRegister/ClassRegisterScreen';
+import { ClassListScreen } from './features/class/ClassListScreen';
 import LoginAccountScreen from './features/auth/LoginAccountScreen';
 import MessageNavigation from './features/message/MessageNavigation';
 import MaterialNavigation from './features/material/MaterialNavigation';
 import UserInfoNavigator from './features/userInfo/UserInfoNavigator';
 import AuthNavigator from './features/auth/AuthNavigator';
 import AssignmentNavigation from './features/assignment/AssignmentNavigation';
+import ClassFirstScreen from './features/class/ClassFirstScreen';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -37,7 +39,7 @@ const TabNavigation = () => {
       tabBar={props => <BottomNavBar {...props} />}>
       <Tab.Screen name="Notifications" component={NotificationScreen} />
       <Tab.Screen name="Messages" component={MessageScreen} />
-      <Tab.Screen name="Classes" component={ClassScreen} />
+      <Tab.Screen name="Classes" component={ClassNavigator} />
       <Tab.Screen name="Register" component={ClassRegisterScreen} />
       <Tab.Screen name="Calendar" component={ClassStacks} />
     </Tab.Navigator>
@@ -93,6 +95,11 @@ export const RootStacks = () => {
         name="ClassStacks"
         component={ClassStacks}
         options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ClassNavigator"
+        component={ClassNavigator}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

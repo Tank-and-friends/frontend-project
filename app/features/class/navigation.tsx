@@ -4,6 +4,8 @@ import {ClassListScreen} from './ClassListScreen';
 import {ClassDetailsScreen} from './ClassDetailsScreen';
 import {AbsenceRequestsListScreen} from './AbsenceRequestsListScreen';
 import {AbsenceRequestStacks} from './absence-request/navigation';
+import ClassFirstScreen from './ClassFirstScreen';
+import ClassScreen from './ClassScreen';
 
 const Stack = createStackNavigator();
 
@@ -41,6 +43,23 @@ export const ClassFeaturesStacks = () => {
         name="AbsenceRequest"
         component={AbsenceRequestStacks}
         options={{headerShown: false}}
+      />
+    </Stack.Navigator>
+  );
+};
+
+export const ClassNavigator = () => {
+  return (
+    <Stack.Navigator initialRouteName="ClassFirstScreen">
+      <Stack.Screen
+        name="ClassFirstScreen"
+        component={ClassFirstScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ClassScreen"
+        component={ClassScreen}
+        options={{ headerShown: true, title: 'Class Details' }}
       />
     </Stack.Navigator>
   );
