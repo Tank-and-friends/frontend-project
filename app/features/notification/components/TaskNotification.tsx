@@ -7,7 +7,12 @@ interface NotificationProps {
   time: string;
   notificationName: string;
   notificationText: string;
-  onMarkRead: boolean;
+  onMarkRead?: boolean;
+  showFooter: boolean;
+  setShowFooter: (value: boolean) => void;
+  unConflic?: boolean;
+  checked?: boolean;
+  setChecked: (value: boolean) => void;
 }
 
 const TaskNotification: React.FC<NotificationProps> = ({
@@ -16,32 +21,60 @@ const TaskNotification: React.FC<NotificationProps> = ({
   notificationName,
   notificationText,
   onMarkRead, // Default text if not provided
+  showFooter,
+  setShowFooter,
+  unConflic,
+  checked, // Nhận trạng thái checked
+  setChecked, // Nhận hàm cập nhật trạng thái
 }) => {
   const [unRead, setUnRead] = useState(onMarkRead);
   const textColor = unRead ? '#B6B6B6' : '#020202'; // Change text color based on unread state
 
+  const toggleFooter = () => {
+    setShowFooter(true); // Toggle footer state
+    // alert(showFooter),
+  };
+
   return (
     <View style={styles.taskTitleContainer}>
-      <View>
-        <View style={styles.title}>
-          <Text style={styles.subject}>{subject}</Text>
-          <Text style={[styles.time, {color: textColor}]}>{time}</Text>
+      <TouchableOpacity
+        onLongPress={toggleFooter}
+      >
+        <View>
+          <View style={styles.title}>
+            <Text style={styles.subject}>{subject}</Text>
+            <Text style={[styles.time, {color: textColor}]}>{time}</Text>
+          </View>
+          <View style={styles.notification}>
+            <Icon name="arrow-up-from-bracket" size={30} color="black" />
+            <Text style={styles.notificationName}>{notificationName}</Text>
+          </View>
+          <View style={styles.line} />
+          <Text style={styles.text}>{notificationText}</Text>
+          {!unRead && unConflic && (
+            <TouchableOpacity onPress={() => setUnRead(!unRead)}>
+              <View style={styles.mark}>
+                <Text style={styles.text2}>Đánh dấu là đã đọc</Text>
+                <Icon name="arrow-up-from-bracket" size={20} color="black" />
+              </View>
+            </TouchableOpacity>
+          )}
+          {!unConflic && showFooter && !checked && (
+            <TouchableOpacity onPress={() => setChecked(!checked)}>
+              <View style={styles.mark}>
+              <Icon name="circle-notch" size={20} color="#C02135" />
+              </View>
+            </TouchableOpacity>
+          )}
+          {!unConflic && showFooter && checked && (
+            <TouchableOpacity onPress={() => setChecked(!checked)}>
+              <View style={styles.mark}>
+                <Icon name="circle-check" size={20} color="#C02135" />
+              </View>
+            </TouchableOpacity>
+          )}
         </View>
-        <View style={styles.notification}>
-          <Icon name="arrow-up-from-bracket" size={30} color="black" />
-          <Text style={styles.notificationName}>{notificationName}</Text>
-        </View>
-        <View style={styles.line} />
-        <Text style={styles.text}>{notificationText}</Text>
-        {!unRead && (
-          <TouchableOpacity onPress={() => setUnRead(!unRead)}>
-            <View style={styles.mark}>
-              <Text style={styles.text2}>Đánh dấu là đã đọc</Text>
-              <Icon name="arrow-up-from-bracket" size={20} color="black" />
-            </View>
-          </TouchableOpacity>
-        )}
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };

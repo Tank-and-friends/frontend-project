@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
+  BackHandler,
   ScrollView,
   StyleSheet,
   Text,
@@ -18,40 +19,145 @@ const NotificationScreen = () => {
       notificationText: 'Nguyen Thi Thu Trang đã tạo một bài tập mới',
       onMarkRead: false,
     },
+    {
+      subject: 'CTDLGT.20241',
+      time: '09:30',
+      notificationName: 'Thông báo',
+      notificationText: 'Lịch kiểm tra giữa kỳ đã được cập nhật.',
+      onMarkRead: true,
+    },
+    {
+      subject: 'HTTTQL.20241',
+      time: '11:00',
+      notificationName: 'Tài liệu',
+      notificationText: 'Thầy Nguyễn Văn A đã đăng tài liệu ôn tập cuối kỳ.',
+      onMarkRead: false,
+    },
+    {
+      subject: 'LTHDT.20241',
+      time: '14:45',
+      notificationName: 'Câu hỏi',
+      notificationText:
+        'Sinh viên cần hoàn thành bài thảo luận trước ngày 25/11.',
+      onMarkRead: false,
+    },
+    {
+      subject: 'PTTKHT.20241',
+      time: '08:20',
+      notificationName: 'Hướng dẫn',
+      notificationText: 'Video hướng dẫn đồ án cuối kỳ đã được tải lên.',
+      onMarkRead: true,
+    },
+    {
+      subject: 'MKT.20241',
+      time: '16:30',
+      notificationName: 'Đánh giá',
+      notificationText: 'Đánh giá bài tập nhóm đã được đăng.',
+      onMarkRead: false,
+    },
+    {
+      subject: 'THVP.20241',
+      time: '10:15',
+      notificationName: 'Bài học',
+      notificationText: 'Bài giảng mới đã có trên hệ thống LMS.',
+      onMarkRead: true,
+    },
   ];
 
   // const [unRead, setUnRead] = useState(false);
   // const textColor = unRead ? '#B6B6B6' : '#020202';
+
+  const [showFooter, setShowFooter] = useState(false);
+  const [unConflic, setUnConflic] = useState(true);
+
+  useEffect(() => {
+    const handleBackPress = () => {
+      if (showFooter) {
+        setShowFooter(false);
+        return true; // Chặn hành động quay lại mặc định
+      }
+      return false; // Cho phép hành động quay lại mặc định
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      handleBackPress,
+    );
+
+    return () => backHandler.remove(); // Dọn dẹp listener khi component unmount
+  }, [showFooter]);
+
+  useEffect(() => {
+    // Đảm bảo showFooter khác với unConflic
+    if (unConflic === showFooter) {
+      setUnConflic(!showFooter);
+    }
+  }, [unConflic, showFooter]); // Theo dõi thay đổi của cả hai
+
+  const [checkedStates, setCheckedStates] = useState(
+    Array(notifications.length).fill(false) // Khởi tạo mảng với tất cả giá trị `false`
+  );
+
+  useEffect(() => {
+    if (showFooter) {
+      // Reset all checked states to false when showFooter is true
+      setCheckedStates(Array(notifications.length).fill(false));
+    }
+  }, [showFooter, notifications.length]);
+
+  const handleMarkRead = () => {
+    const selectedIndexes = checkedStates
+      .map((checked, index) => (checked ? index : null)) // Lấy index nếu checked là true
+      .filter((index) => index !== null); // Loại bỏ các giá trị null
+    console.log('Danh sách các index được chọn:', selectedIndexes);
+  };
+
   return (
     <View style={styles.container}>
       {/* Content */}
-      <ScrollView style={styles.contentContainer}>
-        {notifications.map((item, index) => (
-          <TaskNotification
-            key={index}
-            subject={item.subject}
-            time={item.time}
-            notificationName={item.notificationName}
-            notificationText={item.notificationText}
-            onMarkRead={item.onMarkRead}
-          />
-        ))}
-      </ScrollView>
-      {/* Footer */}
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerButton}>
-          <Icon3 name="pencil-outline" size={25} color="white" />
-          <Text>Đánh dấu đã đọc</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <Icon3 name="trash-can-outline" size={25} color="white" />
-          <Text>Xóa</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <Icon3 name="dots-horizontal" size={25} color="white" />
-          <Text>Xem thêm</Text>
-        </TouchableOpacity>
+      <View style={styles.test}>
+        <ScrollView
+          style={styles.contentContainer}
+          contentContainerStyle={{paddingBottom: 10 /* eslint-disable-line react-native/no-inline-styles */}}>
+          {notifications.map((item, index) => (
+            <TaskNotification
+              key={index}
+              subject={item.subject}
+              time={item.time}
+              notificationName={item.notificationName}
+              notificationText={item.notificationText}
+              onMarkRead={item.onMarkRead}
+              showFooter={showFooter} // Truyền showFooter
+              setShowFooter={setShowFooter} // Truyền setShowFooter
+              unConflic={unConflic}
+              checked={checkedStates[index]}
+              setChecked={(value) => {
+                const updatedStates = [...checkedStates];
+                updatedStates[index] = value;
+                setCheckedStates(updatedStates);
+              }} // Truyền hàm cập nhật
+            />
+          ))}
+        </ScrollView>
       </View>
+
+      {/* Footer */}
+      {showFooter && (
+        <View style={styles.footer}>
+          <TouchableOpacity style={styles.footerButton} onPress={handleMarkRead}>
+            <Icon3 name="pencil-outline" size={25} color="white" />
+            <Text>Đánh dấu đã đọc</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.footerButton}>
+            <Icon3 name="trash-can-outline" size={25} color="white" />
+            <Text>Xóa</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.footerButton}>
+            <Icon3 name="dots-horizontal" size={25} color="white" />
+            <Text>Xem thêm</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
@@ -88,7 +194,9 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     paddingHorizontal: 16,
-    paddingTop: 10,
+    marginBottom: 0,
+    paddingVertical: 10,
+    // paddingVertical: 10,
   },
 
   line: {
@@ -104,19 +212,6 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '500',
     lineHeight: 16, // Chỉnh lineHeight tùy vào nhu cầu của bạn (ví dụ: 16px)
-  },
-
-  scrollView: {
-    height: 200,
-    width: '96%',
-    padding: 0,
-    borderColor: '#ccc',
-    borderRadius: 0,
-    marginTop: 10,
-    marginBottom: 20,
-    paddingRight: 1,
-    // borderWidth: 1,
-    // borderRightColor: 'green'
   },
 
   text1: {
@@ -178,6 +273,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 0,
     /* Footer button styling */
+  },
+  test: {
+    flex: 1,
   },
 });
 

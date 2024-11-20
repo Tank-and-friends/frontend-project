@@ -120,7 +120,7 @@ dependencies {
 }
 
 project.ext.vectoricons = [
-    iconFontNames: [ 'Ionicons.ttf', 'MaterialCommunityIcons.ttf', 'FontAwesome6_Solid.ttf', 'FontAwesome6_Brands.ttf', 'FontAwesome6_Regular.ttf', 'FontAwesome.ttf', 'SimpleLineIcons' ] // Có thể thêm các fonts khác nếu cần
+    iconFontNames: [ 'Ionicons.ttf', 'MaterialCommunityIcons.ttf', 'FontAwesome6_Solid.ttf', 'FontAwesome6_Brands.ttf', 'FontAwesome6_Regular.ttf', 'FontAwesome.ttf', 'SimpleLineIcons', 'Feather'] // Có thể thêm các fonts khác nếu cần
 ]
 
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
