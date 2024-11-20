@@ -1,10 +1,8 @@
-import {View, Image, StyleSheet, Pressable} from 'react-native';
-import {IconButton, Text} from 'react-native-paper';
+import { NavigationProp, useNavigation } from '@react-navigation/core';
+import React, { PropsWithChildren } from 'react';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
+import { IconButton, Text } from 'react-native-paper';
 import avatar from '../../assets/images/bachmahoangtu.jpg';
-import React, {PropsWithChildren} from 'react';
-import {NavigationProp, useNavigation} from '@react-navigation/core';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from '../../features/userInfo/UserInfoNavigator';
 
 type Props = PropsWithChildren<{
   title: string;
