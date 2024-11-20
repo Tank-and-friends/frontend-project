@@ -11,7 +11,66 @@ import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import TaskNotification from './components/TaskNotification';
 
 const NotificationScreen = () => {
-  const notifications = [
+  // const notificationdata = [
+  //   {
+  //     subject: 'TKXDPM.20241',
+  //     time: '15:15',
+  //     notificationName: 'Bài tập',
+  //     notificationText: 'Nguyen Thi Thu Trang đã tạo một bài tập mới',
+  //     onMarkRead: false,
+  //   },
+  //   {
+  //     subject: 'CTDLGT.20241',
+  //     time: '09:30',
+  //     notificationName: 'Thông báo',
+  //     notificationText: 'Lịch kiểm tra giữa kỳ đã được cập nhật.',
+  //     onMarkRead: true,
+  //   },
+  //   {
+  //     subject: 'HTTTQL.20241',
+  //     time: '11:00',
+  //     notificationName: 'Tài liệu',
+  //     notificationText: 'Thầy Nguyễn Văn A đã đăng tài liệu ôn tập cuối kỳ.',
+  //     onMarkRead: false,
+  //   },
+  //   {
+  //     subject: 'LTHDT.20241',
+  //     time: '14:45',
+  //     notificationName: 'Câu hỏi',
+  //     notificationText:
+  //       'Sinh viên cần hoàn thành bài thảo luận trước ngày 25/11.',
+  //     onMarkRead: false,
+  //   },
+  //   {
+  //     subject: 'PTTKHT.20241',
+  //     time: '08:20',
+  //     notificationName: 'Hướng dẫn',
+  //     notificationText: 'Video hướng dẫn đồ án cuối kỳ đã được tải lên.',
+  //     onMarkRead: true,
+  //   },
+  //   {
+  //     subject: 'MKT.20241',
+  //     time: '16:30',
+  //     notificationName: 'Đánh giá',
+  //     notificationText: 'Đánh giá bài tập nhóm đã được đăng.',
+  //     onMarkRead: false,
+  //   },
+  //   {
+  //     subject: 'THVP.20241',
+  //     time: '10:15',
+  //     notificationName: 'Bài học',
+  //     notificationText: 'Bài giảng mới đã có trên hệ thống LMS.',
+  //     onMarkRead: true,
+  //   },
+  // ];
+
+  // const [unRead, setUnRead] = useState(false);
+  // const textColor = unRead ? '#B6B6B6' : '#020202';
+
+  // const [notifications, setNotifications] = useState(notificationdata);
+
+
+  const [notifications, setNotifications] = useState([
     {
       subject: 'TKXDPM.20241',
       time: '15:15',
@@ -62,10 +121,7 @@ const NotificationScreen = () => {
       notificationText: 'Bài giảng mới đã có trên hệ thống LMS.',
       onMarkRead: true,
     },
-  ];
-
-  // const [unRead, setUnRead] = useState(false);
-  // const textColor = unRead ? '#B6B6B6' : '#020202';
+  ]);
 
   const [showFooter, setShowFooter] = useState(false);
   const [unConflic, setUnConflic] = useState(true);
@@ -109,7 +165,22 @@ const NotificationScreen = () => {
     const selectedIndexes = checkedStates
       .map((checked, index) => (checked ? index : null)) // Lấy index nếu checked là true
       .filter((index) => index !== null); // Loại bỏ các giá trị null
-    console.log('Danh sách các index được chọn:', selectedIndexes);
+    // console.log('Danh sách các index được chọn:', selectedIndexes);
+
+    const updatedNotifications = notifications.map((notification, index) => {
+      if (checkedStates[index]) {
+        return { ...notification, onMarkRead: true }; // Đánh dấu đã đọc
+      }
+      return notification; // Không thay đổi nếu không được chọn
+    });
+    setNotifications(updatedNotifications); // Cập nhật trạng thái thông báo
+    // const markedReadNotifications = updatedNotifications.filter((_, index) => checkedStates[index]);
+    // console.log('Các thông báo đã đánh dấu là đã đọc:', markedReadNotifications);
+
+    if (selectedIndexes.length > 0) {
+      setShowFooter(false);
+    } else {
+    }
   };
 
   return (

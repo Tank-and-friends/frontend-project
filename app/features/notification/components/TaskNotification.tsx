@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome6'; // Assuming you're using FontAwesome icons
 
@@ -34,6 +34,10 @@ const TaskNotification: React.FC<NotificationProps> = ({
     setShowFooter(true); // Toggle footer state
     // alert(showFooter),
   };
+
+  useEffect(() => {
+    setUnRead(onMarkRead);
+  }, [onMarkRead]);
 
   return (
     <View style={styles.taskTitleContainer}>
