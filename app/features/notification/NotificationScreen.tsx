@@ -183,6 +183,24 @@ const NotificationScreen = () => {
     }
   };
 
+  const handleDeleteSelected = () => {
+    const selectedIndexes = checkedStates
+      .map((checked, index) => (checked ? index : null)) // Lấy index nếu checked là true
+      .filter((index) => index !== null); // Loại bỏ các giá trị null
+
+    // Lọc ra các thông báo không được chọn (xóa các phần được chọn)
+    const updatedNotifications = notifications.filter((_, index) => !checkedStates[index]);
+
+    setNotifications(updatedNotifications); // Cập nhật danh sách thông báo sau khi xóa
+
+    // Kiểm tra nếu không còn thông báo nào được chọn
+    if (selectedIndexes.length > 0) {
+      setShowFooter(false);
+    } else {
+      console.log('Không có mục nào được chọn để xóa.');
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/* Content */}
@@ -219,7 +237,7 @@ const NotificationScreen = () => {
             <Icon3 name="pencil-outline" size={25} color="white" />
             <Text>Đánh dấu đã đọc</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.footerButton}>
+          <TouchableOpacity style={styles.footerButton} onPress={handleDeleteSelected}>
             <Icon3 name="trash-can-outline" size={25} color="white" />
             <Text>Xóa</Text>
           </TouchableOpacity>
