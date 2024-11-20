@@ -72,3 +72,4 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+app/assets/images/background.png
