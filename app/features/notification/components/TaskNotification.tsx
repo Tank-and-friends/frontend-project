@@ -77,6 +77,13 @@ const TaskNotification: React.FC<NotificationProps> = ({
               </View>
             </TouchableOpacity>
           )}
+          {unRead && unConflic && (
+            <TouchableOpacity>
+              <View style={styles.mark}>
+                <View style={{ width: 20, height: 21.5 } /* eslint-disable-line react-native/no-inline-styles */} />
+              </View>
+            </TouchableOpacity>
+          )}
         </View>
       </TouchableOpacity>
     </View>
