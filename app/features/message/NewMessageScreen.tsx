@@ -1,12 +1,8 @@
-import React, { PropsWithChildren } from 'react';
-import {
-  FlatList,
-  ImageBackground,
-  StyleSheet,
-  View
-} from 'react-native';
+/* eslint-disable react-native/no-inline-styles */
+import React, {PropsWithChildren} from 'react';
+import {FlatList, ImageBackground, StyleSheet, View} from 'react-native';
 import IonIcons from 'react-native-vector-icons/Ionicons';
-import { TextField } from '../../components/TextField/TextField';
+import {TextField} from '../../components/TextField/TextField';
 import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
 import MessageListItem from './components/MessageListItem';
 
@@ -31,7 +27,7 @@ const NewMessageScreen = ({}: SectionProps) => {
   return (
     <View style={{flex: 1}}>
       <ImageBackground
-        source={require('../../assets/images/MessageBackground.png')}
+        source={require('../../assets/images/background.png')}
         style={styles.backgroundImage}
         resizeMode="cover">
         <TopNavWithoutAvatar title="Tin nhắn mới" />
@@ -45,7 +41,7 @@ const NewMessageScreen = ({}: SectionProps) => {
           style={styles.listMessage}
           renderItem={({item}) => <MessageListItem item={item} />}
           keyExtractor={item => item.name}
-          ItemSeparatorComponent={() => <View style={{height: 10}} />}
+          ItemSeparatorComponent={() => <View style={{height: 10}} />} // TODO: Sao không dùng gap ở đây
         />
       </ImageBackground>
     </View>

@@ -1,5 +1,6 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 const Topic = () => {
   return (
@@ -9,18 +10,20 @@ const Topic = () => {
         <Text
           style={[
             styles.status,
-            {color: 'white'},/* eslint-disable-line react-native/no-inline-styles */
-          ]}
-        >
+            {
+              color: 'white',
+            },
+          ]}>
           {}
         </Text>
       </View>
       <View
         style={[
           styles.badge,
-          {backgroundColor: '#FF7F11'}, /* eslint-disable-line react-native/no-inline-styles */
-        ]}
-      >
+          {
+            backgroundColor: '#FF7F11',
+          },
+        ]}>
         <Text style={styles.badgeText}>Chưa nộp bài à</Text>
       </View>
     </View>

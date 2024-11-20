@@ -1,6 +1,6 @@
 // AppNavigator.tsx
+import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
 import AccountInfoScreen from './AccountInfoScreen';
 import AccountUpdateScreen from './AccountUpdateScreen2';
 import PasswordChangeScreen from './PasswordChangeScreen';
@@ -13,7 +13,7 @@ export type RootStackParamList = {
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-const UserInfoNavigator = () => (
+export const UserInfoStacks = () => (
   <Stack.Navigator initialRouteName="AccountInfoScreen">
     <Stack.Screen
       name="AccountInfoScreen"
@@ -32,5 +32,3 @@ const UserInfoNavigator = () => (
     />
   </Stack.Navigator>
 );
-
-export default UserInfoNavigator;

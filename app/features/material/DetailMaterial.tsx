@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {PropsWithChildren, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Button, Modal, PaperProvider, Portal} from 'react-native-paper';
@@ -21,7 +22,8 @@ const DetailMaterial = ({}: Props) => {
     setIsRename(false);
   };
   const showRenameModal = () => {
-    hidePopup(), setIsRename(true);
+    hidePopup();
+    setIsRename(true);
   };
   return (
     <PaperProvider>

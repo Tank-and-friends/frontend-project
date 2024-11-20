@@ -1,7 +1,8 @@
-import {PropsWithChildren} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {Button, Modal} from 'react-native-paper';
-import {TextField} from '../../../components/TextField/TextField';
+/* eslint-disable react-native/no-inline-styles */
+import React, { PropsWithChildren } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Button, Modal } from 'react-native-paper';
+import { TextField } from '../../../components/TextField/TextField';
 type Props = PropsWithChildren<{
   isVisible: boolean;
   hideModal: () => void;

@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
-import {List} from 'react-native-paper';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import { List } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 type AccountItemProps = {
@@ -16,19 +16,21 @@ const AccountItem: React.FC<AccountItemProps> = ({
   iconColor,
   onPress,
 }) => {
+  const renderIcon = () => (
+    <Ionicons
+      name="person-circle-outline"
+      size={40}
+      color={iconColor}
+      style={styles.icon}
+    />
+  );
+
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <List.Item
         title={title}
         description={description}
-        left={() => (
-          <Ionicons
-            name="person-circle-outline"
-            size={40}
-            color={iconColor}
-            style={styles.icon}
-          />
-        )}
+        left={renderIcon}
         titleStyle={styles.title} // Áp dụng style cho title
         descriptionStyle={styles.description} // Áp dụng style cho description
         style={styles.listItem}

@@ -1,25 +1,26 @@
-import React, {useEffect, useState} from 'react';
+/* eslint-disable react-native/no-inline-styles */
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useEffect, useState } from 'react';
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
   Image,
   ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import LabeledInput from '../../components/LabeledInput';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from './AuthNavigator';
 import DatePickerInput from '../../components/DatePicker';
-import {validateEmail, validatePassword} from '../../utils/validation';
+import LabeledInput from '../../components/LabeledInput';
+import { validateEmail, validatePassword } from '../../utils/validation';
+import { ParamsList } from './navigation';
 
 type SignupCreateNavigationProp = StackNavigationProp<
-  RootStackParamList,
+  ParamsList,
   'SignupCreateScreen'
 >;
-type SignupCreateRouteProp = RouteProp<RootStackParamList, 'PasswordScreen'>;
+type SignupCreateRouteProp = RouteProp<ParamsList, 'PasswordScreen'>;
 const SignupCreateScreen = () => {
   const navigation = useNavigation<SignupCreateNavigationProp>();
   const route = useRoute<SignupCreateRouteProp>();
@@ -34,13 +35,13 @@ const SignupCreateScreen = () => {
   const handleDateChange = (date: string) => {
     setBirthDate(date);
   };
-  const handlePasswordChange = (email: string) => {
-    setPassword(email);
-    setPasswordError(validatePassword(email)); // Update email error message based on validation
+  const handlePasswordChange = (_email: string) => {
+    setPassword(_email);
+    setPasswordError(validatePassword(_email)); // Update email error message based on validation
   };
-  const handleEmailChange = (email: string) => {
-    setEmail(email);
-    setEmailError(validateEmail(email));
+  const handleEmailChange = (_email: string) => {
+    setEmail(_email);
+    setEmailError(validateEmail(_email));
   };
 
   useEffect(() => {

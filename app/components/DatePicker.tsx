@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import React, { useState } from 'react';
 import {
-  View,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
+  View,
 } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
 
 interface DatePickerProps {
   label: string;

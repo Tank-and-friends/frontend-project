@@ -1,6 +1,7 @@
-import {createStackNavigator} from '@react-navigation/stack';
-import ListMaterial from './ListMaterial';
+import { createStackNavigator } from '@react-navigation/stack';
+import React from 'react';
 import DetailMaterial from './DetailMaterial';
+import ListMaterial from './ListMaterial';
 
 type ParamList = {
   ListMaterial: undefined;
@@ -9,7 +10,7 @@ type ParamList = {
 
 const Stack = createStackNavigator<ParamList>();
 
-const MaterialNavigation = () => {
+export const MaterialStacks = () => {
   return (
     <Stack.Navigator initialRouteName="ListMaterial">
       <Stack.Screen
@@ -25,5 +26,3 @@ const MaterialNavigation = () => {
     </Stack.Navigator>
   );
 };
-
-export default MaterialNavigation;

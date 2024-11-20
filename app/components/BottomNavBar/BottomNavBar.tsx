@@ -3,7 +3,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Icon} from 'react-native-paper';
 
 import IonIcons from 'react-native-vector-icons/Ionicons';
-const BottomNavBar = ({state, descriptors, navigation}: any) => {
+const BottomNavBar = ({state, navigation}: any) => {
   const icons = [
     {name: 'notifications-outline', label: 'Thông báo', route: 'Notifications'},
     {name: 'message-outline', label: 'Tin nhắn', route: 'Messages'},

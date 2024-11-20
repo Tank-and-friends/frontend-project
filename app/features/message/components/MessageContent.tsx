@@ -1,5 +1,5 @@
-import React, {PropsWithChildren} from 'react';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import React, { PropsWithChildren } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 type Props = PropsWithChildren<{
   yours: boolean;

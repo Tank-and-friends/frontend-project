@@ -1,6 +1,7 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {Image, StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
-import {Text} from 'react-native-paper';
+import { Image, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+import { Text } from 'react-native-paper';
 
 interface ClassSquareProps {
   onPress?: () => void;
@@ -12,7 +13,7 @@ export default function ClassSquare({onPress, className}: ClassSquareProps) {
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={styles.classSquareContainer}>
         <Image
-          source={require('../../../assets/images/ClassBackground.jpg')}
+          source={require('../../../assets/images/class-background.jpg')}
           style={[styles.backgroundImage, {borderRadius: 10}]}
           resizeMode="stretch"
         />

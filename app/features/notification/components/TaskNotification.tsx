@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+/* eslint-disable react-native/no-inline-styles */
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 // import { IconButton } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome6'; // Assuming you're using FontAwesome icons
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -45,16 +46,14 @@ const TaskNotification: React.FC<NotificationProps> = ({
 
   return (
     <View style={styles.taskTitleContainer}>
-      <TouchableOpacity
-        onLongPress={toggleFooter}
-      >
+      <TouchableOpacity onLongPress={toggleFooter}>
         <View>
           <View style={styles.title}>
             <Text style={styles.subject}>{subject}</Text>
             <Text style={[styles.time, {color: textColor}]}>{time}</Text>
           </View>
           <View style={styles.notification}>
-              <Icon name={iconName} size={30} color="black"/>
+            <Icon name={iconName} size={30} color="black" />
             <Text style={styles.notificationName}>{notificationName}</Text>
           </View>
           <View style={styles.line} />
@@ -70,7 +69,7 @@ const TaskNotification: React.FC<NotificationProps> = ({
           {!unConflic && showFooter && !checked && (
             <TouchableOpacity onPress={() => setChecked(!checked)}>
               <View style={styles.mark}>
-              <Icon name="circle-notch" size={20} color="#C02135" />
+                <Icon name="circle-notch" size={20} color="#C02135" />
               </View>
             </TouchableOpacity>
           )}
@@ -84,7 +83,12 @@ const TaskNotification: React.FC<NotificationProps> = ({
           {unRead && unConflic && (
             <TouchableOpacity>
               <View style={styles.mark}>
-                <View style={{ width: 20, height: 21.5 } /* eslint-disable-line react-native/no-inline-styles */} />
+                <View
+                  style={{
+                    width: 20,
+                    height: 21.5,
+                  }}
+                />
               </View>
             </TouchableOpacity>
           )}

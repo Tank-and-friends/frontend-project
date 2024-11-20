@@ -1,15 +1,15 @@
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
-import {useRoute, useNavigation, RouteProp} from '@react-navigation/native';
-import {RootStackParamList} from './AuthNavigator';
-import {StackNavigationProp} from '@react-navigation/stack';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { ParamsList } from './navigation';
 
 type VerifyEmailScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
+  ParamsList,
   'VerifyEmailScreen'
 >;
-type VerifyEmailRouteProp = RouteProp<RootStackParamList, 'VerifyEmailScreen'>;
+type VerifyEmailRouteProp = RouteProp<ParamsList, 'VerifyEmailScreen'>;
 
 const VerifyEmailScreen = () => {
   const route = useRoute<VerifyEmailRouteProp>();

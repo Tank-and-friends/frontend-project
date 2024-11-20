@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface StatusButtonProps {
   label: string;
@@ -13,7 +13,9 @@ const StatusButton: React.FC<StatusButtonProps> = ({
   onPress,
 }) => {
   return (
-    <TouchableOpacity style={[styles.button, { backgroundColor }]} onPress={onPress}>
+    <TouchableOpacity
+      style={[styles.button, {backgroundColor}]}
+      onPress={onPress}>
       <Text style={styles.buttonText}>{label}</Text>
     </TouchableOpacity>
   );
@@ -40,7 +42,9 @@ const StatusButtonGroup: React.FC = () => {
       />
       <StatusButton
         label="Đã hoàn thành"
-        backgroundColor={selectedButton === 'Đã hoàn thành' ? '#FF7F11' : '#C62828'}
+        backgroundColor={
+          selectedButton === 'Đã hoàn thành' ? '#FF7F11' : '#C62828'
+        }
         onPress={() => handlePress('Đã hoàn thành')}
       />
     </View>

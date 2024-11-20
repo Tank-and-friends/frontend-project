@@ -1,4 +1,6 @@
-import {StyleSheet, Text, View} from 'react-native';
+/* eslint-disable react-native/no-inline-styles */
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 
 type ClassRectProps = {
   classTitle: string;
@@ -13,8 +15,8 @@ export default function ClassRect({
   classCode,
   status,
 }: ClassRectProps) {
-  const getStatusColor = (status: string) => {
-    switch (status) {
+  const getStatusColor = (_status: string) => {
+    switch (_status) {
       case 'Thành công':
         return '#21A366';
       case 'Chờ xét duyệt':

@@ -1,8 +1,9 @@
+/* eslint-disable react-native/no-inline-styles */
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import React, {PropsWithChildren} from 'react';
-import {View, StyleSheet} from 'react-native';
-import {Text} from 'react-native-paper';
+import {StyleSheet, View} from 'react-native';
 import {Pressable} from 'react-native-gesture-handler';
+import {Text} from 'react-native-paper';
 
 type SectionProps = PropsWithChildren<{
   item: {
@@ -13,7 +14,7 @@ type SectionProps = PropsWithChildren<{
 }>;
 
 type ParamList = {
-  MessageNavigation: {
+  MessageFeaturesStacks: {
     screen: string;
     params: {
       newMessage: boolean;
@@ -26,7 +27,7 @@ const MessageListItem = ({item}: SectionProps) => {
   return (
     <Pressable
       onPress={() => {
-        navigation.navigate('MessageNavigation', {
+        navigation.navigate('MessageFeaturesStacks', {
           screen: 'MessageDetail',
           params: {
             newMessage: item.time === undefined,

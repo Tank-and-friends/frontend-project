@@ -1,7 +1,7 @@
-import {View, Image, StyleSheet} from 'react-native';
-import {Appbar, IconButton, Text} from 'react-native-paper';
-import React, {PropsWithChildren} from 'react';
-import {useNavigation} from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/core';
+import React, { PropsWithChildren } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Appbar, IconButton } from 'react-native-paper';
 
 type Props = PropsWithChildren<{
   title: string;

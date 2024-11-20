@@ -1,13 +1,16 @@
-import React, {PropsWithChildren} from 'react';
-import {Image, StyleSheet, View} from 'react-native';
-import image from '../../../assets/images/MessageBackground.png';
+import React, { PropsWithChildren } from 'react';
+import { Image, StyleSheet, View } from 'react-native';
 
 type Props = PropsWithChildren<{}>;
 
 const ImageMessage = ({}: Props) => {
   return (
     <View style={styles.timeWrapper}>
-      <Image source={image} style={styles.image} resizeMode="contain" />
+      <Image
+        source={require('../../../assets/images/background.png')}
+        style={styles.image}
+        resizeMode="contain"
+      />
     </View>
   );
 };

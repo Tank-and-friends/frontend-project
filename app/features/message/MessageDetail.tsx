@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import {
   NavigationProp,
   RouteProp,
@@ -22,7 +23,7 @@ import TopNavBar from './components/TopNavBar';
 type Props = PropsWithChildren<{route: RouteProp<RouteProps>}>;
 
 type ParamList = {
-  MessageNavigation: {
+  MessageStacks: {
     screen: string;
   };
 };
@@ -39,7 +40,7 @@ const MessageDetail = ({route}: Props) => {
   const [isTextFocus, setIsTextFocus] = useState(false);
   const [isOpenUtilities, setIsOpenUtilities] = useState(false);
   const navigation = useNavigation<NavigationProp<ParamList>>();
-  const scrollView = useRef<ScrollView | null>();
+  const scrollView = useRef<ScrollView | null>(null);
   const {newMessage} = route.params;
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
@@ -76,7 +77,7 @@ const MessageDetail = ({route}: Props) => {
                 textColor="black"
                 icon="account"
                 onPress={() =>
-                  navigation.navigate('MessageNavigation', {
+                  navigation.navigate('MessageStacks', {
                     screen: 'FriendPersonalInfo',
                   })
                 }>

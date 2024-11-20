@@ -1,16 +1,16 @@
 // LoginScreen.tsx
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import {View, StyleSheet, Text, Image, TouchableOpacity} from 'react-native';
-import {List} from 'react-native-paper';
-import AccountItem from '../../components/AccountItem';
-import {getRandomColor} from '../../utils/getRandomColor';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { List } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from './AuthNavigator';
-import {useNavigation} from '@react-navigation/native';
+import AccountItem from '../../components/AccountItem';
+import { getRandomColor } from '../../utils/color';
+import { ParamsList } from './navigation';
 
 type LoginAccountScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
+  ParamsList,
   'LoginAccountScreen'
 >;
 

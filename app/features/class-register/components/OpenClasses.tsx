@@ -1,6 +1,7 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
-import {Text} from 'react-native-paper';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { Text } from 'react-native-paper';
 import ClassSquare from './ClassSquare';
 
 const classGroups = [
@@ -71,7 +72,9 @@ export default function OpenClasses({navigation}: any) {
                 <ClassSquare
                   key={idx}
                   onPress={() =>
-                    navigation.navigate('ClassList', {className: cls.className})
+                    navigation.navigate('ClassRegisterList', {
+                      className: cls.className,
+                    })
                   }
                   className={cls.className}
                 />

@@ -1,18 +1,19 @@
-import React, {useEffect, useState} from 'react';
+/* eslint-disable react-native/no-inline-styles */
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useEffect, useState } from 'react';
 import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
   ActivityIndicator,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from './UserInfoNavigator';
-import {StackNavigationProp} from '@react-navigation/stack';
 import LabeledInput from '../../components/LabeledInput';
+import { RootStackParamList } from './navigation';
 
 type AccountUpdateScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -41,17 +42,17 @@ const AccountUpdateScreen: React.FC = () => {
   const [address, setAddress] = useState('');
   const [link, setLink] = useState('');
 
-  const handleUserNameChange = (userName: string) => {
-    setUserName(userName);
+  const handleUserNameChange = (_userName: string) => {
+    setUserName(_userName);
   };
-  const handleDescriptionChange = (description: string) => {
-    setDescription(description);
+  const handleDescriptionChange = (_description: string) => {
+    setDescription(_description);
   };
-  const handleAddressChange = (address: string) => {
-    setAddress(address);
+  const handleAddressChange = (_address: string) => {
+    setAddress(_address);
   };
-  const handleLinkChange = (link: string) => {
-    setLink(link);
+  const handleLinkChange = (_link: string) => {
+    setLink(_link);
   };
 
   useEffect(() => {

@@ -1,17 +1,15 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
+/* eslint-disable react-native/no-inline-styles */
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useEffect, useState } from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
 import LabeledInput from '../../components/LabeledInput';
-import {validateEmail} from '../../utils/validation';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from './AuthNavigator';
+import { validateEmail } from '../../utils/validation';
+import { ParamsList } from './navigation';
 
-type LoginScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'LoginScreen'
->;
-type LoginScreenRouteProp = RouteProp<RootStackParamList, 'LoginScreen'>;
+type LoginScreenNavigationProp = StackNavigationProp<ParamsList, 'LoginScreen'>;
+type LoginScreenRouteProp = RouteProp<ParamsList, 'LoginScreen'>;
 
 const LoginScreen = () => {
   const [email, setEmail] = useState<string>('');
@@ -26,9 +24,9 @@ const LoginScreen = () => {
     }
   }, [route.params.email]);
 
-  const handleEmailChange = (email: string) => {
-    setEmail(email);
-    setEmailError(validateEmail(email));
+  const handleEmailChange = (_email: string) => {
+    setEmail(_email);
+    setEmailError(validateEmail(_email));
   };
 
   const handleContinue = () => {
@@ -69,7 +67,7 @@ const LoginScreen = () => {
       <TouchableOpacity
         style={[
           styles.continueButton,
-          {backgroundColor: !!emailError ? '#8C8C8C' : '#C02135'},
+          {backgroundColor: emailError ? '#8C8C8C' : '#C02135'},
         ]}
         onPress={handleContinue}
         disabled={!!emailError}>

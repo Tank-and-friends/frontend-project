@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import React, {PropsWithChildren} from 'react';
 import {
@@ -15,7 +16,6 @@ import {
   Portal,
 } from 'react-native-paper';
 import IonIcons from 'react-native-vector-icons/Ionicons';
-import BackgroundImage from '../../assets/images/MaterialBackground.png';
 import {TextField} from '../../components/TextField/TextField';
 import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
 import MaterialListItem from './components/MaterialListItem';
@@ -23,7 +23,7 @@ import RenamePopup from './components/RenamePopup';
 type Props = PropsWithChildren<{}>;
 
 type ParamList = {
-  MaterialNavigation: {
+  MaterialStacks: {
     screen: string;
   };
 };
@@ -76,7 +76,7 @@ const ListMaterial = ({}: Props) => {
     <PaperProvider>
       <View style={{flex: 1}}>
         <ImageBackground
-          source={BackgroundImage}
+          source={require('../../assets/images/background.png')}
           style={styles.backgroundImage}
           resizeMode="stretch">
           <TopNavWithoutAvatar title="Tài liệu" />
@@ -89,7 +89,7 @@ const ListMaterial = ({}: Props) => {
             style={styles.listMessage}
             renderItem={({item}) => <MaterialListItem item={item} />}
             keyExtractor={item => item.name}
-            ItemSeparatorComponent={() => <View style={{height: 10}} />}
+            ItemSeparatorComponent={() => <View style={{height: 10}} />} // TODO: Sao không dùng gap ở đây
           />
           <IconButton
             icon="plus"
@@ -113,7 +113,7 @@ const ListMaterial = ({}: Props) => {
                 contentStyle={{justifyContent: 'flex-start'}}
                 onPress={() => {
                   hideModal();
-                  navigation.navigate('MaterialNavigation', {
+                  navigation.navigate('MaterialStacks', {
                     screen: 'DetailMaterial',
                   });
                 }}>

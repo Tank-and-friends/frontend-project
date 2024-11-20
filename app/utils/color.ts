@@ -1,4 +1,3 @@
-
 export const getRandomColor = (): string => {
   const colors = [
     '#A6C7FF', // Light Sky Blue
@@ -20,7 +19,7 @@ export const getRandomColor = (): string => {
     '#251C58', // Dark Purple Blue
     '#6A4C9C', // Dark Lavender
     '#4E4F94', // Dark Violet Blue
-  ]
+  ];
 
   const randomIndex = Math.floor(Math.random() * colors.length);
   return colors[randomIndex];

@@ -1,12 +1,9 @@
+/* eslint-disable react-native/no-inline-styles */
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import React, {PropsWithChildren} from 'react';
 import {GestureResponderEvent, Image, StyleSheet, View} from 'react-native';
 import {Pressable} from 'react-native-gesture-handler';
 import {IconButton, Text} from 'react-native-paper';
-import excel from '../../../assets/images/excel.png';
-import img from '../../../assets/images/img.png';
-import pdf from '../../../assets/images/pdf.png';
-import word from '../../../assets/images/word.png';
 
 type Props = PropsWithChildren<{
   item: {
@@ -18,7 +15,7 @@ type Props = PropsWithChildren<{
 }>;
 
 type ParamList = {
-  MaterialNavigation: {
+  MaterialStacks: {
     screen: string;
   };
 };
@@ -28,13 +25,21 @@ const MaterialListItem = ({item}: Props) => {
   const fileSymbol = (type: string) => {
     switch (type) {
       case 'jpg':
-        return <Image source={img} />;
+        return (
+          <Image
+            source={require('../../../assets/icons/icon-default-image.png')}
+          />
+        );
       case 'pdf':
-        return <Image source={pdf} />;
+        return <Image source={require('../../../assets/icons/icon-pdf.png')} />;
       case 'docx':
-        return <Image source={word} />;
+        return (
+          <Image source={require('../../../assets/icons/icon-word.png')} />
+        );
       case 'xlsx':
-        return <Image source={excel} />;
+        return (
+          <Image source={require('../../../assets/icons/icon-excel.png')} />
+        );
       default:
         return null;
     }
@@ -46,7 +51,7 @@ const MaterialListItem = ({item}: Props) => {
         <Pressable
           style={styles.textContentContainer}
           onPress={() => {
-            navigation.navigate('MaterialNavigation', {
+            navigation.navigate('MaterialStacks', {
               screen: 'DetailMaterial',
             });
           }}>

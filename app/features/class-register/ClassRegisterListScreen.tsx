@@ -1,9 +1,10 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {Image, ScrollView, StyleSheet, View} from 'react-native';
-import {Text} from 'react-native-paper';
-import ClassRect from './ClassRect';
+import { Image, ScrollView, StyleSheet, View } from 'react-native';
+import { Text } from 'react-native-paper';
+import ClassRect from './components/ClassRect';
 
-export default function ClassList({route}: any) {
+export default function ClassRegisterListScreen({route}: any) {
   const {className} = route.params;
 
   const classData = [
@@ -30,14 +31,14 @@ export default function ClassList({route}: any) {
   return (
     <View style={styles.container}>
       <Image
-        source={require('../../../assets/images/Background.png')}
+        source={require('../../assets/images/background.png')}
         style={styles.backgroundImage}
         resizeMode="stretch"
       />
       <Text style={styles.title}>Class List for {className}</Text>
       <View style={styles.classSquareContainerContainer}>
         <Image
-          source={require('../../../assets/images/ClassBackground.jpg')}
+          source={require('../../assets/images/class-background.jpg')}
           style={[styles.backgroundClassImage, {borderRadius: 10}]}
           resizeMode="stretch"
         />

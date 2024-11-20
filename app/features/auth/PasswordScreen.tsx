@@ -1,19 +1,19 @@
+/* eslint-disable react-native/no-inline-styles */
 // features/auth/PasswordScreen.tsx
-import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
-import {useRoute, useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from './AuthNavigator';
-import {RouteProp} from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useEffect, useState } from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LabeledInput from '../../components/LabeledInput';
-import {validateEmail, validatePassword} from '../../utils/validation';
+import { validateEmail, validatePassword } from '../../utils/validation';
+import { ParamsList } from './navigation';
 
 type PasswordScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
+  ParamsList,
   'PasswordScreen'
 >;
-type PasswordScreenRouteProp = RouteProp<RootStackParamList, 'PasswordScreen'>;
+type PasswordScreenRouteProp = RouteProp<ParamsList, 'PasswordScreen'>;
 const PasswordScreen = () => {
   const navigation = useNavigation<PasswordScreenNavigationProp>();
   const route = useRoute<PasswordScreenRouteProp>();
@@ -33,14 +33,14 @@ const PasswordScreen = () => {
       console.log(`Email: ${email}, Password: ${password}`);
     }
   };
-  const handlePasswordChange = (password: string) => {
-    setPassword(password);
-    setPasswordError(validatePassword(password));
+  const handlePasswordChange = (_password: string) => {
+    setPassword(_password);
+    setPasswordError(validatePassword(_password));
   };
 
-  const handleEmailChange = (email: string) => {
-    setEmail(email);
-    setEmailError(validateEmail(email));
+  const handleEmailChange = (_email: string) => {
+    setEmail(_email);
+    setEmailError(validateEmail(_email));
   };
 
   const handleGoBack = () => {

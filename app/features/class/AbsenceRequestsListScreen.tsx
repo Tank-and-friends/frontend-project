@@ -6,13 +6,10 @@ import {Chip} from './components/Chip';
 import {AbsenceRequestsList} from './components/AbsenceRequestsList';
 
 type ParamsList = {
-  ClassStacks: {
+  ClassFeaturesStacks: {
     screen: string;
     params: {
       screen: string;
-      params: {
-        screen: string;
-      };
     };
   };
 };
@@ -24,7 +21,7 @@ export const AbsenceRequestsListScreen = () => {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={require('../../assets/images/Background.png')}
+        source={require('../../assets/images/background.png')}
         style={styles.backgroundImage}
         resizeMode="cover">
         <Appbar.Header mode="small" style={styles.header}>
@@ -130,13 +127,10 @@ export const AbsenceRequestsListScreen = () => {
             size={50}
             style={styles.createBtn}
             onPress={() =>
-              navigation.navigate('ClassStacks', {
-                screen: 'ClassFeaturesStacks',
+              navigation.navigate('ClassFeaturesStacks', {
+                screen: 'AbsenceRequest',
                 params: {
-                  screen: 'AbsenceRequestStacks',
-                  params: {
-                    screen: 'CreateAbsenseForm',
-                  },
+                  screen: 'CreateAbsenceRequest',
                 },
               })
             }

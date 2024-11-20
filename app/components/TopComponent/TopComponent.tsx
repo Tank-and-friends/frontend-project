@@ -1,15 +1,15 @@
-import {NavigationProp, useNavigation} from '@react-navigation/core';
-import React, {PropsWithChildren} from 'react';
-import {Image, Pressable, StyleSheet, View} from 'react-native';
-import {IconButton, Text} from 'react-native-paper';
-import avatar from '../../assets/images/bachmahoangtu.jpg';
+/* eslint-disable react-native/no-inline-styles */
+import { NavigationProp, useNavigation } from '@react-navigation/core';
+import React, { PropsWithChildren } from 'react';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
+import { IconButton, Text } from 'react-native-paper';
 
 type Props = PropsWithChildren<{
   title: string;
 }>;
 
 type ParamsList = {
-  UserInfoNavigator: {
+  UserInfoStacks: {
     screen: string;
   };
 };
@@ -20,11 +20,14 @@ export default function TopComponent({title}: Props) {
       <View style={styles.topContainer}>
         <Pressable
           onPress={() =>
-            navigation.navigate('UserInfoNavigator', {
+            navigation.navigate('UserInfoStacks', {
               screen: 'AccountInfoScreen',
             })
           }>
-          <Image source={avatar} style={styles.profileImage} />
+          <Image
+            source={require('../../assets/images/bachmahoangtu.jpg')}
+            style={styles.profileImage}
+          />
         </Pressable>
         <Text
           style={{

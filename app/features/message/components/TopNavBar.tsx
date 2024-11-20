@@ -2,10 +2,9 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import React, {PropsWithChildren} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {IconButton} from 'react-native-paper';
-import avatar from '../../../assets/images/pensquare.png';
 
 type ParamList = {
-  MessageNavigation: {
+  MessageStacks: {
     screen: string;
   };
 };
@@ -26,13 +25,16 @@ const TopNavBar = ({title, onOpenPopup}: Props) => {
         onPress={() => navigation.goBack()}
         // containerColor="black"
       />
-      <Image source={avatar} style={styles.avatar} />
+      <Image
+        source={require('../../../assets/images/pensquare.png')}
+        style={styles.avatar}
+      />
       <Text
         style={styles.name}
         numberOfLines={1}
         ellipsizeMode="tail"
         onPress={() =>
-          navigation.navigate('MessageNavigation', {
+          navigation.navigate('MessageStacks', {
             screen: 'FriendPersonalInfo',
           })
         }>

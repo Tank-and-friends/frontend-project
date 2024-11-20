@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react';
+/* eslint-disable react-native/no-inline-styles */
+import React, { useEffect, useState } from 'react';
 import {
   BackHandler,
   ScrollView,
@@ -207,7 +208,7 @@ const NotificationScreen = () => {
         <ScrollView
           style={styles.contentContainer}
           contentContainerStyle={{
-            paddingBottom: 10 /* eslint-disable-line react-native/no-inline-styles */,
+            paddingBottom: 10,
           }}>
           {notifications.map((item, index) => (
             <TaskNotification

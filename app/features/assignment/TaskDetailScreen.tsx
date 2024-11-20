@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {
   ScrollView,
@@ -49,7 +50,7 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
                   styles.badge,
                   {
                     backgroundColor: '#FF7F11',
-                  } /* eslint-disable-line react-native/no-inline-styles */,
+                  },
                 ]}>
                 <Text style={styles.badgeText}>Chưa nộp bài</Text>
                 <EvilIcons name="clock" size={24} color="black" />

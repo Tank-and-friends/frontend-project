@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import IonIcons from 'react-native-vector-icons/Ionicons';
-import {TextField} from '../../components/TextField/TextField';
+import { TextField } from '../../components/TextField/TextField';
 import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
 import Assignment from './components/Assignment';
 import StatusButtonGroup from './components/StatusButtonGroup';
@@ -129,7 +129,7 @@ const AssignmentScreen = () => {
 
   return (
     <ImageBackground
-      source={require('./MessageBackground.png')}
+      source={require('../../assets/images/background.png')}
       style={styles.backgroundImage}
       resizeMode="cover">
       <View style={styles.container}>

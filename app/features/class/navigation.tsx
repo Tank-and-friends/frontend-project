@@ -1,17 +1,15 @@
+import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
-import {ClassListScreen} from './ClassListScreen';
-import {ClassDetailsScreen} from './ClassDetailsScreen';
-import {AbsenceRequestsListScreen} from './AbsenceRequestsListScreen';
-import {AbsenceRequestStacks} from './absence-request/navigation';
-import ClassFirstScreen from './ClassFirstScreen';
-import ClassScreen from './ClassScreen';
+import { AbsenceRequestStacks } from './absence-request/navigation';
+import { AbsenceRequestsListScreen } from './AbsenceRequestsListScreen';
+import ClassDetailsScreen from './ClassDetailsScreen';
+import ClassListScreen from './ClassListScreen';
 
 const Stack = createStackNavigator();
 
 export const ClassStacks = () => {
   return (
-    <Stack.Navigator initialRouteName="AbsenceRequestsList">
+    <Stack.Navigator initialRouteName="ClassList">
       <Stack.Screen
         name="ClassList"
         component={ClassListScreen}
@@ -20,16 +18,11 @@ export const ClassStacks = () => {
       <Stack.Screen
         name="ClassDetails"
         component={ClassDetailsScreen}
-        options={{headerShown: false}}
+        options={{headerShown: true, title: 'Class Details'}}
       />
       <Stack.Screen
         name="AbsenceRequestsList"
         component={AbsenceRequestsListScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="ClassFeaturesStacks"
-        component={ClassFeaturesStacks}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
@@ -43,23 +36,6 @@ export const ClassFeaturesStacks = () => {
         name="AbsenceRequest"
         component={AbsenceRequestStacks}
         options={{headerShown: false}}
-      />
-    </Stack.Navigator>
-  );
-};
-
-export const ClassNavigator = () => {
-  return (
-    <Stack.Navigator initialRouteName="ClassFirstScreen">
-      <Stack.Screen
-        name="ClassFirstScreen"
-        component={ClassFirstScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="ClassScreen"
-        component={ClassScreen}
-        options={{ headerShown: true, title: 'Class Details' }}
       />
     </Stack.Navigator>
   );

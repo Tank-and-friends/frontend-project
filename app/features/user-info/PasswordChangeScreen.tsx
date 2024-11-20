@@ -1,17 +1,17 @@
-import React, {useState} from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useState } from 'react';
 import {
-  View,
+  ScrollView,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
-  ScrollView,
+  View,
 } from 'react-native';
-import {RootStackParamList} from './UserInfoNavigator';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {validatePassword} from '../../utils/validation';
+import { validatePassword } from '../../utils/validation';
+import { RootStackParamList } from './navigation';
 
 type PasswordChangeScreenNavigationProp = StackNavigationProp<
   RootStackParamList,

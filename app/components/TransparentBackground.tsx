@@ -1,5 +1,6 @@
-import {DefaultTheme} from 'react-native-paper';
-//transparent background for modal
+import { DefaultTheme } from 'react-native-paper';
+
+/** transparent background for modal */
 const TransparentBackground = {
   ...DefaultTheme,
   colors: {
@@ -7,4 +8,5 @@ const TransparentBackground = {
     backdrop: 'transparent',
   },
 };
+
 export default TransparentBackground;

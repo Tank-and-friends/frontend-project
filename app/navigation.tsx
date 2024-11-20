@@ -1,25 +1,27 @@
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createStackNavigator} from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import BottomNavBar from './components/BottomNavBar/BottomNavBar';
-import AssignmentNavigation from './features/assignment/AssignmentNavigation';
-import AuthNavigator from './features/auth/AuthNavigator';
-import {ClassNavigator, ClassStacks} from './features/class/navigation';
-import ClassRegisterScreen from './features/classRegister/ClassRegisterScreen';
-import MaterialNavigation from './features/material/MaterialNavigation';
-import MessageNavigation from './features/message/MessageNavigation';
-import MessageScreen from './features/message/MessageScreen';
+import { AssignmentStacks } from './features/assignment/navigation';
+import { AuthStacks } from './features/auth/navigation';
+import { ClassRegisterStacks } from './features/class-register/navigation';
+import { ClassFeaturesStacks, ClassStacks } from './features/class/navigation';
+import { MaterialStacks } from './features/material/navigation';
+import {
+  MessageFeaturesStacks,
+  MessageStacks,
+} from './features/message/navigation';
 import NotificationScreen from './features/notification/NotificationScreen';
-import UserInfoNavigator from './features/userInfo/UserInfoNavigator';
+import { UserInfoStacks } from './features/user-info/navigation';
 
 export type RootStackParamList = {
   Home: undefined;
   ClassFeaturesStacks: undefined;
-  MessageNavigation: undefined;
-  MaterialNavigation: undefined;
-  UserInfoNavigator: undefined;
-  AuthNavigator: undefined;
-  AssignmentNavigation: undefined;
+  MessageFeaturesStacks: undefined;
+  MaterialStacks: undefined;
+  UserInfoStacks: undefined;
+  AuthStacks: undefined;
+  AssignmentStacks: undefined;
   NotificationScreen: undefined;
   ClassRegisterScreen: undefined;
   ClassStacks: undefined;
@@ -28,16 +30,19 @@ export type RootStackParamList = {
 
 const Tab = createBottomTabNavigator();
 
+const renderBottomNavBar = (props: any) => <BottomNavBar {...props} />;
+
 const TabNavigation = () => {
   return (
     <Tab.Navigator
       screenOptions={{headerShown: false}}
-      tabBar={props => <BottomNavBar {...props} />}>
+      tabBar={renderBottomNavBar}>
       <Tab.Screen name="Notifications" component={NotificationScreen} />
-      <Tab.Screen name="Messages" component={MessageScreen} />
-      <Tab.Screen name="Classes" component={ClassNavigator} />
-      <Tab.Screen name="Register" component={ClassRegisterScreen} />
+      <Tab.Screen name="Messages" component={MessageStacks} />
+      <Tab.Screen name="Classes" component={ClassStacks} />
+      <Tab.Screen name="Register" component={ClassRegisterStacks} />
       <Tab.Screen name="Calendar" component={ClassStacks} />
+      <Tab.Screen name="Notification" component={NotificationScreen} />
     </Tab.Navigator>
   );
 };
@@ -53,48 +58,33 @@ export const RootStacks = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="MessageNavigation"
-        component={MessageNavigation}
+        name="MessageFeaturesStacks"
+        component={MessageFeaturesStacks}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="MaterialNavigation"
-        component={MaterialNavigation}
+        name="MaterialStacks"
+        component={MaterialStacks}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="UserInfoNavigator"
-        component={UserInfoNavigator}
+        name="UserInfoStacks"
+        component={UserInfoStacks}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="AuthNavigator"
-        component={AuthNavigator}
+        name="AuthStacks"
+        component={AuthStacks}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="AssignmentNavigation"
-        component={AssignmentNavigation}
+        name="AssignmentStacks"
+        component={AssignmentStacks}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="NotificationScreen"
-        component={NotificationScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="ClassRegisterScreen"
-        component={ClassRegisterScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="ClassStacks"
-        component={ClassStacks}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="ClassNavigator"
-        component={ClassNavigator}
+        name="ClassFeaturesStacks"
+        component={ClassFeaturesStacks}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

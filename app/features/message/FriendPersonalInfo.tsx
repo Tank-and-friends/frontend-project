@@ -1,12 +1,18 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 
-import {Image, StyleSheet, Text, View} from 'react-native';
-import {Appbar, Button, Divider, IconButton} from 'react-native-paper';
-import avatarImage from '../../assets/images/bachmahoangtu.jpg';
-import coverImage from '../../assets/images/11.jpg';
-import chatIcon from '../../assets/images/chat.png';
-import {ScrollView} from 'react-native-gesture-handler';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { Appbar, Button, Divider, IconButton } from 'react-native-paper';
+
+const ChatIcon = () => (
+  <Image
+    source={require('../../assets/icons/chat.png')}
+    width={24}
+    height={24}
+  />
+);
 
 const FriendPersonalInfo = () => {
   const navigation = useNavigation();
@@ -24,14 +30,17 @@ const FriendPersonalInfo = () => {
       <ScrollView>
         <View style={styles.imageWrapper}>
           <Image
-            source={coverImage}
+            source={require('../../assets/images/cover.jpg')}
             height={20}
             width={20}
             resizeMode="stretch"
             style={styles.coverImage}
           />
           <View>
-            <Image source={avatarImage} style={styles.avatarImage} />
+            <Image
+              source={require('../../assets/images/bachmahoangtu.jpg')}
+              style={styles.avatarImage}
+            />
             <View style={styles.status} />
           </View>
         </View>
@@ -130,7 +139,7 @@ const FriendPersonalInfo = () => {
               textColor="white"
               buttonColor="#C02135"
               style={{borderRadius: 4, width: 290, marginTop: 20}}
-              icon={() => <Image source={chatIcon} width={24} height={24} />}>
+              icon={ChatIcon}>
               Nhắn tin
             </Button>
           </View>

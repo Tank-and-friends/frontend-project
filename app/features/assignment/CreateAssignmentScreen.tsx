@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Checkbox, TextInput} from 'react-native-paper';
+import { Checkbox, TextInput } from 'react-native-paper';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 

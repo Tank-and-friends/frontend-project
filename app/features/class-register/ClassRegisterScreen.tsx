@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
 import {ImageBackground, ScrollView, StyleSheet, View} from 'react-native';
 import {Button} from 'react-native-paper';
@@ -7,13 +8,13 @@ import TopComponent from '../../components/TopComponent/TopComponent';
 import OpenClasses from './components/OpenClasses';
 import RegisteredClasses from './components/RegisteredClasses';
 
-const ClassRegisterMain = ({navigation}: any) => {
+const ClassRegisterScreen = ({navigation}: any) => {
   const [activeScreen, setActiveScreen] = useState('Screen1');
 
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={require('../../assets/images/Background.png')}
+        source={require('../../assets/images/background.png')}
         style={styles.backgroundImage}
         resizeMode="cover">
         <TopComponent title="Đăng ký lớp" />
@@ -97,4 +98,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ClassRegisterMain;
+export default ClassRegisterScreen;

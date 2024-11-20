@@ -1,8 +1,8 @@
-import React, {useRef} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Animated} from 'react-native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from '../AssignmentNavigation';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useRef } from 'react';
+import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { RootStackParamList } from '../navigation';
 
 type TaskNavigationProp = StackNavigationProp<
   RootStackParamList,

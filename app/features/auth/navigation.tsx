@@ -1,5 +1,5 @@
 // AppNavigator.tsx
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import LoginAccountScreen from './LoginAccountScreen';
 import LoginScreen from './LoginScreen';
@@ -8,7 +8,7 @@ import SignupCreateScreen from './SignupCreateScreen';
 import SignupScreen from './SignupScreen';
 import VerifyEmailScreen from './VerifyEmailScreen';
 
-export type RootStackParamList = {
+export type ParamsList = {
   LoginAccountScreen: undefined;
   LoginScreen: {email: null | string};
   PasswordScreen: {email: string};
@@ -17,9 +17,9 @@ export type RootStackParamList = {
   VerifyEmailScreen: {email: string};
 };
 
-const Stack = createStackNavigator<RootStackParamList>();
+const Stack = createStackNavigator<ParamsList>();
 
-const AuthNavigator = () => (
+export const AuthStacks = () => (
   <Stack.Navigator initialRouteName="LoginAccountScreen">
     <Stack.Screen
       name="LoginAccountScreen"
@@ -54,4 +54,4 @@ const AuthNavigator = () => (
   </Stack.Navigator>
 );
 
-export default AuthNavigator;
+export default AuthStacks;

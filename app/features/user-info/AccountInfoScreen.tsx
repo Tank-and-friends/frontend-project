@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
 import {
   View,
@@ -11,7 +12,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from './UserInfoNavigator';
+import {RootStackParamList} from './navigation';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 type AccountInfoScreenNavigationProp = StackNavigationProp<

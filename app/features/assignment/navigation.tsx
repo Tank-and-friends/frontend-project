@@ -1,4 +1,5 @@
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
+import React from 'react';
 import AssignmentScreen from './AssignmentScreen';
 import CreateAssignmentScreen from './CreateAssignmentScreen';
 import TaskDetailScreen from './TaskDetailScreen';
@@ -16,7 +17,7 @@ export type RootStackParamList = {
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-const AssignmentNavigation = () => {
+export const AssignmentStacks = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -36,5 +37,3 @@ const AssignmentNavigation = () => {
     </Stack.Navigator>
   );
 };
-
-export default AssignmentNavigation;

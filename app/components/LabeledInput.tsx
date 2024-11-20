@@ -1,6 +1,6 @@
 // LabeledInput.tsx
 import React from 'react';
-import { View, Text, TextInput, StyleSheet} from 'react-native';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 interface LabeledInputProps {
   label: string;
@@ -25,7 +25,10 @@ const LabeledInput: React.FC<LabeledInputProps> = ({
         <Text style={styles.label}>{label}</Text>
         {isRequired && <Text style={styles.asterisk}>*</Text>}
       </View>
-      <TextInput style={[styles.input, errorMessage && styles.inputError]} {...textInputProps} />
+      <TextInput
+        style={[styles.input, errorMessage && styles.inputError]}
+        {...textInputProps}
+      />
       {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
     </View>
   );
@@ -40,7 +43,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignSelf: 'flex-start',
     marginBottom: 16,
-
   },
   label: {
     fontSize: 16,
@@ -68,6 +70,5 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 });
-
 
 export default LabeledInput;
