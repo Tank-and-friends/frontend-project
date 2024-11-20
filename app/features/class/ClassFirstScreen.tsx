@@ -50,7 +50,7 @@ const ClassFirstScreen = () => {
     },
   ];
 
-  const handleNavigateToClass = (classId: string, className: string, classTime: string, classPlace: string, grade: { midTerm: Float32Array; endTerm: Float32Array }) => {
+  const handleNavigateToClass = (classId: string, className: string, classTime: string, classPlace: string, grade: { midTerm: number; endTerm: number }) => {
     navigation.navigate('ClassScreen', { classId, className, classTime, classPlace, grade });
   };
 
@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
     gap: 20,
     paddingVertical: 10,
     paddingTop: 20,
+    paddingBottom: 120
   },
 });
 
