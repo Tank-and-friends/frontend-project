@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+// import { IconButton } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome6'; // Assuming you're using FontAwesome icons
+import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface NotificationProps {
   subject: string;
@@ -13,6 +15,7 @@ interface NotificationProps {
   unConflic?: boolean;
   checked?: boolean;
   setChecked: (value: boolean) => void;
+  iconName: string;
 }
 
 const TaskNotification: React.FC<NotificationProps> = ({
@@ -26,6 +29,7 @@ const TaskNotification: React.FC<NotificationProps> = ({
   unConflic,
   checked, // Nhận trạng thái checked
   setChecked, // Nhận hàm cập nhật trạng thái
+  iconName,
 }) => {
   const [unRead, setUnRead] = useState(onMarkRead);
   const textColor = unRead ? '#B6B6B6' : '#020202'; // Change text color based on unread state
@@ -50,7 +54,7 @@ const TaskNotification: React.FC<NotificationProps> = ({
             <Text style={[styles.time, {color: textColor}]}>{time}</Text>
           </View>
           <View style={styles.notification}>
-            <Icon name="arrow-up-from-bracket" size={30} color="black" />
+              <Icon name={iconName} size={30} color="black"/>
             <Text style={styles.notificationName}>{notificationName}</Text>
           </View>
           <View style={styles.line} />
@@ -59,7 +63,7 @@ const TaskNotification: React.FC<NotificationProps> = ({
             <TouchableOpacity onPress={() => setUnRead(!unRead)}>
               <View style={styles.mark}>
                 <Text style={styles.text2}>Đánh dấu là đã đọc</Text>
-                <Icon name="arrow-up-from-bracket" size={20} color="black" />
+                <Icon3 name="pencil-outline" size={20} color="#42A4EE" />
               </View>
             </TouchableOpacity>
           )}
@@ -95,6 +99,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 10,
     // borderWidth: 2,
   },
 
@@ -175,7 +180,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal', // Font style bình thường
     fontWeight: '400', // Đặt trọng lượng font là '400' (normal weight)
     lineHeight: 12, // Bạn cần chỉ định lineHeight cụ thể (ví dụ: 12px)
-    marginRight: 10,
+    marginRight: 8,
   },
 });
 

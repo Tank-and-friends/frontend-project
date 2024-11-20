@@ -77,6 +77,7 @@ const NotificationScreen = () => {
       notificationName: 'Bài tập',
       notificationText: 'Nguyen Thi Thu Trang đã tạo một bài tập mới',
       onMarkRead: false,
+      iconName: 'file-invoice', // Thêm thuộc tính iconName
     },
     {
       subject: 'CTDLGT.20241',
@@ -84,6 +85,7 @@ const NotificationScreen = () => {
       notificationName: 'Thông báo',
       notificationText: 'Lịch kiểm tra giữa kỳ đã được cập nhật.',
       onMarkRead: true,
+      iconName: 'bell', // Thêm thuộc tính iconName
     },
     {
       subject: 'HTTTQL.20241',
@@ -91,14 +93,15 @@ const NotificationScreen = () => {
       notificationName: 'Tài liệu',
       notificationText: 'Thầy Nguyễn Văn A đã đăng tài liệu ôn tập cuối kỳ.',
       onMarkRead: false,
+      iconName: 'file', // Thêm thuộc tính iconName
     },
     {
       subject: 'LTHDT.20241',
       time: '14:45',
       notificationName: 'Câu hỏi',
-      notificationText:
-        'Sinh viên cần hoàn thành bài thảo luận trước ngày 25/11.',
+      notificationText: 'Sinh viên cần hoàn thành bài thảo luận trước ngày 25/11.',
       onMarkRead: false,
+      iconName: 'clipboard-question', // Thêm thuộc tính iconName
     },
     {
       subject: 'PTTKHT.20241',
@@ -106,6 +109,7 @@ const NotificationScreen = () => {
       notificationName: 'Hướng dẫn',
       notificationText: 'Video hướng dẫn đồ án cuối kỳ đã được tải lên.',
       onMarkRead: true,
+      iconName: 'readme', // Thêm thuộc tính iconName
     },
     {
       subject: 'MKT.20241',
@@ -113,15 +117,9 @@ const NotificationScreen = () => {
       notificationName: 'Đánh giá',
       notificationText: 'Đánh giá bài tập nhóm đã được đăng.',
       onMarkRead: false,
+      iconName: 'star', // Thêm thuộc tính iconName
     },
-    {
-      subject: 'THVP.20241',
-      time: '10:15',
-      notificationName: 'Bài học',
-      notificationText: 'Bài giảng mới đã có trên hệ thống LMS.',
-      onMarkRead: true,
-    },
-  ]);
+]);
 
   const [showFooter, setShowFooter] = useState(false);
   const [unConflic, setUnConflic] = useState(true);
@@ -225,6 +223,7 @@ const NotificationScreen = () => {
                 updatedStates[index] = value;
                 setCheckedStates(updatedStates);
               }} // Truyền hàm cập nhật
+              iconName={item.iconName}
             />
           ))}
         </ScrollView>
