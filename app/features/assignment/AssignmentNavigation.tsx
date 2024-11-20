@@ -1,6 +1,6 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import CreateAssignmentScreen from './CreateAssignmentScreen';
 import AssignmentScreen from './AssignmentScreen';
+import CreateAssignmentScreen from './CreateAssignmentScreen';
 import TaskDetailScreen from './TaskDetailScreen';
 
 export type RootStackParamList = {

@@ -1,10 +1,10 @@
 import React from 'react';
 import {
-  View,
-  Text,
-  TouchableOpacity,
   ScrollView,
   StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
@@ -15,8 +15,8 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 //   content: string;
 // }
 
-const TaskDetailScreen: React.FC = ({ route }: any) => {
-  const { title, date, deadline, content } = route.params;
+const TaskDetailScreen: React.FC = ({route}: any) => {
+  const {title, date, deadline, content} = route.params;
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -47,9 +47,10 @@ const TaskDetailScreen: React.FC = ({ route }: any) => {
               <View
                 style={[
                   styles.badge,
-                  {backgroundColor: '#FF7F11'}, /* eslint-disable-line react-native/no-inline-styles */
-                ]}
-              >
+                  {
+                    backgroundColor: '#FF7F11',
+                  } /* eslint-disable-line react-native/no-inline-styles */,
+                ]}>
                 <Text style={styles.badgeText}>Chưa nộp bài</Text>
                 <EvilIcons name="clock" size={24} color="black" />
               </View>

@@ -1,6 +1,6 @@
-import {useNavigation} from '@react-navigation/native';
 import React, {PropsWithChildren} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {StyleSheet, Text, View} from 'react-native';
 import {IconButton} from 'react-native-paper';
 
 type Props = PropsWithChildren<{

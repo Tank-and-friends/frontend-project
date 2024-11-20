@@ -1,5 +1,5 @@
 import React, {PropsWithChildren} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import image from '../../../assets/images/MessageBackground.png';
 
 type Props = PropsWithChildren<{}>;

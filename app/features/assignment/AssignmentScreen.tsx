@@ -1,17 +1,16 @@
 import React from 'react';
-import {Text, TextInput} from 'react-native-paper';
 import {
-  StyleSheet,
-  View,
   ImageBackground,
   Pressable,
   ScrollView,
+  StyleSheet,
+  View,
 } from 'react-native';
-import StatusButtonGroup from './components/StatusButtonGroup';
-import Assignment from './components/Assignment';
-import {TextField} from '../../components/TextField/TextField';
 import IonIcons from 'react-native-vector-icons/Ionicons';
+import {TextField} from '../../components/TextField/TextField';
 import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
+import Assignment from './components/Assignment';
+import StatusButtonGroup from './components/StatusButtonGroup';
 const AssignmentScreen = () => {
   const assignments = [
     {

@@ -1,13 +1,21 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+// import { IconButton } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome6'; // Assuming you're using FontAwesome icons
+import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface NotificationProps {
   subject: string;
   time: string;
   notificationName: string;
   notificationText: string;
-  onMarkRead: boolean;
+  onMarkRead?: boolean;
+  showFooter: boolean;
+  setShowFooter: (value: boolean) => void;
+  unConflic?: boolean;
+  checked?: boolean;
+  setChecked: (value: boolean) => void;
+  iconName: string;
 }
 
 const TaskNotification: React.FC<NotificationProps> = ({
@@ -16,32 +24,72 @@ const TaskNotification: React.FC<NotificationProps> = ({
   notificationName,
   notificationText,
   onMarkRead, // Default text if not provided
+  showFooter,
+  setShowFooter,
+  unConflic,
+  checked, // Nhận trạng thái checked
+  setChecked, // Nhận hàm cập nhật trạng thái
+  iconName,
 }) => {
   const [unRead, setUnRead] = useState(onMarkRead);
   const textColor = unRead ? '#B6B6B6' : '#020202'; // Change text color based on unread state
 
+  const toggleFooter = () => {
+    setShowFooter(true); // Toggle footer state
+    // alert(showFooter),
+  };
+
+  useEffect(() => {
+    setUnRead(onMarkRead);
+  }, [onMarkRead]);
+
   return (
     <View style={styles.taskTitleContainer}>
-      <View>
-        <View style={styles.title}>
-          <Text style={styles.subject}>{subject}</Text>
-          <Text style={[styles.time, {color: textColor}]}>{time}</Text>
+      <TouchableOpacity
+        onLongPress={toggleFooter}
+      >
+        <View>
+          <View style={styles.title}>
+            <Text style={styles.subject}>{subject}</Text>
+            <Text style={[styles.time, {color: textColor}]}>{time}</Text>
+          </View>
+          <View style={styles.notification}>
+              <Icon name={iconName} size={30} color="black"/>
+            <Text style={styles.notificationName}>{notificationName}</Text>
+          </View>
+          <View style={styles.line} />
+          <Text style={styles.text}>{notificationText}</Text>
+          {!unRead && unConflic && (
+            <TouchableOpacity onPress={() => setUnRead(!unRead)}>
+              <View style={styles.mark}>
+                <Text style={styles.text2}>Đánh dấu là đã đọc</Text>
+                <Icon3 name="pencil-outline" size={20} color="#42A4EE" />
+              </View>
+            </TouchableOpacity>
+          )}
+          {!unConflic && showFooter && !checked && (
+            <TouchableOpacity onPress={() => setChecked(!checked)}>
+              <View style={styles.mark}>
+              <Icon name="circle-notch" size={20} color="#C02135" />
+              </View>
+            </TouchableOpacity>
+          )}
+          {!unConflic && showFooter && checked && (
+            <TouchableOpacity onPress={() => setChecked(!checked)}>
+              <View style={styles.mark}>
+                <Icon name="circle-check" size={20} color="#C02135" />
+              </View>
+            </TouchableOpacity>
+          )}
+          {unRead && unConflic && (
+            <TouchableOpacity>
+              <View style={styles.mark}>
+                <View style={{ width: 20, height: 21.5 } /* eslint-disable-line react-native/no-inline-styles */} />
+              </View>
+            </TouchableOpacity>
+          )}
         </View>
-        <View style={styles.notification}>
-          <Icon name="arrow-up-from-bracket" size={30} color="black" />
-          <Text style={styles.notificationName}>{notificationName}</Text>
-        </View>
-        <View style={styles.line} />
-        <Text style={styles.text}>{notificationText}</Text>
-        {!unRead && (
-          <TouchableOpacity onPress={() => setUnRead(!unRead)}>
-            <View style={styles.mark}>
-              <Text style={styles.text2}>Đánh dấu là đã đọc</Text>
-              <Icon name="arrow-up-from-bracket" size={20} color="black" />
-            </View>
-          </TouchableOpacity>
-        )}
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -51,6 +99,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 10,
     // borderWidth: 2,
   },
 
@@ -131,7 +180,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal', // Font style bình thường
     fontWeight: '400', // Đặt trọng lượng font là '400' (normal weight)
     lineHeight: 12, // Bạn cần chỉ định lineHeight cụ thể (ví dụ: 12px)
-    marginRight: 10,
+    marginRight: 8,
   },
 });
 

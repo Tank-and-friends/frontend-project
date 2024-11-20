@@ -1,12 +1,6 @@
 import {PropsWithChildren} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {
-  Button,
-  Modal,
-  PaperProvider,
-  Portal,
-  TextInput,
-} from 'react-native-paper';
+import {Button, Modal} from 'react-native-paper';
 import {TextField} from '../../../components/TextField/TextField';
 type Props = PropsWithChildren<{
   isVisible: boolean;

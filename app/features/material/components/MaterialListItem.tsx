@@ -1,8 +1,8 @@
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import React, {PropsWithChildren} from 'react';
-import {View, StyleSheet, Image, GestureResponderEvent} from 'react-native';
-import {IconButton, Text} from 'react-native-paper';
+import {GestureResponderEvent, Image, StyleSheet, View} from 'react-native';
 import {Pressable} from 'react-native-gesture-handler';
+import {IconButton, Text} from 'react-native-paper';
 import excel from '../../../assets/images/excel.png';
 import img from '../../../assets/images/img.png';
 import pdf from '../../../assets/images/pdf.png';

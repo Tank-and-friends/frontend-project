@@ -1,21 +1,11 @@
 import React, {useState} from 'react';
-import {
-  View,
-  Image,
-  StyleSheet,
-  ScrollView,
-  ImageBackground,
-} from 'react-native';
+import {ImageBackground, ScrollView, StyleSheet, View} from 'react-native';
 import {Button} from 'react-native-paper';
-import {createStackNavigator} from '@react-navigation/stack';
+import IonIcons from 'react-native-vector-icons/Ionicons';
+import {TextField} from '../../components/TextField/TextField';
+import TopComponent from '../../components/TopComponent/TopComponent';
 import OpenClasses from './components/OpenClasses';
 import RegisteredClasses from './components/RegisteredClasses';
-import ClassList from './components/ClassList'; // Adjust the import path as needed
-import TopComponent from '../../components/TopComponent/TopComponent';
-import {TextField} from '../../components/TextField/TextField';
-import IonIcons from 'react-native-vector-icons/Ionicons';
-
-const Stack = createStackNavigator();
 
 const ClassRegisterMain = ({navigation}: any) => {
   const [activeScreen, setActiveScreen] = useState('Screen1');

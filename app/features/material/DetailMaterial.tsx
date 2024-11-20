@@ -1,6 +1,5 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {PropsWithChildren, useRef, useState} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import React, {PropsWithChildren, useState} from 'react';
+import {StyleSheet, View} from 'react-native';
 import {Button, Modal, PaperProvider, Portal} from 'react-native-paper';
 import TransparentBackground from '../../components/TransparentBackground';
 import RenamePopup from './components/RenamePopup';
@@ -11,8 +10,6 @@ type Props = PropsWithChildren<{}>;
 const DetailMaterial = ({}: Props) => {
   const [isRename, setIsRename] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const navigation = useNavigation();
-  const scrollView = useRef<ScrollView | null>();
 
   const showPopup = () => {
     setIsPopupOpen(true);

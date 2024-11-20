@@ -1,11 +1,11 @@
 // AppNavigator.tsx
-import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
+import React from 'react';
+import LoginAccountScreen from './LoginAccountScreen';
 import LoginScreen from './LoginScreen';
 import PasswordScreen from './PasswordScreen';
-import SignupScreen from './SignupScreen';
 import SignupCreateScreen from './SignupCreateScreen';
-import LoginAccountScreen from './LoginAccountScreen';
+import SignupScreen from './SignupScreen';
 import VerifyEmailScreen from './VerifyEmailScreen';
 
 export type RootStackParamList = {

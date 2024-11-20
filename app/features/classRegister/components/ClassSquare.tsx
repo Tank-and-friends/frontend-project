@@ -1,26 +1,33 @@
 import React from 'react';
-import { View, Image, StyleSheet, TouchableWithoutFeedback } from 'react-native';
-import { Text } from 'react-native-paper';
+import {Image, StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
+import {Text} from 'react-native-paper';
 
 interface ClassSquareProps {
   onPress?: () => void;
   className: string;
 }
 
-export default function ClassSquare({ onPress, className }: ClassSquareProps) {
+export default function ClassSquare({onPress, className}: ClassSquareProps) {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={styles.classSquareContainer}>
         <Image
           source={require('../../../assets/images/ClassBackground.jpg')}
-          style={[styles.backgroundImage, { borderRadius: 10 }]}
+          style={[styles.backgroundImage, {borderRadius: 10}]}
           resizeMode="stretch"
         />
-        <View style={{flexDirection:'row', justifyContent: 'space-between', alignItems: 'center'}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
           <View style={styles.Box}>
-              <Text style={styles.Text}>Đại cương</Text>
+            <Text style={styles.Text}>Đại cương</Text>
           </View>
-          <Text style={{fontSize: 10, textDecorationLine: 'underline'}}>234 lớp →</Text>
+          <Text style={{fontSize: 10, textDecorationLine: 'underline'}}>
+            234 lớp →
+          </Text>
         </View>
         <View style={styles.classTitle}>
           <Text
@@ -30,10 +37,9 @@ export default function ClassSquare({ onPress, className }: ClassSquareProps) {
               fontSize: 12,
               fontFamily: 'Inter',
               textShadowColor: 'white',
-              textShadowOffset: { width: 0, height: 0 },
+              textShadowOffset: {width: 0, height: 0},
               textShadowRadius: 4,
-            }}
-          >
+            }}>
             Calculus I
           </Text>
           <Text
@@ -43,10 +49,9 @@ export default function ClassSquare({ onPress, className }: ClassSquareProps) {
               fontSize: 16,
               fontFamily: 'Inter',
               textShadowColor: 'white',
-              textShadowOffset: { width: 0, height: 0 },
+              textShadowOffset: {width: 0, height: 0},
               textShadowRadius: 4,
-            }}
-          >
+            }}>
             {className}
           </Text>
         </View>

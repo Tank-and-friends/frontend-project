@@ -1,21 +1,16 @@
-import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
-import {HomeTabs} from './features/home/navigation';
-import {ClassNavigator, ClassStacks} from './features/class/navigation';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createStackNavigator} from '@react-navigation/stack';
+import React from 'react';
 import BottomNavBar from './components/BottomNavBar/BottomNavBar';
-import NotificationScreen from './features/notification/NotificationScreen';
-import MessageScreen from './features/message/MessageScreen';
-import ClassScreen from './features/class/ClassScreen';
-import ClassRegisterScreen from './features/classRegister/ClassRegisterScreen';
-import { ClassListScreen } from './features/class/ClassListScreen';
-import LoginAccountScreen from './features/auth/LoginAccountScreen';
-import MessageNavigation from './features/message/MessageNavigation';
-import MaterialNavigation from './features/material/MaterialNavigation';
-import UserInfoNavigator from './features/userInfo/UserInfoNavigator';
-import AuthNavigator from './features/auth/AuthNavigator';
 import AssignmentNavigation from './features/assignment/AssignmentNavigation';
-import ClassFirstScreen from './features/class/ClassFirstScreen';
+import AuthNavigator from './features/auth/AuthNavigator';
+import {ClassNavigator, ClassStacks} from './features/class/navigation';
+import ClassRegisterScreen from './features/classRegister/ClassRegisterScreen';
+import MaterialNavigation from './features/material/MaterialNavigation';
+import MessageNavigation from './features/message/MessageNavigation';
+import MessageScreen from './features/message/MessageScreen';
+import NotificationScreen from './features/notification/NotificationScreen';
+import UserInfoNavigator from './features/userInfo/UserInfoNavigator';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -28,6 +23,7 @@ export type RootStackParamList = {
   NotificationScreen: undefined;
   ClassRegisterScreen: undefined;
   ClassStacks: undefined;
+  ClassNavigator: undefined;
 };
 
 const Tab = createBottomTabNavigator();
@@ -99,7 +95,7 @@ export const RootStacks = () => {
       <Stack.Screen
         name="ClassNavigator"
         component={ClassNavigator}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );

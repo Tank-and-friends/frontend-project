@@ -38,15 +38,11 @@ const MessageDetail = ({route}: Props) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isTextFocus, setIsTextFocus] = useState(false);
   const [isOpenUtilities, setIsOpenUtilities] = useState(false);
-  const [selectedMessage, setSelectedMessage] = useState(null);
   const navigation = useNavigation<NavigationProp<ParamList>>();
   const scrollView = useRef<ScrollView | null>();
   const {newMessage} = route.params;
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
-  };
-  const toggleUtilities = () => {
-    setIsOpenUtilities(!isOpenUtilities);
   };
   const toggleBlock = () => {
     setIsBlock(!isBlock);
