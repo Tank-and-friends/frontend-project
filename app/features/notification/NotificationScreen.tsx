@@ -1,7 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   BackHandler,
+  ImageBackground,
   ScrollView,
   StyleSheet,
   Text,
@@ -10,6 +11,7 @@ import {
 } from 'react-native';
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import TaskNotification from './components/TaskNotification';
+import TopComponent from '../../components/TopComponent/TopComponent';
 const NotificationScreen = () => {
   // const notificationdata = [
   //   {
@@ -203,62 +205,72 @@ const NotificationScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* Content */}
-      <View style={styles.test}>
-        <ScrollView
-          style={styles.contentContainer}
-          contentContainerStyle={{
-            paddingBottom: 10,
-          }}>
-          {notifications.map((item, index) => (
-            <TaskNotification
-              key={index}
-              subject={item.subject}
-              time={item.time}
-              notificationName={item.notificationName}
-              notificationText={item.notificationText}
-              onMarkRead={item.onMarkRead}
-              showFooter={showFooter} // Truyền showFooter
-              setShowFooter={setShowFooter} // Truyền setShowFooter
-              unConflic={unConflic}
-              checked={checkedStates[index]}
-              setChecked={value => {
-                const updatedStates = [...checkedStates];
-                updatedStates[index] = value;
-                setCheckedStates(updatedStates);
-              }} // Truyền hàm cập nhật
-              iconName={item.iconName}
-            />
-          ))}
-        </ScrollView>
-      </View>
-
-      {/* Footer */}
-      {showFooter && (
-        <View style={styles.footer}>
-          <TouchableOpacity
-            style={styles.footerButton}
-            onPress={handleMarkRead}>
-            <Icon3 name="pencil-outline" size={25} color="white" />
-            <Text>Đánh dấu đã đọc</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.footerButton}
-            onPress={handleDeleteSelected}>
-            <Icon3 name="trash-can-outline" size={25} color="white" />
-            <Text>Xóa</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.footerButton}>
-            <Icon3 name="dots-horizontal" size={25} color="white" />
-            <Text>Xem thêm</Text>
-          </TouchableOpacity>
+      <ImageBackground
+        source={require('../../assets/images/background.png')}
+        style={styles.backgroundImage}
+        resizeMode="cover">
+        <TopComponent title="Thông báo" />
+        {/* Content */}
+        <View style={styles.test}>
+          <ScrollView
+            style={styles.contentContainer}
+            contentContainerStyle={{
+              paddingBottom: 10,
+            }}>
+            {notifications.map((item, index) => (
+              <TaskNotification
+                key={index}
+                subject={item.subject}
+                time={item.time}
+                notificationName={item.notificationName}
+                notificationText={item.notificationText}
+                onMarkRead={item.onMarkRead}
+                showFooter={showFooter} // Truyền showFooter
+                setShowFooter={setShowFooter} // Truyền setShowFooter
+                unConflic={unConflic}
+                checked={checkedStates[index]}
+                setChecked={value => {
+                  const updatedStates = [...checkedStates];
+                  updatedStates[index] = value;
+                  setCheckedStates(updatedStates);
+                }} // Truyền hàm cập nhật
+                iconName={item.iconName}
+              />
+            ))}
+          </ScrollView>
         </View>
-      )}
+
+        {/* Footer */}
+        {showFooter && (
+          <View style={styles.footer}>
+            <TouchableOpacity
+              style={styles.footerButton}
+              onPress={handleMarkRead}>
+              <Icon3 name="pencil-outline" size={25} color="white" />
+              <Text>Đánh dấu đã đọc</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.footerButton}
+              onPress={handleDeleteSelected}>
+              <Icon3 name="trash-can-outline" size={25} color="white" />
+              <Text>Xóa</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.footerButton}>
+              <Icon3 name="dots-horizontal" size={25} color="white" />
+              <Text>Xem thêm</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </ImageBackground>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
   },
