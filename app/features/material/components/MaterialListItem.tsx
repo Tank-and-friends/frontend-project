@@ -80,6 +80,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 5,
     paddingVertical: 12,
+    marginBottom:10,
     backgroundColor: '#eff2ef',
     borderRadius: 10,
     flexDirection: 'row',
@@ -90,12 +91,6 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 5,
   },
-  // fileSymbol: {
-  //   borderRadius: 17.5,
-  //   backgroundColor: '#d9d9d9',
-  //   height: 35,
-  //   width: 35,
-  // },
   textContentContainer: {
     flex: 1,
     marginLeft: 10,

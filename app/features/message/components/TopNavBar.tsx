@@ -4,7 +4,7 @@ import {Image, StyleSheet, Text, View} from 'react-native';
 import {IconButton} from 'react-native-paper';
 
 type ParamList = {
-  MessageStacks: {
+  MessageFeaturesStacks: {
     screen: string;
   };
 };
@@ -34,7 +34,7 @@ const TopNavBar = ({title, onOpenPopup}: Props) => {
         numberOfLines={1}
         ellipsizeMode="tail"
         onPress={() =>
-          navigation.navigate('MessageStacks', {
+          navigation.navigate('MessageFeaturesStacks', {
             screen: 'FriendPersonalInfo',
           })
         }>
