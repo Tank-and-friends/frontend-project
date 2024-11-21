@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import TaskNotification from './components/TaskNotification';
-import TopComponent from '../../components/TopComponent/TopComponent';
+import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
 const NotificationScreen = () => {
   // const notificationdata = [
   //   {
@@ -209,7 +209,7 @@ const NotificationScreen = () => {
         source={require('../../assets/images/background.png')}
         style={styles.backgroundImage}
         resizeMode="cover">
-        <TopComponent title="Thông báo" />
+        <TopNavWithoutAvatar title="Thông báo" />
         {/* Content */}
         <View style={styles.test}>
           <ScrollView
