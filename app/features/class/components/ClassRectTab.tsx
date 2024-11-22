@@ -53,7 +53,6 @@ const styles = StyleSheet.create({
   },
   classTitle: {
     flexDirection: 'column',
-    marginBottom: 4,
     backgroundColor: '#EFF2EF',
     flex: 1,
     height: 100,
@@ -103,6 +102,6 @@ const styles = StyleSheet.create({
     height: 120,
     borderRadius: 10,
     resizeMode: 'cover',
-    transform: [{ scale: 1.2 }],
+    transform: [{ scale: 1.25 }],
   },
 });
