@@ -21,28 +21,28 @@ const ClassListScreen = () => {
 
   const classes = [
     {
-      classId: 'Class1',
+      classId: '123456',
       className: 'Giải tích I',
       classTime: 'Sáng thứ 3, 6:45 - 10:05',
       classPlace: 'TC-207',
       grade: {midTerm: 4.0, endTerm: 3.2},
     },
     {
-      classId: 'Class2',
+      classId: '234567',
       className: 'Giải tích II',
       classTime: 'Chiều thứ 5, 14:00 - 16:30',
       classPlace: 'TC-208',
       grade: {},
     },
     {
-      classId: 'Class3',
+      classId: '345678',
       className: 'Giải tích III',
       classTime: 'Tối thứ 7, 18:00 - 20:30',
       classPlace: 'TC-209',
       grade: {midTerm: 4.0, endTerm: 3.2},
     },
     {
-      classId: 'Class4',
+      classId: '456789',
       className: 'Giải tích IV',
       classTime: 'Tối thứ 7, 18:00 - 20:30',
       classPlace: 'TC-209',
