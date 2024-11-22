@@ -56,7 +56,7 @@ const ClassRegisterScreen = ({navigation}: any) => {
           style={styles.scrollableContent}
           showsHorizontalScrollIndicator={false}>
           {activeScreen === 'Screen1' ? (
-            <OpenClasses navigation={navigation} /> // Pass navigation here
+            <OpenClasses navigation={navigation} />
           ) : (
             <RegisteredClasses />
           )}
@@ -95,6 +95,7 @@ const styles = StyleSheet.create({
   scrollableContent: {
     paddingVertical: 10,
     width: '100%',
+    paddingBottom: 120,
   },
 });
 

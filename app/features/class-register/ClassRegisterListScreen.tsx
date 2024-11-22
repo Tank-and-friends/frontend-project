@@ -75,7 +75,7 @@ export default function ClassRegisterListScreen({route}: any) {
         style={{width: '100%'}}>
         {classData.map((classItem, index) => (
           <ClassRect
-            key={index}
+            key={index} 
             classTitle={classItem.classTitle}
             classTime={classItem.classTime}
             classCode={classItem.classCode}
@@ -171,5 +171,6 @@ const styles = StyleSheet.create({
     width: '100%',
     gap: 20,
     paddingVertical: 10,
+    paddingBottom: 120,
   },
 });
