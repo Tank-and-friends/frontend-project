@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { Image, ScrollView, StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
+import {Image, ScrollView, StyleSheet, View} from 'react-native';
+import {Text} from 'react-native-paper';
 import ClassRect from './components/ClassRect';
 
 export default function ClassRegisterListScreen({route}: any) {

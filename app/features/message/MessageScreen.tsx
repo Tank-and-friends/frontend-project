@@ -10,7 +10,9 @@ import MessageListItem from './components/MessageListItem';
 type SectionProps = PropsWithChildren<{}>;
 
 type ParamList = {
-  NewMessageScreen?: string;
+  MessageFeaturesStacks: {
+    screen: string;
+  };
 };
 
 const DATA = [
@@ -62,7 +64,6 @@ const MessageScreen = ({}: SectionProps) => {
           style={styles.listMessage}
           renderItem={({item}) => <MessageListItem item={item} />}
           keyExtractor={item => item.name}
-          ItemSeparatorComponent={() => <View style={{height: 10}} />} // TODO: Sao ko dùng gap giữa các item
         />
         <IconButton
           icon={NoteIcon}
@@ -71,7 +72,9 @@ const MessageScreen = ({}: SectionProps) => {
           size={30}
           style={styles.newMessageButton}
           onPress={() =>
-            navigation.navigate('NewMessageScreen')
+            navigation.navigate('MessageFeaturesStacks', {
+              screen: 'NewMessageScreen',
+            })
           }
         />
       </ImageBackground>

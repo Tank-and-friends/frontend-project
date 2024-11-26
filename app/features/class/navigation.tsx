@@ -18,7 +18,7 @@ export const ClassStacks = () => {
       <Stack.Screen
         name="ClassDetails"
         component={ClassDetailsScreen}
-        options={{headerShown: true, title: 'Class Details'}}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="AbsenceRequestsList"

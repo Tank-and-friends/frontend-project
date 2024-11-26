@@ -41,7 +41,6 @@ const NewMessageScreen = ({}: SectionProps) => {
           style={styles.listMessage}
           renderItem={({item}) => <MessageListItem item={item} />}
           keyExtractor={item => item.name}
-          ItemSeparatorComponent={() => <View style={{height: 10}} />} // TODO: Sao không dùng gap ở đây
         />
       </ImageBackground>
     </View>

@@ -8,7 +8,7 @@ import TopComponent from '../../components/TopComponent/TopComponent';
 import OpenClasses from './components/OpenClasses';
 import RegisteredClasses from './components/RegisteredClasses';
 
-const ClassRegisterScreen = ({navigation}: any) => {
+const ClassRegisterScreen = () => {
   const [activeScreen, setActiveScreen] = useState('Screen1');
 
   return (
@@ -56,7 +56,7 @@ const ClassRegisterScreen = ({navigation}: any) => {
           style={styles.scrollableContent}
           showsHorizontalScrollIndicator={false}>
           {activeScreen === 'Screen1' ? (
-            <OpenClasses navigation={navigation} /> // Pass navigation here
+            <OpenClasses/> // Pass navigation here
           ) : (
             <RegisteredClasses />
           )}
