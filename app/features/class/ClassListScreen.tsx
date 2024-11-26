@@ -1,18 +1,21 @@
-import { NavigationProp, useNavigation } from '@react-navigation/core';
+import {NavigationProp, useNavigation} from '@react-navigation/core';
 import React from 'react';
-import { ImageBackground, ScrollView, StyleSheet, View } from 'react-native';
+import {ImageBackground, ScrollView, StyleSheet, View} from 'react-native';
 import IonIcons from 'react-native-vector-icons/Ionicons';
-import { TextField } from '../../components/TextField/TextField';
+import {TextField} from '../../components/TextField/TextField';
 import TopComponent from '../../components/TopComponent/TopComponent';
 import ClassRect from './components/ClassRect';
 
 export type ParamList = {
-  ClassDetails?: {
-    classId: string;
-    className: string;
-    classTime: string;
-    classPlace: string;
-    grade: {midTerm?: number; endTerm?: number};
+  ClassStacks: {
+    screen: string;
+    params: {
+      classId: string;
+      className: string;
+      classTime: string;
+      classPlace: string;
+      grade: {midTerm?: number; endTerm?: number};
+    };
   };
 };
 
@@ -57,12 +60,15 @@ const ClassListScreen = () => {
     classPlace: string,
     grade: {midTerm?: number; endTerm?: number},
   ) => {
-    navigation.navigate('ClassDetails', {
-      classId,
-      className,
-      classTime,
-      classPlace,
-      grade,
+    navigation.navigate('ClassStacks', {
+      screen: 'ClassDetails',
+      params: {
+        classId,
+        className,
+        classTime,
+        classPlace,
+        grade,
+      },
     });
   };
 
