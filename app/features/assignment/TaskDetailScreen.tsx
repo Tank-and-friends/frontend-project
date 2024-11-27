@@ -30,7 +30,7 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
         setProcessedDeadline(match[0]); // Lưu giá trị giờ vào state
       } else {
         setLate(true); // Đặt late là true nếu không có thông tin giờ
-        setProcessedDeadline('Quá hạn'); // Lưu thông báo nếu không có thông tin giờ
+        setProcessedDeadline(deadline); // Lưu thông báo nếu không có thông tin giờ
       }
     };
 
@@ -64,6 +64,9 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
               </View>
               {!late && <Text style={styles.deadline}>
                 Đến hạn vào ngày {date} lúc {processedDeadline}
+              </Text>}
+              {late && <Text style={styles.deadline}>
+                {processedDeadline}
               </Text>}
               <View style={styles.line} />
               <Text style={styles.text}>Nội dung</Text>
