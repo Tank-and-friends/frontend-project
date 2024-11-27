@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
+  ImageBackground,
   ScrollView,
   StyleSheet,
   Text,
@@ -8,7 +9,8 @@ import {
   View,
 } from 'react-native';
 
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
 // interface TaskDetailData {
 //   title: string;
 //   date: string;
@@ -18,107 +20,97 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
 const TaskDetailScreen: React.FC = ({route}: any) => {
   const {title, date, deadline, content} = route.params;
+  const [late, setLate] = useState(false);
+  const [processedDeadline, setProcessedDeadline] = useState('');
+
+  useEffect(() => {
+    const processDeadline = () => {
+      const match = deadline.match(/\d{2}:\d{2}/); // Tìm chuỗi có định dạng HH:mm
+      if (match) {
+        setProcessedDeadline(match[0]); // Lưu giá trị giờ vào state
+      } else {
+        setLate(true); // Đặt late là true nếu không có thông tin giờ
+        setProcessedDeadline('Quá hạn'); // Lưu thông báo nếu không có thông tin giờ
+      }
+    };
+
+    processDeadline();
+  }, [deadline]);
+
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton}>
-          {/* Back Icon */}
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Phát triển ứng dụng đa nền tảng</Text>
-
-        <Text style={styles.headerTitle}>Phát triển ứng dụng đa nền tảng</Text>
-
-        <Text style={styles.headerTitle}>Phát triển ứng dụng đa nền tảng</Text>
-
-        <Text style={styles.headerTitle}>Phát triển ứng dụng đa nền tảng</Text>
-        <TouchableOpacity style={styles.settingsButton}>
-          {/* Settings Icon */}
-        </TouchableOpacity>
-      </View>
-
-      {/* Task Title */}
-
-      {/* Content */}
-      <ScrollView style={styles.contentContainer}>
-        <View style={styles.taskTitleContainer}>
-          <View>
-            <View style={styles.title}>
-              <Text style={styles.taskTitle}>{title}</Text>
-              <View
-                style={[
-                  styles.badge,
-                  {
-                    backgroundColor: '#FF7F11',
-                  },
-                ]}>
-                <Text style={styles.badgeText}>Chưa nộp bài</Text>
-                <EvilIcons name="clock" size={24} color="black" />
+      <ImageBackground
+        source={require('../../assets/images/background.png')}
+        style={styles.backgroundImage}
+        resizeMode="cover">
+        {/* Task Title */}
+        <TopNavWithoutAvatar title="Chi tiết bài tập" />
+        {/* Content */}
+        <ScrollView style={styles.contentContainer}>
+          <View style={styles.taskTitleContainer}>
+            <View>
+              <View style={styles.title}>
+                <Text style={styles.taskTitle}>{title}</Text>
+                <View
+                  style={[
+                    styles.badge,
+                    {
+                      backgroundColor: '#FF7F11',
+                    },
+                  ]}>
+                  <Text style={styles.badgeText}>Chưa nộp bài</Text>
+                  <FeatherIcon name="clock" size={24} color="black" />
+                </View>
               </View>
-            </View>
-            <Text style={styles.deadline}>
-              Đến hạn vào ngày {date} lúc {deadline}
-            </Text>
-            <View style={styles.line} />
-            <Text style={styles.text}>Nội dung</Text>
-            <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
-              <Text style={styles.text1}>{content}</Text>
-            </ScrollView>
+              {!late && <Text style={styles.deadline}>
+                Đến hạn vào ngày {date} lúc {processedDeadline}
+              </Text>}
+              <View style={styles.line} />
+              <Text style={styles.text}>Nội dung</Text>
+              <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
+                <Text style={styles.text1}>{content}</Text>
+              </ScrollView>
 
-            <Text style={styles.text}>Tài liệu liên quan</Text>
+              <Text style={styles.text}>Tài liệu liên quan</Text>
+            </View>
           </View>
-        </View>
 
-        <View style={styles.taskTitleContainer}>
-          <View>
-            <View style={styles.title}>
-              <Text style={styles.text}>Bài nộp của tôi</Text>
-              <TouchableOpacity>
-                <Text style={styles.addAssignment}>Thêm +</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.line} />
-            {/* Cuộn các tài liệu đã nộp (Có thể đổi thành tăng dần kích thước) */}
-            {/* <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
+          <View style={styles.taskTitleContainer}>
+            <View>
+              <View style={styles.title}>
+                <Text style={styles.text}>Bài nộp của tôi</Text>
+                <TouchableOpacity>
+                  <Text style={styles.addAssignment}>Thêm +</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.line} />
+              {/* Cuộn các tài liệu đã nộp (Có thể đổi thành tăng dần kích thước) */}
+              {/* <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
 
             </ScrollView> */}
-            <View style={styles.button1}>
-              <TouchableOpacity style={styles.button2}>
-                <Text style={styles.buttonText}>Nộp bài</Text>
-              </TouchableOpacity>
+              <View style={styles.button1}>
+                <TouchableOpacity style={styles.button2}>
+                  <Text style={styles.buttonText}>Nộp bài</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </ScrollView>
-
-      {/* Footer */}
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text>Thông báo</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text>Tin nhắn</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text>Lớp học</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text>Đăng ký lớp</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text>Xem thêm</Text>
-        </TouchableOpacity>
-      </View>
+        </ScrollView>
+      </ImageBackground>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: '#ccc',
-    borderWidth: 2,
-    borderColor: 'green',
+    // borderWidth: 2,
+    // borderColor: 'green',
   },
   title: {
     flexDirection: 'row',
@@ -152,6 +144,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter',
     fontWeight: '700',
     color: '#071013',
+    flexWrap: 'wrap',
+    width: '65%',
   },
   deadline: {
     color: '#071013',
