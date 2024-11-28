@@ -5,64 +5,30 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  Linking,
   StyleSheet,
   ScrollView,
-  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from './navigation';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {UserInfo} from '../../models/User';
+import {getUserInfo} from '../../apis/UserApi';
 
 type AccountInfoScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'AccountInfoScreen'
 >;
 
-type AccountInfoScreenProps = {
-  coverImageUrl: string;
-  profileImageUrl: string;
-  userName: string;
-  friendCount: number;
-  statusText: string;
-  joinDate: string;
-  location: string;
-  websiteUrl: string;
-};
 const AccountInfoScreen: React.FC = () => {
-  const [accountData, setAccountData] = useState<AccountInfoScreenProps | null>(
-    null,
-  );
-  const [loading, setLoading] = useState<boolean>(true);
+  const [accountData, setAccountData] = useState<UserInfo | null>(null);
   const navigation = useNavigation<AccountInfoScreenNavigationProp>();
 
   useEffect(() => {
-    const fakeAccountData = {
-      coverImageUrl: '../../assets/avt.jpg',
-      profileImageUrl: 'https://example.com/profile-image-url',
-      userName: 'Bong 20210000',
-      friendCount: 420,
-      statusText: 'Fan thầy Bean tổng nè',
-      joinDate: '15 tháng 4 năm 2024',
-      location: 'Thị xã Kinh Môn, tỉnh Hải Dương, Việt Nam',
-      websiteUrl: 'https://abcdexyz',
-    };
-
-    setTimeout(() => {
-      setAccountData(fakeAccountData);
-      setLoading(false);
-    }, 1000);
+    getUserInfo().then(res => {
+      setAccountData(res);
+    });
   }, []);
-
-  if (loading) {
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator size="large" color="#f57c00" />
-        <Text>Đang tải dữ liệu...</Text>
-      </View>
-    );
-  }
 
   if (!accountData) {
     return (
@@ -101,15 +67,13 @@ const AccountInfoScreen: React.FC = () => {
         {/* Profile Section */}
         <View style={styles.profileContainer}>
           <Image
-            source={require('../../assets/avt.jpg')}
+            source={{uri: accountData.avatar}}
             style={styles.profileImage}
           />
           <View style={styles.onlineStatusIndicator} />
-          <Text style={styles.userName}>{accountData.userName}</Text>
-          <Text style={styles.friendCount}>
-            {accountData.friendCount} người bạn
-          </Text>
-          <Text style={styles.statusText}>{accountData.statusText}</Text>
+          <Text style={styles.userName}>{accountData.name}</Text>
+          <Text style={styles.friendCount}>{accountData.role}</Text>
+          <Text style={styles.statusText}>{accountData.id}</Text>
         </View>
 
         {/* Divider */}
@@ -119,25 +83,11 @@ const AccountInfoScreen: React.FC = () => {
         <View style={styles.detailsContainer}>
           <View style={styles.detailItem}>
             <Icon name="calendar" size={20} color="#f57c00" />
-            <Text style={styles.detailText}>
-              Tham gia ngày{' '}
-              <Text style={styles.detailTextBold}>{accountData.joinDate}</Text>
-            </Text>
+            <Text style={styles.detailText}>{accountData.email}</Text>
           </View>
           <View style={styles.detailItem}>
-            <Icon name="home" size={20} color="#4caf50" />
-            <Text style={styles.detailText}>
-              Sống tại{' '}
-              <Text style={styles.detailTextBold}>{accountData.location}</Text>
-            </Text>
-          </View>
-          <View style={styles.detailItemLink}>
-            <Icon name="link" size={20} color="#1e88e5" />
-            <Text
-              style={styles.linkText}
-              onPress={() => Linking.openURL(accountData.websiteUrl)}>
-              {accountData.websiteUrl}
-            </Text>
+            <Icon name="calendar" size={20} color="#f57c00" />
+            <Text style={styles.detailText}>{accountData.status}</Text>
           </View>
         </View>
 
