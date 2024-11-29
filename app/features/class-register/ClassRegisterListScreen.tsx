@@ -35,7 +35,7 @@ export default function ClassRegisterListScreen({route}: any) {
         style={styles.backgroundImage}
         resizeMode="stretch"
       />
-      <Text style={styles.title}>Class List for {className}</Text>
+      {/* <Text style={styles.title}>Class List for {className}</Text> */}
       <View style={styles.classSquareContainerContainer}>
         <Image
           source={require('../../assets/images/class-background.jpg')}
