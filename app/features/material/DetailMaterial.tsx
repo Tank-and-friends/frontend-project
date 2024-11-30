@@ -1,15 +1,29 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {PropsWithChildren, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {Button, Modal, PaperProvider, Portal} from 'react-native-paper';
 import TransparentBackground from '../../components/TransparentBackground';
-import RenamePopup from './components/RenamePopup';
 import TopNavBar from './components/TopNavBar';
+import {MaterialInfo} from '../../models/Material';
+import EditMaterialPopup from './components/EditMaterialPopup';
+import {RouteProp, useNavigation} from '@react-navigation/core';
+import WebView from 'react-native-webview';
+import {getDirectMaterialLink} from '../../utils/image';
+import {deleteMaterial, getMaterialInfo} from '../../apis/MaterialApi';
 
-type Props = PropsWithChildren<{}>;
+type Props = PropsWithChildren<{route: RouteProp<RouteProps>}>;
 
-const DetailMaterial = ({}: Props) => {
-  const [isRename, setIsRename] = useState(false);
+type RouteProps = {
+  DetailMaterial: {
+    material: MaterialInfo;
+  };
+};
+
+const DetailMaterial = ({route}: Props) => {
+  const {material} = route.params;
+  const navigation = useNavigation();
+  const [materialInfo, setMaterialInfo] = useState<MaterialInfo>(material);
+  const [isEdit, setIsEdit] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const showPopup = () => {
@@ -18,22 +32,52 @@ const DetailMaterial = ({}: Props) => {
   const hidePopup = () => {
     setIsPopupOpen(false);
   };
-  const toggleRename = () => {
-    setIsRename(false);
+  const toggleEdit = () => {
+    setIsEdit(false);
   };
-  const showRenameModal = () => {
+  const showEditModal = () => {
     hidePopup();
-    setIsRename(true);
+    setIsEdit(true);
+  };
+  const fetchMaterialInfo = () => {
+    getMaterialInfo(materialInfo.id).then(res => {
+      if (res) {
+        setMaterialInfo(res);
+      }
+    });
+  };
+
+  const handleDelete = () => {
+    deleteMaterial(materialInfo.id).then(res => {
+      if (res) {
+        navigation.goBack();
+      }
+    });
   };
   return (
     <PaperProvider>
       <View
         style={{
-          flex: 1,
-          backgroundColor: 'white',
           position: 'relative',
         }}>
-        <TopNavBar title="Danh sach phan nhom" onOpenPopup={showPopup} />
+        <TopNavBar
+          title={materialInfo.material_name + '.' + materialInfo.material_type}
+          onOpenPopup={showPopup}
+        />
+        <View style={styles.container}>
+          <Text>fdg</Text>
+          <WebView
+            source={{uri: getDirectMaterialLink(materialInfo.material_link)}}
+            onError={syntheticEvent => {
+              const {nativeEvent} = syntheticEvent;
+              console.error('WebView error: ', nativeEvent);
+            }}
+            startInLoadingState={true}
+            javaScriptEnabled={true}
+            domStorageEnabled={true}
+            scalesPageToFit={true}
+          />
+        </View>
         <Portal>
           <Modal
             visible={isPopupOpen}
@@ -55,8 +99,8 @@ const DetailMaterial = ({}: Props) => {
               mode="text"
               textColor="black"
               contentStyle={{justifyContent: 'flex-start'}}
-              onPress={showRenameModal}>
-              Đổi tên
+              onPress={showEditModal}>
+              Chỉnh sửa
             </Button>
             <Button
               icon="trash-can-outline"
@@ -64,11 +108,17 @@ const DetailMaterial = ({}: Props) => {
               mode="text"
               textColor="black"
               contentStyle={{justifyContent: 'flex-start'}}
-              onPress={() => console.log('Pressed')}>
+              onPress={handleDelete}>
               Xóa
             </Button>
           </Modal>
-          <RenamePopup isVisible={isRename} hideModal={toggleRename} />
+          <EditMaterialPopup
+            isVisible={isEdit}
+            hideModal={toggleEdit}
+            classId={materialInfo.class_id}
+            material={materialInfo}
+            onUpdate={fetchMaterialInfo}
+          />
         </Portal>
       </View>
     </PaperProvider>
@@ -94,6 +144,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     justifyContent: 'space-between',
     elevation: 20,
+  },
+  container: {
+    backgroundColor: 'red',
   },
 });
 

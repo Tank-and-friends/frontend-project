@@ -1,66 +1,50 @@
 /* eslint-disable react-native/no-inline-styles */
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import React, {PropsWithChildren} from 'react';
-import {GestureResponderEvent, Image, StyleSheet, View} from 'react-native';
+import {GestureResponderEvent, StyleSheet, View} from 'react-native';
 import {Pressable} from 'react-native-gesture-handler';
 import {IconButton, Text} from 'react-native-paper';
+import {MaterialInfo} from '../../../models/Material';
+import {fileSymbol} from '../actions';
 
 type Props = PropsWithChildren<{
-  item: {
-    name: string;
-    type: string;
-    lastestModified: string;
-    showModal: (event: GestureResponderEvent) => void;
-  };
+  item: MaterialInfo;
+  moreOption: (event: GestureResponderEvent, item: MaterialInfo) => void;
 }>;
 
 type ParamList = {
   MaterialStacks: {
     screen: string;
+    params: {
+      material: MaterialInfo;
+    };
   };
 };
 
-const MaterialListItem = ({item}: Props) => {
+const MaterialListItem = ({item, moreOption}: Props) => {
   const navigation = useNavigation<NavigationProp<ParamList>>();
-  const fileSymbol = (type: string) => {
-    switch (type) {
-      case 'jpg':
-        return (
-          <Image
-            source={require('../../../assets/icons/icon-default-image.png')}
-          />
-        );
-      case 'pdf':
-        return <Image source={require('../../../assets/icons/icon-pdf.png')} />;
-      case 'docx':
-        return (
-          <Image source={require('../../../assets/icons/icon-word.png')} />
-        );
-      case 'xlsx':
-        return (
-          <Image source={require('../../../assets/icons/icon-excel.png')} />
-        );
-      default:
-        return null;
-    }
-  };
   return (
     <Pressable>
       <View style={styles.itemContainer}>
-        {fileSymbol(item.type)}
+        {fileSymbol(item.material_type)}
         <Pressable
           style={styles.textContentContainer}
           onPress={() => {
             navigation.navigate('MaterialStacks', {
               screen: 'DetailMaterial',
+              params: {
+                material: item,
+              },
             });
           }}>
           <View>
             <Text style={{fontWeight: 'bold', fontSize: 14}}>
-              {item.name}.{item.type}
+              {item.material_name}.{item.material_type}
             </Text>
-            <Text style={{fontSize: 10, marginTop: 3, color: '#b6b6b6'}}>
-              Người sửa đối: {item.lastestModified}
+            <Text
+              style={{fontSize: 10, marginTop: 3, color: '#b6b6b6'}}
+              numberOfLines={1}>
+              {item.description}
             </Text>
           </View>
         </Pressable>
@@ -68,7 +52,7 @@ const MaterialListItem = ({item}: Props) => {
           icon="dots-vertical"
           style={{margin: 0}}
           size={20}
-          onPress={item.showModal}
+          onPress={e => moreOption(e, item)}
         />
       </View>
     </Pressable>
@@ -80,7 +64,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 5,
     paddingVertical: 12,
-    marginBottom:10,
+    marginBottom: 10,
     backgroundColor: '#eff2ef',
     borderRadius: 10,
     flexDirection: 'row',
