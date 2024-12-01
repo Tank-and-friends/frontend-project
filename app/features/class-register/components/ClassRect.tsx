@@ -24,6 +24,9 @@ export default function ClassRect({
       case 'Thất bại':
         return '#C02135';
 
+      case 'Hủy lớp':
+        return '#C02135';
+
       case 'Còn chỗ':
         return '#21A366';
       case 'Trùng lịch':

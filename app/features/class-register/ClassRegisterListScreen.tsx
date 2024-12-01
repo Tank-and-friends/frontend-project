@@ -1,10 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { Image, ScrollView, StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Image, ImageBackground, ScrollView, StyleSheet, View } from 'react-native';
+import { Appbar, IconButton, Text } from 'react-native-paper';
 import ClassRect from './components/ClassRect';
+import navigation from '../auth/navigation';
 
-export default function ClassRegisterListScreen({route}: any) {
+export default function ClassRegisterListScreen({route, navigation}: any) {
   const {className} = route.params;
 
   const classData = [
@@ -26,63 +27,89 @@ export default function ClassRegisterListScreen({route}: any) {
       classCode: '154053',
       status: 'Hết chỗ',
     },
+    {
+      classTitle: 'Giải tích I',
+      classTime: 'Sáng thứ 3, 6:45 - 10:05',
+      classCode: '154052',
+      status: 'Còn chỗ',
+    },
   ];
 
   return (
-    <View style={styles.container}>
-      <Image
+    <View style={{flex: 1}}>
+      <ImageBackground
         source={require('../../assets/images/background.png')}
         style={styles.backgroundImage}
-        resizeMode="stretch"
-      />
-      {/* <Text style={styles.title}>Class List for {className}</Text> */}
-      <View style={styles.classSquareContainerContainer}>
-        <Image
-          source={require('../../assets/images/class-background.jpg')}
-          style={[styles.backgroundClassImage, {borderRadius: 10}]}
-          resizeMode="stretch"
-        />
-        <View style={styles.classSquareContainer}>
-          <View style={styles.classTitle}>
-            <Text style={styles.className}>Calculus I</Text>
-            <Text style={styles.classDetails}>{className}</Text>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            <View style={styles.Box}>
-              <Text style={styles.Text}>Đại cương</Text>
-            </View>
-            <Text
-              style={{
-                fontSize: 14,
-                fontWeight: '500',
-                color: '#174FB2',
-                textShadowColor: 'white',
-                textShadowOffset: {width: 1, height: 1},
-                textShadowRadius: 2,
-              }}>
-              Hiện còn 234 lớp
-            </Text>
-          </View>
-        </View>
-      </View>
-      <ScrollView
-        contentContainerStyle={styles.classGroupContainer}
-        style={{width: '100%'}}>
-        {classData.map((classItem, index) => (
-          <ClassRect
-            key={index} 
-            classTitle={classItem.classTitle}
-            classTime={classItem.classTime}
-            classCode={classItem.classCode}
-            status={classItem.status}
+        resizeMode="stretch">
+        <Appbar.Header mode="small" style={styles.header}>
+          <Appbar.BackAction
+            size={30}
+            color="red"
+            containerColor="white"
+            onPress={() => navigation.goBack()}
           />
-        ))}
-      </ScrollView>
+          <View style={styles.headerContent}>
+            <Text style={styles.headerTitle}>{className}</Text>
+            {/* <Text style={styles.headerSubtitle}>Đăng ký mở lớp</Text> */}
+          </View>
+          <View style={styles.actionBtn}>
+            <IconButton icon="cog-outline" iconColor="white" size={30} />
+          </View>
+        </Appbar.Header>
+        
+
+
+        <View style={styles.container}>
+          {/* <Text style={styles.title}>Class List for {className}</Text> */}
+          <View style={styles.classSquareContainerContainer}>
+            <Image
+              source={require('../../assets/images/class-background.jpg')}
+              style={[styles.backgroundClassImage, {borderRadius: 10}]}
+              resizeMode="stretch"
+            />
+            <View style={styles.classSquareContainer}>
+              <View style={styles.classTitle}>
+                <Text style={styles.className}>Calculus I</Text>
+                <Text style={styles.classDetails}>{className}</Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}>
+                <View style={styles.Box}>
+                  <Text style={styles.Text}>Đại cương</Text>
+                </View>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: '500',
+                    color: '#174FB2',
+                    textShadowColor: 'white',
+                    textShadowOffset: {width: 1, height: 1},
+                    textShadowRadius: 2,
+                  }}>
+                  Hiện còn 234 lớp
+                </Text>
+              </View>
+            </View>
+          </View>
+          <ScrollView
+            contentContainerStyle={styles.classGroupContainer}
+            style={{width: '100%'}}>
+            {classData.map((classItem, index) => (
+              <ClassRect
+                key={index} 
+                classTitle={classItem.classTitle}
+                classTime={classItem.classTime}
+                classCode={classItem.classCode}
+                status={classItem.status}
+              />
+            ))}
+          </ScrollView>
+        </View>
+      </ImageBackground>
     </View>
   );
 }
@@ -108,6 +135,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    paddingTop: 24,
     alignItems: 'center',
     position: 'relative',
     width: '100%',
@@ -172,5 +200,31 @@ const styles = StyleSheet.create({
     gap: 20,
     paddingVertical: 10,
     paddingBottom: 120,
+  },
+  header: {
+    backgroundColor: 'transparent',
+    paddingTop: 30,
+  },
+  headerContent: {
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    gap: 2
+  },
+  headerTitle: {
+    color: 'white',
+    fontSize: 24,
+    fontFamily: 'Inter',
+    fontWeight: 'semibold',
+    paddingLeft: 10,
+  },
+  headerSubtitle: {
+    fontSize: 14,
+    color: '#D7C3B1',
+    paddingLeft: 12,
+  },
+  actionBtn: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
   },
 });
