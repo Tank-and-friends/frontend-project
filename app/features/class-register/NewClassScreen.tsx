@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { Image, ImageBackground, ScrollView, StyleSheet, View } from 'react-native';
-import { Appbar, IconButton, Text } from 'react-native-paper';
+import { Appbar, Button, IconButton, Text } from 'react-native-paper';
 import ClassRect from './components/ClassRect';
 import { TextField } from '../../components/TextField/TextField';
 import navigation from '../auth/navigation';
@@ -32,8 +32,58 @@ export default function NewClassScreen({route, navigation}: any) {
         <View style={styles.container}>
           <View style={styles.formContainer}>
             <View style={styles.formTitle}>
-
+              <Text style={[styles.headerTitle, {color: '#071013', fontWeight: '500'}]}>Đăng ký mở lớp</Text>
+              <Text style={[styles.headerSubtitle, {color: '#41484A', fontWeight: '500'}]}>Vui lòng điền những thông tin cần thiết</Text>
             </View>
+            <View style={styles.line}></View>
+            <View style={styles.formTextField}>
+              <View style={styles.formClassName}>
+                <TextField
+                  id='className'
+                  name='className'
+                  customLabel='Môn học'/>
+              </View>
+              <View style={styles.formTimePlace}>
+                <Text style={{color: '#071013', fontWeight: 'bold', fontSize: 16, paddingLeft: 18, paddingTop: 14}}>Thời gian</Text>
+                <View style={styles.formTime}>
+                  <View style={{width: '50%'}}>
+                    <TextField
+                      id='Day'
+                      name='Day'
+                      customLabel='Thứ'/>
+                  </View>
+                  <View style={{width: '50%'}}>
+                    <TextField
+                      id='Period'
+                      name='Period'
+                      customLabel='Tiết'/>
+                  </View>
+                </View>
+                <Text style={{color: '#071013', fontWeight: 'bold', fontSize: 16, paddingLeft: 18, paddingTop: 14}}>Địa điểm</Text>
+                <View style={styles.formTime}>
+                  <View style={{width: '50%'}}>
+                    <TextField
+                      id='Building'
+                      name='Building'
+                      customLabel='Tòa'/>
+                  </View>
+                  <View style={{width: '50%'}}>
+                    <TextField
+                      id='Room'
+                      name='Room'
+                      customLabel='Phòng'/>
+                  </View>
+                </View>
+              </View>
+            </View>
+            <Button
+              mode="contained"
+              style={{ margin: 20 }}
+              buttonColor="#FF7F11"
+              textColor="white"
+              onPress={() => console.log('Đã gửi yêu cầu!')}>
+              Gửi yêu cầu
+            </Button>
           </View>
         </View>
       </ImageBackground>
@@ -57,7 +107,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'relative',
     width: '100%',
-    paddingTop: 24,
+    paddingTop: 20,
   },
   header: {
     backgroundColor: 'transparent',
@@ -88,13 +138,31 @@ const styles = StyleSheet.create({
   formContainer: {
     backgroundColor: '#EFF2EF',
     width: '90%',
-    height: 500,
     borderRadius: 10,
-    padding: 20,
-
   },
   formTitle:{
+    gap: 4,
+    padding: 20
+  },
+  line:{
+    backgroundColor: '#D9D9D9',
+    width: '100%',
+    height: 2
+  },
+  formTextField:{
+    padding: 10,
+    width:'100%'
+  },
+  formClassName:{
 
+  },
+  formTimePlace:{
+    width: '100%',
+  },
+  formTime:{
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'flex-start',
+    alignItems: 'center'
   }
-  
 });
