@@ -71,48 +71,48 @@ export const AbsenceRequestsListScreen = () => {
                 {
                   title: 'Hôm nay',
                   items: [
-                    {title: 'Nghỉ ốm', date: '27/10/2024', status: 'accepted'},
+                    {title: 'Nghỉ ốm', date: '27/10/2024', status: 'ACCEPTED'},
                     {
                       title: 'Nghỉ về quê',
                       date: '27/10/2024',
-                      status: 'pending',
+                      status: 'PENDING',
                     },
                     {
                       title: 'Nghỉ đi tiêm Covid',
                       date: '27/10/2024',
-                      status: 'rejected',
+                      status: 'REJECTED',
                     },
                   ],
                 },
                 {
                   title: 'Hôm qua',
                   items: [
-                    {title: 'Nghỉ ốm', date: '27/10/2024', status: 'accepted'},
+                    {title: 'Nghỉ ốm', date: '27/10/2024', status: 'ACCEPTED'},
                     {
                       title: 'Nghỉ về quê',
                       date: '27/10/2024',
-                      status: 'pending',
+                      status: 'PENDING',
                     },
                     {
                       title: 'Nghỉ đi tiêm Covid',
                       date: '27/10/2024',
-                      status: 'rejected',
+                      status: 'REJECTED',
                     },
                   ],
                 },
                 {
                   title: 'Hôm kia',
                   items: [
-                    {title: 'Nghỉ ốm', date: '27/10/2024', status: 'accepted'},
+                    {title: 'Nghỉ ốm', date: '27/10/2024', status: 'ACCEPTED'},
                     {
                       title: 'Nghỉ về quê',
                       date: '27/10/2024',
-                      status: 'pending',
+                      status: 'PENDING',
                     },
                     {
                       title: 'Nghỉ đi tiêm Covid',
                       date: '27/10/2024',
-                      status: 'rejected',
+                      status: 'REJECTED',
                     },
                   ],
                 },

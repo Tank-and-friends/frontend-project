@@ -39,7 +39,6 @@ export const CreateAbsenceRequest = () => {
       }
     }
   };
-  console.log('File', file);
 
   return (
     <View style={styles.container}>

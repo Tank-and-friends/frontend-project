@@ -1,37 +1,54 @@
+import {NavigationProp, useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Card, Text} from 'react-native-paper';
-import {Badge} from './Badge';
 import {StyleSheet} from 'react-native';
+import {Card, Text} from 'react-native-paper';
 import {AbsenceRequestInfo} from '../type';
+import {Badge} from './Badge';
+
+type ParamsList = {
+  ClassFeatures: {
+    screen: string;
+    params: {
+      screen: string;
+    };
+  };
+};
 
 export const AbsenceRequestCard = ({
   title,
   date,
   status,
 }: AbsenceRequestInfo) => {
+  const navigation = useNavigation<NavigationProp<ParamsList>>();
+
+  const statusMarkup =
+    status === 'ACCEPTED' ? (
+      <Badge mode="success">Chấp nhận</Badge>
+    ) : status === 'PENDING' ? (
+      <Badge mode="warning">Chưa duyệt</Badge>
+    ) : (
+      <Badge mode="critical">Từ chối</Badge>
+    );
+
   return (
-    <Card elevation={4} style={styles.card}>
+    <Card
+      elevation={4}
+      style={styles.card}
+      onPress={() =>
+        navigation.navigate('ClassFeatures', {
+          screen: 'AbsenceRequest',
+          params: {
+            screen: 'AbsenceRequestDetails',
+          },
+        })
+      }>
       <Card.Title
         title={<Text style={styles.cardTitle}>{title}</Text>}
         subtitle={
           <Text style={styles.cardSubtitle}>{`Ngày tạo: ${date}`}</Text>
         }
       />
-      <Badge
-        mode={
-          status === 'accepted'
-            ? 'success'
-            : status === 'pending'
-            ? 'warning'
-            : 'critical'
-        }
-        style={styles.badge}>
-        {status === 'accepted'
-          ? 'Chấp nhận'
-          : status === 'pending'
-          ? 'Chưa duyệt'
-          : 'Từ chối'}
-      </Badge>
+      {statusMarkup}
     </Card>
   );
 };
