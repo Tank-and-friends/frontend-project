@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
+import {ScrollView, StyleSheet, View} from 'react-native';
+import {Text} from 'react-native-paper';
 import ClassSquare from './ClassSquare';
 
 const classGroups = [
@@ -31,7 +31,7 @@ const classGroups = [
   },
 ];
 
-export default function OpenClasses({navigation}: any) {
+export default function OpenClasses() {
   return (
     <View>
       {classGroups.map((group, index) => (
@@ -69,15 +69,7 @@ export default function OpenClasses({navigation}: any) {
               showsHorizontalScrollIndicator={false}
               style={{alignSelf: 'flex-start'}}>
               {group.classes.map((cls, idx) => (
-                <ClassSquare
-                  key={idx}
-                  onPress={() =>
-                    navigation.navigate('ClassRegisterList', {
-                      className: cls.className,
-                    })
-                  }
-                  className={cls.className}
-                />
+                <ClassSquare key={idx} className={cls.className} />
               ))}
             </ScrollView>
           </View>

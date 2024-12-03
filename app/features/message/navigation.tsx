@@ -1,4 +1,4 @@
-import { createStackNavigator } from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
 import FriendPersonalInfo from './FriendPersonalInfo';
 import MessageDetail from './MessageDetail';
@@ -16,7 +16,7 @@ type ParamList = {
 
 const Stack = createStackNavigator<ParamList>();
 
-export const MessageStacks = () => {
+export const MessageFeaturesStacks = () => {
   return (
     <Stack.Navigator initialRouteName="MessageScreen">
       <Stack.Screen
@@ -29,13 +29,6 @@ export const MessageStacks = () => {
         component={NewMessageScreen}
         options={{headerShown: false}}
       />
-    </Stack.Navigator>
-  );
-};
-
-export const MessageFeaturesStacks = () => {
-  return (
-    <Stack.Navigator>
       <Stack.Screen
         name="MessageDetail"
         component={MessageDetail}

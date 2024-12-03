@@ -10,7 +10,9 @@ import MessageListItem from './components/MessageListItem';
 type SectionProps = PropsWithChildren<{}>;
 
 type ParamList = {
-  NewMessageScreen?: string;
+  MessageFeaturesStacks: {
+    screen: string;
+  };
 };
 
 const DATA = [
@@ -70,7 +72,9 @@ const MessageScreen = ({}: SectionProps) => {
           size={30}
           style={styles.newMessageButton}
           onPress={() =>
-            navigation.navigate('NewMessageScreen')
+            navigation.navigate('MessageFeaturesStacks', {
+              screen: 'NewMessageScreen',
+            })
           }
         />
       </ImageBackground>
