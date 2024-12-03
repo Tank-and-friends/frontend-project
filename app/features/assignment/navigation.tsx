@@ -32,7 +32,10 @@ export const AssignmentStacks = () => {
       <Stack.Screen
         name="TaskDetailScreen"
         component={TaskDetailScreen}
-        options={({route}) => ({title: route.params.title})}
+        options={({ route }) => ({
+          title: route.params.title,
+          headerShown: false, // Ẩn top navigator
+        })}
       />
     </Stack.Navigator>
   );
