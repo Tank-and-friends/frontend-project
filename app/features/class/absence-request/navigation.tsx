@@ -1,7 +1,7 @@
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import {AbsenceRequestManage} from './AbsenceRequestManage';
-import {CreateAbsenceRequest} from './CreateAbsenceRequest';
+import { AbsenceRequestManage } from './AbsenceRequestManage';
+import { CreateAbsenceRequest } from './CreateAbsenceRequest';
 
 const Stack = createStackNavigator();
 
@@ -14,7 +14,7 @@ export const AbsenceRequestStacks = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="AbsenceRequestDetails"
+        name="AbsenceRequestManage"
         component={AbsenceRequestManage}
         options={{headerShown: false}}
       />

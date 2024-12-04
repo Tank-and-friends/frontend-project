@@ -1,9 +1,9 @@
 import React from 'react';
-import {AbsenceRequestsGroup} from '../type';
-import {StyleSheet, View} from 'react-native';
-import {Text} from 'react-native-paper';
-import {AbsenceRequestCard} from './AbsenceRequestCard';
-import {getDayOfWeek} from '../utils/date-time-util';
+import { StyleSheet, View } from 'react-native';
+import { Text } from 'react-native-paper';
+import { AbsenceRequestsGroup } from '../type';
+import { getDayOfWeek } from '../utils/date-time-util';
+import { AbsenceRequestCard } from './AbsenceRequestCard';
 
 interface Props {
   groups: AbsenceRequestsGroup[];

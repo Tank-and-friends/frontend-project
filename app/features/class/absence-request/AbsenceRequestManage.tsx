@@ -1,9 +1,9 @@
-import {useNavigation} from '@react-navigation/core';
-import React, {useState} from 'react';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
-import {Appbar, Button} from 'react-native-paper';
-import {Badge} from '../components/Badge';
+import { useNavigation } from '@react-navigation/core';
+import React, { useState } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Appbar, Button } from 'react-native-paper';
 import FontAwesome6Icon from 'react-native-vector-icons/FontAwesome6';
+import { Badge } from '../components/Badge';
 
 export const AbsenceRequestManage = () => {
   const navigation = useNavigation();
@@ -97,6 +97,7 @@ export const AbsenceRequestManage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
   },
   header: {
     backgroundColor: '#c02135',

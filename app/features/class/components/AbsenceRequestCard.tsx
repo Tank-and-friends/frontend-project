@@ -1,9 +1,9 @@
-import {NavigationProp, useNavigation} from '@react-navigation/core';
+import { NavigationProp, useNavigation } from '@react-navigation/core';
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import {Card, Text} from 'react-native-paper';
-import {AbsenceRequestInfo} from '../type';
-import {Badge} from './Badge';
+import { StyleSheet } from 'react-native';
+import { Card, Text } from 'react-native-paper';
+import { AbsenceRequestInfo } from '../type';
+import { Badge } from './Badge';
 
 type ParamsList = {
   ClassFeatures: {

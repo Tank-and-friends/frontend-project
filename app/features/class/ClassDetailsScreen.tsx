@@ -6,8 +6,8 @@ import {
   useRoute,
 } from '@react-navigation/core';
 import React from 'react';
-import {ImageBackground, StyleSheet, Text, View} from 'react-native';
-import {Button} from 'react-native-paper';
+import { ImageBackground, StyleSheet, Text, View } from 'react-native';
+import { Button } from 'react-native-paper';
 
 export type ParamList = {
   ClassStacks: {

@@ -1,9 +1,9 @@
-import {NavigationProp, useNavigation} from '@react-navigation/core';
+import { NavigationProp, useNavigation } from '@react-navigation/core';
 import React from 'react';
-import {ImageBackground, ScrollView, StyleSheet, View} from 'react-native';
-import {Appbar, IconButton} from 'react-native-paper';
-import {Chip} from './components/Chip';
-import {AbsenceRequestsList} from './components/AbsenceRequestsList';
+import { ImageBackground, ScrollView, StyleSheet, View } from 'react-native';
+import { Appbar, IconButton } from 'react-native-paper';
+import { AbsenceRequestsList } from './components/AbsenceRequestsList';
+import { Chip } from './components/Chip';
 
 type ParamsList = {
   ClassFeaturesStacks: {

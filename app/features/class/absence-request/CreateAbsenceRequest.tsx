@@ -106,6 +106,7 @@ export const CreateAbsenceRequest = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
   },
   header: {
     backgroundColor: '#c02135',
