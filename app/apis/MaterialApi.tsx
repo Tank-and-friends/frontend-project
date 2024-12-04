@@ -1,22 +1,21 @@
-import axios from 'axios';
 import {MaterialInfo, MaterialUploadReq} from '../models/Material';
 import {exportFileType} from '../features/material/actions';
 import {Alert} from 'react-native';
+import axiosInstance from './apiConfig';
 
-const BASE_URL = 'http://157.66.24.126:8080/it5023e';
-const token = 'iV8V38';
+const DOMAIN = '/it5023e';
+const token = 'VQQmC0';
 export const getMaterialList = async (
   classId: string,
 ): Promise<MaterialInfo[] | []> => {
   try {
-    const response = await axios.post(`${BASE_URL}/get_material_list`, {
+    const response = await axiosInstance.post(`${DOMAIN}/get_material_list`, {
       token: token,
       class_id: classId,
     });
-    const data = response.data.data;
+    const data = response.data;
     return data;
   } catch (error) {
-    console.error('Error fetching data:', error);
     return [];
   }
 };
@@ -25,29 +24,26 @@ export const getMaterialInfo = async (
   materialId: string,
 ): Promise<MaterialInfo | null> => {
   try {
-    const response = await axios.post(`${BASE_URL}/get_material_info`, {
+    const response = await axiosInstance.post(`${DOMAIN}/get_material_info`, {
       token: token,
       material_id: materialId,
     });
-    const data = response.data.data;
+    const data = response.data;
     return data;
   } catch (error) {
-    console.error('Error fetching data:', error);
     return null;
   }
 };
 
 export const deleteMaterial = async (materialId: string): Promise<boolean> => {
   try {
-    await axios.post(`${BASE_URL}/delete_material`, {
+    await axiosInstance.post(`${DOMAIN}/delete_material`, {
       token: token,
       material_id: materialId,
     });
     Alert.alert('Xoá tài liệu thành công!');
     return true;
   } catch (error) {
-    Alert.prompt('Lỗi khi xóa tài liệu:' + error);
-
     return false;
   }
 };
@@ -66,16 +62,19 @@ export const uploadMaterial = async (
     formData.append('classId', classId);
     formData.append('description', material.description);
 
-    const response = await axios.post(`${BASE_URL}/upload_material`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
+    const response = await axiosInstance.post(
+      `${DOMAIN}/upload_material`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       },
-    });
-    const data = response.data.data;
-    Alert.prompt('Up tài liệu thành công!');
+    );
+    const data = response.data;
+    Alert.alert('Up tài liệu thành công!');
     return data;
   } catch (error) {
-    Alert.prompt('Lỗi khi up tài liệu:' + error);
     return null;
   }
 };
@@ -94,16 +93,19 @@ export const editMaterial = async (
     formData.append('materialId', materialId);
     formData.append('description', material.description);
 
-    const response = await axios.post(`${BASE_URL}/edit_material`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
+    const response = await axiosInstance.post(
+      `${DOMAIN}/edit_material`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       },
-    });
-    const data = response.data.data;
-    Alert.prompt('Up tài liệu thành công!');
+    );
+    const data = response.data;
+    Alert.alert('Up tài liệu thành công!');
     return data;
   } catch (error) {
-    Alert.prompt('Lỗi khi up tài liệu:' + error);
     return null;
   }
 };

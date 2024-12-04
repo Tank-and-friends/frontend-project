@@ -1,18 +1,18 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {PropsWithChildren, useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {Button, Modal} from 'react-native-paper';
+import {Button, Icon, Modal} from 'react-native-paper';
 import {TextField} from '../../../components/TextField/TextField';
 import {MaterialInfo, MaterialUploadReq} from '../../../models/Material';
 import {Pressable} from 'react-native-gesture-handler';
-import {pickFile} from '../actions';
+import {fileSymbol, pickFile} from '../actions';
 import {editMaterial, uploadMaterial} from '../../../apis/MaterialApi';
 type Props = PropsWithChildren<{
   isVisible: boolean;
   hideModal: () => void;
   material?: MaterialInfo;
   classId: string;
-  onUpdate: (classId: string) => void;
+  onUpdate: (e: MaterialInfo) => void;
 }>;
 const EditMaterialPopup = ({
   isVisible,
@@ -42,9 +42,6 @@ const EditMaterialPopup = ({
     });
   }, [material]);
 
-  // function handleDataChange(id: string, value: string) {
-  //   setMaterialInfo({...materialInfo, [id]: value});
-  // }
   const handleDataChange = (field: string, value: string) => {
     setMaterialInfo({...materialInfo, [field]: value});
   };
@@ -62,7 +59,7 @@ const EditMaterialPopup = ({
         if (res) {
           hideModal();
           if (onUpdate) {
-            onUpdate(classId);
+            onUpdate(res);
           }
         }
       });
@@ -71,7 +68,7 @@ const EditMaterialPopup = ({
         if (res) {
           hideModal();
           if (onUpdate) {
-            onUpdate(classId);
+            onUpdate(res);
           }
         }
       });
@@ -82,6 +79,9 @@ const EditMaterialPopup = ({
       visible={isVisible}
       onDismiss={hideModal}
       contentContainerStyle={styles.renameModal}>
+      <Text style={{fontWeight: 500, textAlign: 'center', fontSize: 20}}>
+        Thông tin tài liệu
+      </Text>
       <TextField
         customLabel="Tên"
         onChange={text => handleDataChange('title', text)}
@@ -93,11 +93,23 @@ const EditMaterialPopup = ({
         value={materialInfo.description}
         onChange={text => handleDataChange('description', text)}
       />
-      <Text>{materialInfo?.file.name}</Text>
-      <Pressable style={styles.uploadArea} onPress={handleUpload}>
-        <Text style={styles.uploadContent}>Tải tài liệu mới</Text>
+      {materialInfo.file.name && (
+        <Pressable style={styles.stylee}>
+          <View style={styles.fileContainer}>
+            {fileSymbol(materialInfo.file.type || '')}
+            <Text style={{fontWeight: 'bold', fontSize: 14, marginLeft: 5}}>
+              {materialInfo.file.name}.{materialInfo.file.type}
+            </Text>
+          </View>
+        </Pressable>
+      )}
+      <Pressable onPress={handleUpload} style={styles.stylee}>
+        <View style={styles.uploadArea}>
+          <Icon source="upload" color="#c02135" size={24} />
+          <Text style={styles.uploadContent}>Tải tài liệu mới</Text>
+        </View>
       </Pressable>
-      <View style={{paddingHorizontal: 12}}>
+      <View style={styles.stylee}>
         <Button
           mode="contained"
           style={styles.saveButton}
@@ -111,13 +123,13 @@ const EditMaterialPopup = ({
 const styles = StyleSheet.create({
   renameModal: {
     alignSelf: 'center',
-    height: 400,
     backgroundColor: 'white',
     borderRadius: 5,
     width: 350,
-    justifyContent: 'space-between',
     padding: 20,
     paddingBottom: 30,
+    flexDirection: 'column',
+    gap: 8,
   },
   saveButton: {
     borderRadius: 4,
@@ -125,22 +137,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: '100%',
   },
-  uploadContainer: {
-    marginTop: 8,
-    flexDirection: 'column',
-    gap: 8,
-    paddingHorizontal: 12,
-  },
-  uploadTitle: {
-    paddingLeft: 4,
-    color: 'black',
-    fontWeight: '500',
-    fontSize: 16,
-  },
   uploadArea: {
-    width: '100%',
-    height: 80,
-    paddingVertical: 16,
+    padding: 12,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -149,10 +147,25 @@ const styles = StyleSheet.create({
     borderColor: '#c02135',
     borderRadius: 8,
     borderStyle: 'dashed',
+    shadowOffset: {width: 3, height: 0},
   },
   uploadContent: {
     fontSize: 16,
     color: '#c02135',
+  },
+  fileContainer: {
+    paddingLeft: 15,
+    paddingRight: 5,
+    paddingVertical: 12,
+    marginBottom: 10,
+    backgroundColor: '#eff2ef',
+    borderRadius: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  stylee: {
+    paddingHorizontal: 12,
+    marginTop: 10,
   },
 });
 export default EditMaterialPopup;

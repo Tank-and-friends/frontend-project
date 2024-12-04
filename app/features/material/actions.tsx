@@ -45,3 +45,14 @@ export const fileSymbol = (type: string) => {
     return <Image source={require('../../assets/icons/icon-excel.png')} />;
   }
 };
+
+export const getPreviewDocumentUrl = (url: string) => {
+  if (url.includes('drive.google.com')) {
+    url = url.substring(0, url.indexOf('view?'));
+    url += 'preview';
+  } else if (url.includes('docs.google.com')) {
+    url = url.substring(0, url.indexOf('edit?'));
+    url += 'preview';
+  }
+  return url;
+};

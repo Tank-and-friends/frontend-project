@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {PropsWithChildren, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Button, Modal, PaperProvider, Portal} from 'react-native-paper';
 import TransparentBackground from '../../components/TransparentBackground';
 import TopNavBar from './components/TopNavBar';
@@ -8,8 +8,8 @@ import {MaterialInfo} from '../../models/Material';
 import EditMaterialPopup from './components/EditMaterialPopup';
 import {RouteProp, useNavigation} from '@react-navigation/core';
 import WebView from 'react-native-webview';
-import {getDirectMaterialLink} from '../../utils/image';
-import {deleteMaterial, getMaterialInfo} from '../../apis/MaterialApi';
+import {deleteMaterial} from '../../apis/MaterialApi';
+import {getPreviewDocumentUrl} from './actions';
 
 type Props = PropsWithChildren<{route: RouteProp<RouteProps>}>;
 
@@ -39,13 +39,6 @@ const DetailMaterial = ({route}: Props) => {
     hidePopup();
     setIsEdit(true);
   };
-  const fetchMaterialInfo = () => {
-    getMaterialInfo(materialInfo.id).then(res => {
-      if (res) {
-        setMaterialInfo(res);
-      }
-    });
-  };
 
   const handleDelete = () => {
     deleteMaterial(materialInfo.id).then(res => {
@@ -54,30 +47,35 @@ const DetailMaterial = ({route}: Props) => {
       }
     });
   };
+
   return (
     <PaperProvider>
       <View
         style={{
+          flex: 1,
           position: 'relative',
         }}>
         <TopNavBar
           title={materialInfo.material_name + '.' + materialInfo.material_type}
           onOpenPopup={showPopup}
         />
-        <View style={styles.container}>
-          <Text>fdg</Text>
-          <WebView
-            source={{uri: getDirectMaterialLink(materialInfo.material_link)}}
-            onError={syntheticEvent => {
-              const {nativeEvent} = syntheticEvent;
-              console.error('WebView error: ', nativeEvent);
-            }}
-            startInLoadingState={true}
-            javaScriptEnabled={true}
-            domStorageEnabled={true}
-            scalesPageToFit={true}
-          />
-        </View>
+        <WebView
+          source={{uri: getPreviewDocumentUrl(materialInfo.material_link)}}
+          style={[
+            styles.webview,
+            {
+              marginTop: ['docx', 'doc', 'txt'].includes(
+                materialInfo.material_type,
+              )
+                ? -60
+                : 0,
+            },
+          ]}
+          startInLoadingState={true}
+          scalesPageToFit={true}
+          javaScriptEnabled={true}
+          domStorageEnabled={true}
+        />
         <Portal>
           <Modal
             visible={isPopupOpen}
@@ -117,7 +115,7 @@ const DetailMaterial = ({route}: Props) => {
             hideModal={toggleEdit}
             classId={materialInfo.class_id}
             material={materialInfo}
-            onUpdate={fetchMaterialInfo}
+            onUpdate={setMaterialInfo}
           />
         </Portal>
       </View>
@@ -146,7 +144,10 @@ const styles = StyleSheet.create({
     elevation: 20,
   },
   container: {
-    backgroundColor: 'red',
+    flex: 1,
+  },
+  webview: {
+    flex: 1,
   },
 });
 
