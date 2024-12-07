@@ -2891,10 +2891,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/sockjs-client@npm:^1.5.4":
+  version: 1.5.4
+  resolution: "@types/sockjs-client@npm:1.5.4"
+  checksum: 197ff99955d6e08442b27871811294c1348c51904a4f6d2c1d337cd4bfd0ffed0d00bf8ac000d8c275c9934c65e6cc4ce25c58974939921deb817a4b30fbb859
+  languageName: node
+  linkType: hard
+
 "@types/stack-utils@npm:^2.0.0":
   version: 2.0.3
   resolution: "@types/stack-utils@npm:2.0.3"
   checksum: 72576cc1522090fe497337c2b99d9838e320659ac57fa5560fcbdcbafcf5d0216c6b3a0a8a4ee4fdb3b1f5e3420aa4f6223ab57b82fef3578bec3206425c6cf5
+  languageName: node
+  linkType: hard
+
+"@types/stompjs@npm:^2.3.9":
+  version: 2.3.9
+  resolution: "@types/stompjs@npm:2.3.9"
+  dependencies:
+    "@types/node": "*"
+  checksum: 7156acc2dc45079f71c43ae2fd98aa50ef22fb9b348be920fd0ff7fd7413d07d2ab3deb9c0ff565c37bcfaea792290d6e6ce93c648a0a135f9065aa1aee348c5
   languageName: node
   linkType: hard
 
@@ -5241,6 +5257,8 @@ __metadata:
     "@types/react": ^18.2.6
     "@types/react-native-vector-icons": ^6.4.18
     "@types/react-test-renderer": ^18.0.0
+    "@types/sockjs-client": ^1.5.4
+    "@types/stompjs": ^2.3.9
     axios: ^1.7.8
     babel-jest: ^29.6.3
     date-fns: ^4.1.0

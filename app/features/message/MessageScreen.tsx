@@ -1,12 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import React, {PropsWithChildren} from 'react';
+import React, {PropsWithChildren, useEffect, useState} from 'react';
 import {FlatList, Image, ImageBackground, StyleSheet, View} from 'react-native';
 import {IconButton} from 'react-native-paper';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import {TextField} from '../../components/TextField/TextField';
 import TopComponent from '../../components/TopComponent/TopComponent';
 import MessageListItem from './components/MessageListItem';
+import {ConversationInfo} from '../../models/Message';
+import {getListConversations} from '../../apis/MessageApi';
 type SectionProps = PropsWithChildren<{}>;
 
 type ParamList = {
@@ -15,28 +17,28 @@ type ParamList = {
   };
 };
 
-const DATA = [
-  {
-    name: 'Nguyen Viet Hoang 20210000',
-    time: '15:00',
-    lastestMessage: 'First Item',
-  },
-  {
-    name: 'Nguyen Thi Ngan 20210000',
-    time: '15:00',
-    lastestMessage: 'Second Item',
-  },
-  {
-    name: 'Quach Huu Tung Anh 20210000',
-    time: '15:00',
-    lastestMessage: 'Third Item',
-  },
-  {
-    name: 'Nguyen Trong Duc 20210000',
-    time: '15:00',
-    lastestMessage: 'Fourth Item',
-  },
-];
+// const DATA = [
+//   {
+//     name: 'Nguyen Viet Hoang 20210000',
+//     time: '15:00',
+//     lastestMessage: 'First Item',
+//   },
+//   {
+//     name: 'Nguyen Thi Ngan 20210000',
+//     time: '15:00',
+//     lastestMessage: 'Second Item',
+//   },
+//   {
+//     name: 'Quach Huu Tung Anh 20210000',
+//     time: '15:00',
+//     lastestMessage: 'Third Item',
+//   },
+//   {
+//     name: 'Nguyen Trong Duc 20210000',
+//     time: '15:00',
+//     lastestMessage: 'Fourth Item',
+//   },
+// ];
 
 const NoteIcon = () => (
   <Image
@@ -47,6 +49,17 @@ const NoteIcon = () => (
 
 const MessageScreen = ({}: SectionProps) => {
   const navigation = useNavigation<NavigationProp<ParamList>>();
+  const [listConversation, setListConversation] = useState<
+    ConversationInfo[] | null
+  >();
+  const fetchListConversation = () => {
+    getListConversations().then(res => {
+      setListConversation(res);
+    });
+  };
+  useEffect(() => {
+    fetchListConversation();
+  }, []);
   return (
     <View style={{flex: 1}}>
       <ImageBackground
@@ -60,10 +73,10 @@ const MessageScreen = ({}: SectionProps) => {
         />
 
         <FlatList
-          data={DATA}
+          data={listConversation}
           style={styles.listMessage}
           renderItem={({item}) => <MessageListItem item={item} />}
-          keyExtractor={item => item.name}
+          keyExtractor={({id}) => id.toString()}
         />
         <IconButton
           icon={NoteIcon}

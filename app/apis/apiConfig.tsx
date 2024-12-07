@@ -8,7 +8,7 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.response.use(
   response => {
-    if (response.data?.code === '1000') {
+    if (response.data?.code === '1000' || response.data?.meta.code === '1000') {
       return response.data;
     }
   },
