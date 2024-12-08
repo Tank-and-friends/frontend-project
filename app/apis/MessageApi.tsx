@@ -14,7 +14,7 @@ export const getListConversations = async (): Promise<
     const response = await axiosInstance.post(
       `${DOMAIN}/get_list_conversation`,
       {
-        token: '3sTYVB',
+        token: await AsyncStorage.getItem('token'),
         index: '0',
         count: INFINITE,
       },

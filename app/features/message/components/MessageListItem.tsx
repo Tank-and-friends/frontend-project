@@ -40,7 +40,9 @@ const MessageListItem = ({item}: SectionProps) => {
             style={styles.avatarImage}
           />
         ) : (
-          <View style={styles.avatarImage} />
+          <View style={styles.avatarImage}>
+            <Text>{item.partner.name.substring(0, 1)}</Text>
+          </View>
         )}
         <View style={styles.textContentContainer}>
           <Text style={{fontWeight: 'bold', fontSize: 14}}>
@@ -52,7 +54,7 @@ const MessageListItem = ({item}: SectionProps) => {
                 {fontSize: 10, marginTop: 3},
                 item.last_message.unread ? {fontWeight: '500'} : {},
               ]}>
-              {item.last_message.sender.id === 277 ? 'Bạn: ' : ''}
+              {item.last_message.sender.id.toString() === '277' ? 'Bạn: ' : ''}
               {item.last_message.message || (
                 <Text style={{fontStyle: 'italic'}}>Tin nhắn đã bị xóa</Text>
               )}
@@ -88,6 +90,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#d9d9d9',
     height: 35,
     width: 35,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   textContentContainer: {
     flex: 1,
