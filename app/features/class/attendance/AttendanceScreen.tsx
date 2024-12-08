@@ -8,7 +8,7 @@ import { AttendanceTab } from './components/AttendanceTab';
 
 export const AttendanceScreen = () => {
   const navigation = useNavigation();
-  const [tab, setTab] = useState('attendance');
+  const [tab, setTab] = useState('absence');
 
   return (
     <View style={styles.container}>
@@ -25,7 +25,7 @@ export const AttendanceScreen = () => {
           <TouchableRipple
             style={styles.tab}
             onPress={() => setTab('attendance')}>
-            <View>
+            <View style={styles.tabConent}>
               <Text style={styles.tabTitle}>DS điểm danh</Text>
               {tab === 'attendance' && (
                 <FontAwesome6Icon
@@ -39,7 +39,7 @@ export const AttendanceScreen = () => {
             </View>
           </TouchableRipple>
           <TouchableRipple style={styles.tab} onPress={() => setTab('absence')}>
-            <View>
+            <View style={styles.tabConent}>
               <Text style={styles.tabTitle}>Xin nghỉ phép</Text>
               {tab === 'absence' && (
                 <FontAwesome6Icon
@@ -87,6 +87,8 @@ const styles = StyleSheet.create({
   tab: {
     flex: 1,
     backgroundColor: 'white',
+  },
+  tabConent: {
     paddingTop: 16,
     paddingBottom: 6,
     flexDirection: 'column',

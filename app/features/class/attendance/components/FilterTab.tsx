@@ -52,7 +52,7 @@ export const FilterTab = ({lessonsList, value, onChange}: Props) => {
           contentStyle={styles.menu}
           visible={isOpenMenu}
           onDismiss={closeMenu}
-          anchor={{x: anchorPosition.x + 26, y: anchorPosition.y - 76}}>
+          anchor={{x: anchorPosition.x + 26, y: anchorPosition.y - 80}}>
           {lessonsList.map((item, index) => (
             <Menu.Item
               key={index}

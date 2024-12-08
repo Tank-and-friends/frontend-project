@@ -102,7 +102,7 @@ export const TablePagination = ({
           contentStyle={styles.menu}
           visible={isOpenMenu}
           onDismiss={closeMenu}
-          anchor={{x: anchorPosition.x, y: anchorPosition.y - 76}}>
+          anchor={{x: anchorPosition.x, y: anchorPosition.y - 80}}>
           {numberOfItemsPerPageList?.map((item, index) => (
             <Menu.Item
               key={index}

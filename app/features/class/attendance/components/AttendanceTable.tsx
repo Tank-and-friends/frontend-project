@@ -103,10 +103,10 @@ const styles = StyleSheet.create({
     flex: 0.5, // Chiều rộng nhỏ cho cột STT
   },
   idColumn: {
-    flex: 1, // Chiều rộng mặc định cho cột MSSV
+    flex: 1.25, // Chiều rộng mặc định cho cột MSSV
   },
   attendanceColumn: {
-    flex: 0.75, // Chiều rộng lớn cho cột điểm danh
+    flex: 0.7, // Chiều rộng lớn cho cột điểm danh
     justifyContent: 'center',
   },
   nameColumn: {
