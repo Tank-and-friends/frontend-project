@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
   itemContainer: {
     paddingHorizontal: 15,
     paddingVertical: 12,
+    marginBottom:10,
     backgroundColor: '#eff2ef',
     borderRadius: 10,
     display: 'flex',

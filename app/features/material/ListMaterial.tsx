@@ -89,7 +89,6 @@ const ListMaterial = ({}: Props) => {
             style={styles.listMessage}
             renderItem={({item}) => <MaterialListItem item={item} />}
             keyExtractor={item => item.name}
-            ItemSeparatorComponent={() => <View style={{height: 10}} />} // TODO: Sao không dùng gap ở đây
           />
           <IconButton
             icon="plus"

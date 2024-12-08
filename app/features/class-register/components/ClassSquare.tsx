@@ -1,16 +1,32 @@
 /* eslint-disable react-native/no-inline-styles */
+import {NavigationProp, useNavigation} from '@react-navigation/core';
 import React from 'react';
-import { Image, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
-import { Text } from 'react-native-paper';
+import {Image, StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
+import {Text} from 'react-native-paper';
 
 interface ClassSquareProps {
-  onPress?: () => void;
   className: string;
 }
 
-export default function ClassSquare({onPress, className}: ClassSquareProps) {
+type ParamList = {
+  ClassRegisterStacks: {
+    screen: string;
+    params: {
+      className: string;
+    };
+  };
+};
+
+export default function ClassSquare({className}: ClassSquareProps) {
+  const navigation = useNavigation<NavigationProp<ParamList>>();
   return (
-    <TouchableWithoutFeedback onPress={onPress}>
+    <TouchableWithoutFeedback
+      onPress={() =>
+        navigation.navigate('ClassRegisterStacks', {
+          screen: 'ClassRegisterList',
+          params: {className: className},
+        })
+      }>
       <View style={styles.classSquareContainer}>
         <Image
           source={require('../../../assets/images/class-background.jpg')}
