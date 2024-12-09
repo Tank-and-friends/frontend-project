@@ -1,13 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
 // features/auth/PasswordScreen.tsx
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import React, {useEffect, useState} from 'react';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LabeledInput from '../../components/LabeledInput';
-import { validateEmail, validatePassword } from '../../utils/validation';
-import { ParamsList } from './navigation';
+import {validateEmail, validatePassword} from '../../utils/validation';
+import {ParamsList} from './navigation';
+import {login} from '../../apis/UserApi'; // Import API login function
 
 type PasswordScreenNavigationProp = StackNavigationProp<
   ParamsList,
@@ -23,16 +24,31 @@ const PasswordScreen = () => {
   const [passwordError, setPasswordError] = useState('');
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
+  const [loginError, setLoginError] = useState('');
 
   useEffect(() => {
     setEmail(initialEmail);
   }, [initialEmail]);
 
-  const handleLogin = () => {
-    if (!passwordError) {
-      console.log(`Email: ${email}, Password: ${password}`);
+  const handleLogin = async () => {
+    if (emailError || !email || !password) {
+      setLoginError('Vui lòng nhập email và mật khẩu hợp lệ.');
+      return;
+    }
+
+    try {
+      const response = await login(email, password);
+      if (response) {
+        // Navigate to home screen or another appropriate screen
+        navigation.navigate('ClassList');
+      } else {
+        setLoginError('Đăng nhập thất bại. Vui lòng thử lại.');
+      }
+    } catch (error) {
+      setLoginError('Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại sau.');
     }
   };
+
   const handlePasswordChange = (_password: string) => {
     setPassword(_password);
     setPasswordError(validatePassword(_password));

@@ -1,18 +1,18 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
 import BottomNavBar from './components/BottomNavBar/BottomNavBar';
-import { AssignmentStacks } from './features/assignment/navigation';
-import { AuthStacks } from './features/auth/navigation';
-import { ClassRegisterStacks } from './features/class-register/navigation';
-import { ClassFeaturesStacks, ClassStacks } from './features/class/navigation';
-import { MaterialStacks } from './features/material/navigation';
+import {AssignmentStacks} from './features/assignment/navigation';
+import {AuthStacks} from './features/auth/navigation';
+import {ClassRegisterStacks} from './features/class-register/navigation';
+import {ClassFeaturesStacks, ClassStacks} from './features/class/navigation';
+import {MaterialStacks} from './features/material/navigation';
 import {
   MessageFeaturesStacks,
   MessageStacks,
 } from './features/message/navigation';
 import NotificationScreen from './features/notification/NotificationScreen';
-import { UserInfoStacks } from './features/user-info/navigation';
+import {UserInfoStacks} from './features/user-info/navigation';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -51,7 +51,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 export const RootStacks = () => {
   return (
-    <Stack.Navigator initialRouteName="Home">
+    <Stack.Navigator initialRouteName="AuthStacks">
       <Stack.Screen
         name="Home"
         component={TabNavigation}

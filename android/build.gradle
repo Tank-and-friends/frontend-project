@@ -19,3 +19,4 @@ buildscript {
 }
 
 apply plugin: "com.facebook.react.rootproject"
+implementation project(':@react-native-async-storage_async-storage')

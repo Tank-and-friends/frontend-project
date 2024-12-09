@@ -15,15 +15,15 @@ export const validatePassword = (password: string): string => {
   if (!/\d/.test(password)) {
     return 'Mật khẩu phải chứa ít nhất một chữ số';
   }
-  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-    return 'Mật khẩu phải chứa ít nhất một ký tự đặc biệt';
-  }
+   if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+     return 'Mật khẩu không nên chứa ký tự đặc biệt';
+   }
   return ''; // Trả về chuỗi rỗng nếu mật khẩu hợp lệ
 };
 
-export const validateBirthDate = (birthDate: string): string => {
-  if (!birthDate) {
-    return 'Ngày sinh không được để trống';
+export const validateName = (name: string): string => {
+  if (!name.trim()) {
+    return 'Trường này không được để trống';
   }
   return '';
 };
