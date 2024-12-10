@@ -22,3 +22,23 @@ export type ConversationInfo = {
     unread: number;
   };
 };
+
+export interface IMessage {
+  sender: {
+    id: number;
+  };
+  content: string;
+  receiver: {
+    id: number;
+  };
+}
+
+export type ReceivedMessage = {
+  content: string;
+  conversation_id: number;
+  created_at: Date;
+  id: number;
+  message_status: 1;
+  receiver: SenderInfo;
+  sender: SenderInfo;
+};

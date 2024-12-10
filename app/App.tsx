@@ -15,7 +15,7 @@ import {UniqueIdProvider} from './utils/uniqueId';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function App(): React.JSX.Element {
-  AsyncStorage.setItem('token', 'YDDESs');
+  AsyncStorage.setItem('token', 'BdZsuO');
   AsyncStorage.setItem('id', '277');
   return (
     <SafeAreaProvider>

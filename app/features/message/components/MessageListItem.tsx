@@ -4,7 +4,7 @@ import React, {PropsWithChildren} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {Pressable} from 'react-native-gesture-handler';
 import {Text} from 'react-native-paper';
-import {ConversationInfo} from '../../../models/Message';
+import {ConversationInfo, SenderInfo} from '../../../models/Message';
 import {formatMessageDate} from '../../../utils/datetime/date';
 import {getDirectImageLink} from '../../../utils/image';
 
@@ -16,7 +16,8 @@ type ParamList = {
   MessageFeaturesStacks: {
     screen: string;
     params: {
-      newMessage: boolean;
+      conversationId: string;
+      partner: SenderInfo;
     };
   };
 };
@@ -29,7 +30,8 @@ const MessageListItem = ({item}: SectionProps) => {
         navigation.navigate('MessageFeaturesStacks', {
           screen: 'MessageDetail',
           params: {
-            newMessage: item.last_message === undefined,
+            partner: item.partner,
+            conversationId: item.id.toString(),
           },
         });
       }}>
