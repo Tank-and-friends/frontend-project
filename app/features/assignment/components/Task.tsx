@@ -1,8 +1,9 @@
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useRef } from 'react';
-import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { RootStackParamList } from '../navigation';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import React, {useRef} from 'react';
+import {Animated, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {RootStackParamList} from '../navigation';
+import {Servey} from '../type';
 
 type TaskNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -17,6 +18,7 @@ interface TaskProps {
   badgeColor?: string;
   date: string;
   content: string;
+  serveyData: Servey;
 }
 
 const Task: React.FC<TaskProps> = ({
@@ -28,6 +30,7 @@ const Task: React.FC<TaskProps> = ({
   badgeColor,
   date,
   content,
+  serveyData,
 }) => {
   const navigation = useNavigation<TaskNavigationProp>();
   const scaleAnim = useRef(new Animated.Value(1)).current;
@@ -53,8 +56,33 @@ const Task: React.FC<TaskProps> = ({
       date,
       deadline: status,
       content,
+      formattedDate,
+      serveyData,
     });
   };
+
+  const formatDateTime = (inputString: string) => {
+    // Chuyển chuỗi thành đối tượng Date
+    const date2 = new Date(inputString);
+
+    // Lấy năm hiện tại
+    const currentYear = new Date().getFullYear();
+
+    // Lấy các phần cần thiết từ Date
+    const hours = date2.getHours().toString().padStart(2, '0'); // Lấy giờ
+    const minutes = date2.getMinutes().toString().padStart(2, '0'); // Lấy phút
+    const day = date2.getDate().toString().padStart(2, '0'); // Lấy ngày
+    const month = (date2.getMonth() + 1).toString().padStart(2, '0'); // Lấy tháng (lưu ý tháng bắt đầu từ 0)
+
+    // Kiểm tra nếu năm hiện tại
+    if (date2.getFullYear() === currentYear) {
+      return `${hours}:${minutes} ngày ${day}-${month}`;
+    } else {
+      return `${hours}:${minutes} ngày ${day}-${month}-${date2.getFullYear()}`;
+    }
+  };
+
+  const formattedDate = formatDateTime(serveyData.deadline);
 
   return (
     <TouchableOpacity
@@ -66,7 +94,9 @@ const Task: React.FC<TaskProps> = ({
         style={[styles.container, {transform: [{scale: scaleAnim}]}]}>
         <View style={styles.taskContent}>
           <Text style={styles.title}>{title}</Text>
-          <Text style={[styles.status, {color: statusColor}]}>{status}</Text>
+          <Text style={[styles.status, {color: statusColor}]}>
+            {formattedDate}
+          </Text>
         </View>
         {hasBadge && badgeText && (
           <View style={[styles.badge, {backgroundColor: badgeColor}]}>
@@ -85,7 +115,7 @@ const styles = StyleSheet.create({
     padding: 12,
     backgroundColor: '#f4f4f4',
     borderRadius: 10,
-    marginVertical: 8,
+    // marginVertical: 8,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowOffset: {width: 0, height: 1},

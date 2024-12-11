@@ -84,7 +84,7 @@ const NotificationScreen = () => {
         const response = await axios.post(
           'http://157.66.24.126:8080/it5023e/get_notifications',
           {
-            token: 'zNFj5I',
+            token: 'Mq9YoW',
             index: 0,
             count: 20,
           },
@@ -218,7 +218,7 @@ const NotificationScreen = () => {
       const response = await axios.post(
         'http://157.66.24.126:8080/it5023e/mark_notification_as_read',
         {
-          token: 'zNFj5I',
+          token: 'Mq9YoW',
           notification_id: notificationId,
         },
       );

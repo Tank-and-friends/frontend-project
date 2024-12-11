@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ImageBackground,
   ScrollView,
@@ -19,7 +19,8 @@ import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvat
 // }
 
 const TaskDetailScreen: React.FC = ({route}: any) => {
-  const {title, date, deadline, content} = route.params;
+  const {title, date, deadline, content, formattedDate, serveyData} =
+    route.params;
   const [late, setLate] = useState(false);
   const [processedDeadline, setProcessedDeadline] = useState('');
 
@@ -46,28 +47,32 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
         {/* Task Title */}
         <TopNavWithoutAvatar title="Chi tiết bài tập" />
         {/* Content */}
+        {false && (
+          <View>
+            <Text>{date}</Text>
+            <Text>{processedDeadline}</Text>
+          </View>
+        )}
         <ScrollView style={styles.contentContainer}>
           <View style={styles.taskTitleContainer}>
             <View>
               <View style={styles.title}>
                 <Text style={styles.taskTitle}>{title}</Text>
-                <View
-                  style={[
-                    styles.badge,
-                    {
-                      backgroundColor: '#FF7F11',
-                    },
-                  ]}>
-                  <Text style={styles.badgeText}>Chưa nộp bài</Text>
-                  <FeatherIcon name="clock" size={24} color="black" />
-                </View>
+                {false && (
+                  <View
+                    style={[
+                      styles.badge,
+                      {
+                        backgroundColor: '#FF7F11',
+                      },
+                    ]}>
+                    <Text style={styles.badgeText}>Chưa nộp bài</Text>
+                    <FeatherIcon name="clock" size={24} color="black" />
+                  </View>
+                )}
               </View>
-              {!late && <Text style={styles.deadline}>
-                Đến hạn vào ngày {date} lúc {processedDeadline}
-              </Text>}
-              {late && <Text style={styles.deadline}>
-                {processedDeadline}
-              </Text>}
+              {!late && <Text style={styles.deadline}>{formattedDate}</Text>}
+              {late && <Text style={styles.deadline}>{formattedDate}</Text>}
               <View style={styles.line} />
               <Text style={styles.text}>Nội dung</Text>
               <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
@@ -75,6 +80,9 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
               </ScrollView>
 
               <Text style={styles.text}>Tài liệu liên quan</Text>
+              <View>
+                <Text style={styles.url}>{serveyData.file_url}</Text>
+              </View>
             </View>
           </View>
 
@@ -151,7 +159,7 @@ const styles = StyleSheet.create({
     width: '65%',
   },
   deadline: {
-    color: '#071013',
+    color: '#21A366',
     marginTop: 8,
   },
   statusText: {
@@ -239,7 +247,7 @@ const styles = StyleSheet.create({
   },
 
   scrollView: {
-    height: 200,
+    maxHeight: 200,
     width: '96%',
     padding: 0,
     borderColor: '#ccc',
@@ -292,6 +300,10 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+
+  url: {
+    color: 'black',
   },
 });
 

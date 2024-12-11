@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ImageBackground,
   Pressable,
@@ -7,11 +7,54 @@ import {
   View,
 } from 'react-native';
 import IonIcons from 'react-native-vector-icons/Ionicons';
-import { TextField } from '../../components/TextField/TextField';
+import {TextField} from '../../components/TextField/TextField';
 import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
 import Assignment from './components/Assignment';
 import StatusButtonGroup from './components/StatusButtonGroup';
+import axios from 'axios';
+import {Servey} from './type';
 const AssignmentScreen = () => {
+  const [dataServey, setDataServey] = useState<Servey[]>([]);
+
+  useEffect(() => {
+    const getAllServeys = async () => {
+      try {
+        const response = await axios.post(
+          'http://157.66.24.126:8080/it5023e/get_all_surveys',
+          {
+            token: 'Mq9YoW',
+            class_id: '000254',
+          },
+        );
+
+        // Log meta và data từ API
+        // console.log('Data:', response.data.data);
+
+        if (response.data && response.data.data) {
+          const apiDataServey = response.data.data.map((item: Servey) => ({
+            id: item.id,
+            title: item.title,
+            description: item.description,
+            lecturer_id: item.lecturer_id,
+            deadline: item.deadline,
+            file_url: item.file_url,
+            class_id: item.class_id,
+          }));
+          setDataServey(apiDataServey);
+        }
+        // console.log(response.data.data);
+      } catch (error) {
+        console.error('Lỗi khi gọi API:', error);
+      } finally {
+        // setLoading(false); // Tắt trạng thái loading
+      }
+    };
+
+    getAllServeys();
+  }, []);
+
+console.log('Servey: ', dataServey);
+
   const assignments = [
     {
       date: '28 tháng 10',
@@ -24,20 +67,6 @@ const AssignmentScreen = () => {
           hasBadge: true,
           badgeText: 'Đã nộp',
           badgeColor: '#FF7F11',
-        },
-        {
-          title: 'Đọc chương 5 - Lịch sử',
-          status: 'Quá hạn',
-          statusColor: '#C62828',
-          hasBadge: true,
-          badgeText: 'Trễ hạn',
-          badgeColor: '#C62828',
-        },
-        {
-          title: 'Hoàn thành dự án Khoa học',
-          status: 'Đã hoàn thành',
-          statusColor: '#388E3C',
-          hasBadge: false,
         },
       ],
     },
@@ -144,13 +173,14 @@ const AssignmentScreen = () => {
         </View>
         <View style={styles.listAssgnment}>
           <ScrollView contentContainerStyle={{}}>
-            {assignments.map((item, index) => (
+            {dataServey.map((item, index) => (
               <Pressable key={index}>
                 <Assignment
                   key={index}
-                  date={item.date}
-                  day={item.day}
-                  tasks={item.tasks}
+                  date={assignments[0].date}
+                  day={assignments[0].date}
+                  tasks={assignments[0].tasks}
+                  serveyData={item}
                 />
               </Pressable>
             ))}
