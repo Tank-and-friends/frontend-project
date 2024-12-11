@@ -10,7 +10,7 @@ export type ParamList = {
   ClassStacks: {
     screen: string;
     params: {
-      classId: string;
+      classId: string; 
       className: string;
       classTime: string;
       classPlace: string;
