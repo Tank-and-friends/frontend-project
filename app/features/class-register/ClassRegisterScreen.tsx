@@ -10,7 +10,9 @@ import RegisteredClasses from './components/RegisteredClasses';
 import TeacherClasses from './components/TeacherClasses';
 
 const ClassRegisterScreen = ({navigation, route}: {navigation: any; route: any}) => {
+  console.log('Route Params:', route.params);
   const {userRole} = route.params;
+  
   const [activeScreen, setActiveScreen] = useState('Screen1');
 
   return (

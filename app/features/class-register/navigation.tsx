@@ -15,7 +15,7 @@ export const ClassRegisterStacks = () => {
         options={{headerShown: false}}
         initialParams={{userRole: 'teacher'}}
       />
-      <Stack.Screen name="ClassRegisterList" options={{headerShown: false}} component={ClassRegisterListScreen} />
+      <Stack.Screen name="ClassRegisterList" options={{headerShown: false}} component={ClassRegisterListScreen}/>
       <Stack.Screen name="NewClassForm" options={{headerShown: false}} component={NewClassScreen} />
     </Stack.Navigator>
   );
