@@ -5267,6 +5267,7 @@ __metadata:
     react-native-device-info: ^14.0.1
     react-native-document-picker: ^9.3.1
     react-native-gesture-handler: ^2.20.0
+    react-native-image-picker: ^7.2.3
     react-native-modal-datetime-picker: ^18.0.0
     react-native-pager-view: ^6.5.0
     react-native-paper: latest
@@ -8442,6 +8443,16 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 8d9e7496615dad4e6bb6dd1c750c2d3b2e57c6173a1d466b4503b28b159b1dbbb1e7527c3d4bda12324422200c07835f34d81c9bd3cd1b7f594b22949bef274a
+  languageName: node
+  linkType: hard
+
+"react-native-image-picker@npm:^7.2.3":
+  version: 7.2.3
+  resolution: "react-native-image-picker@npm:7.2.3"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 96d67516e8e1c1768c593ca1b0a507d5212d8ac5df2610ad9d6f38c188b8d0720966559867849f74b6c19d2500664ce17c907e5fa37ab72487abd363cf493e7d
   languageName: node
   linkType: hard
 

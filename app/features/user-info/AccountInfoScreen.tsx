@@ -13,12 +13,12 @@ import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from './navigation';
 import {StackNavigationProp} from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as ImagePicker from 'react-native-image-picker';
 
 type AccountInfoScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'AccountInfoScreen'
 >;
-
 
 const AccountInfoScreen: React.FC = () => {
   const navigation = useNavigation<AccountInfoScreenNavigationProp>();
@@ -26,6 +26,7 @@ const AccountInfoScreen: React.FC = () => {
   const [email, setEmail] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
   const [name, setName] = useState<string | null>(null);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,10 +34,12 @@ const AccountInfoScreen: React.FC = () => {
         const storedEmail = await AsyncStorage.getItem('email');
         const storedRole = await AsyncStorage.getItem('role');
         const storedName = await AsyncStorage.getItem('name');
+        const storedImage = await AsyncStorage.getItem('profileImage');
 
         setEmail(storedEmail);
         setRole(storedRole);
         setName(storedName);
+        setProfileImage(storedImage);
       } catch (error) {
         console.error('Failed to load data from AsyncStorage:', error);
       }
@@ -44,7 +47,25 @@ const AccountInfoScreen: React.FC = () => {
 
     fetchData();
   }, []);
-  
+  const handleImageUpload = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibrary({
+        mediaType: 'photo',
+        quality: 0.8,
+      });
+
+      if (result.assets && result.assets.length > 0) {
+        const imageUri = result.assets[0].uri ?? null; // Chuyển undefined thành null
+        setProfileImage(imageUri);
+
+        // Lưu ảnh vào AsyncStorage
+        await AsyncStorage.setItem('profileImage', imageUri || '');
+      }
+    } catch (error) {
+      console.error('Failed to pick image:', error);
+    }
+  };
+
   const handlePasswordChange = () => {
     navigation.navigate('PasswordChangeScreen');
   };
@@ -69,12 +90,17 @@ const AccountInfoScreen: React.FC = () => {
           />
         </View>
 
-        {/* Profile Section */}
         <View style={styles.profileContainer}>
-          <Image
-            source={require('../../assets/avt.jpg')}
-            style={styles.profileImage}
-          />
+          <TouchableOpacity onPress={handleImageUpload}>
+            <Image
+              source={
+                profileImage
+                  ? {uri: profileImage}
+                  : require('../../assets/avt.jpg')
+              }
+              style={styles.profileImage}
+            />
+          </TouchableOpacity>
           <View style={styles.onlineStatusIndicator} />
           <Text style={styles.userName}>{name}</Text>
         </View>
@@ -214,7 +240,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 5,
     marginHorizontal: 20,
-    marginVertical: 10,
+    marginVertical: 13,
     justifyContent: 'center',
   },
   buttonText: {
