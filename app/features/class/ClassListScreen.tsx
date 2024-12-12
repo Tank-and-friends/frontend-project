@@ -1,8 +1,8 @@
-import {NavigationProp, useNavigation} from '@react-navigation/core';
+import { NavigationProp, useNavigation } from '@react-navigation/core';
 import React from 'react';
-import {ImageBackground, ScrollView, StyleSheet, View} from 'react-native';
+import { ImageBackground, ScrollView, StyleSheet, View } from 'react-native';
 import IonIcons from 'react-native-vector-icons/Ionicons';
-import {TextField} from '../../components/TextField/TextField';
+import { TextField } from '../../components/TextField/TextField';
 import TopComponent from '../../components/TopComponent/TopComponent';
 import ClassRect from './components/ClassRect';
 

@@ -7,10 +7,11 @@ import DocumentPicker, {
 import { Appbar, Button } from 'react-native-paper';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome6';
 import { TextField } from '../../../components/TextField/TextField';
+import { AbsenceRequestForm } from '../type';
 
 export const CreateAbsenceRequest = () => {
   const navigation = useNavigation();
-  const [requestForm, setRequestForm] = React.useState({
+  const [requestForm, setRequestForm] = React.useState<AbsenceRequestForm>({
     title: '',
     date: '',
     reason: '',

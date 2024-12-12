@@ -17,3 +17,16 @@ export type AbsenceRequestForm = {
   file?: string;
   review?: string;
 };
+
+export type StudentAccount = {
+  account_id: number;
+  last_name: string;
+  first_name: string;
+  email: string;
+  student_id: string;
+}
+
+export type AbsenceRequestReponse = AbsenceRequestForm & {
+  id: number;
+  student_account: StudentAccount;
+};
