@@ -12,6 +12,8 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import { validatePassword } from '../../utils/validation';
 import { RootStackParamList } from './navigation';
+import {changePassword} from '../../apis/UserApi'; // Import API login function
+import {Alert} from 'react-native';
 
 type PasswordChangeScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -34,7 +36,7 @@ const PasswordChangeScreen = () => {
 
   const navigation = useNavigation<PasswordChangeScreenNavigationProp>();
 
-  const handleSavePassword = () => {
+  const handleSavePassword = async () => {
     let isValid = true;
     const newErrors = {oldPassword: '', newPassword: '', confirmPassword: ''};
 
@@ -57,10 +59,23 @@ const PasswordChangeScreen = () => {
     setErrors(newErrors);
 
     if (isValid) {
-      console.log('Password saved!');
-      // Thực hiện logic gửi mật khẩu lên server hoặc xử lý lưu
+      try {
+        const isSuccess = await changePassword(oldPassword, newPassword);
+        if (isSuccess) {
+          Alert.alert('Thành công', 'Mật khẩu đã được thay đổi!');
+          navigation.goBack(); // Quay lại màn hình trước
+        } else {
+          Alert.alert(
+            'Thất bại',
+            'Không thể thay đổi mật khẩu. Vui lòng kiểm tra thông tin nhập vào.',
+          );
+        }
+      } catch (error) {
+        Alert.alert('Lỗi', 'Đã xảy ra lỗi trong quá trình thay đổi mật khẩu.');
+      }
     }
   };
+
 
   return (
     <View style={styles.container}>
@@ -178,9 +193,6 @@ const PasswordChangeScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-  },
   containerScroll: {
     padding: 20,
   },
@@ -243,6 +255,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   saveButton: {
+    marginTop: 300,
     backgroundColor: '#C02135',
     borderRadius: 5,
     paddingVertical: 10,

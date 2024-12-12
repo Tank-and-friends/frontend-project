@@ -5,76 +5,46 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  Linking,
   StyleSheet,
   ScrollView,
-  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from './navigation';
 import {StackNavigationProp} from '@react-navigation/stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type AccountInfoScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'AccountInfoScreen'
 >;
 
-type AccountInfoScreenProps = {
-  coverImageUrl: string;
-  profileImageUrl: string;
-  userName: string;
-  friendCount: number;
-  statusText: string;
-  joinDate: string;
-  location: string;
-  websiteUrl: string;
-};
+
 const AccountInfoScreen: React.FC = () => {
-  const [accountData, setAccountData] = useState<AccountInfoScreenProps | null>(
-    null,
-  );
-  const [loading, setLoading] = useState<boolean>(true);
   const navigation = useNavigation<AccountInfoScreenNavigationProp>();
 
+  const [email, setEmail] = useState<string | null>(null);
+  const [role, setRole] = useState<string | null>(null);
+  const [name, setName] = useState<string | null>(null);
+
   useEffect(() => {
-    const fakeAccountData = {
-      coverImageUrl: '../../assets/avt.jpg',
-      profileImageUrl: 'https://example.com/profile-image-url',
-      userName: 'Bong 20210000',
-      friendCount: 420,
-      statusText: 'Fan thầy Bean tổng nè',
-      joinDate: '15 tháng 4 năm 2024',
-      location: 'Thị xã Kinh Môn, tỉnh Hải Dương, Việt Nam',
-      websiteUrl: 'https://abcdexyz',
+    const fetchData = async () => {
+      try {
+        const storedEmail = await AsyncStorage.getItem('email');
+        const storedRole = await AsyncStorage.getItem('role');
+        const storedName = await AsyncStorage.getItem('name');
+
+        setEmail(storedEmail);
+        setRole(storedRole);
+        setName(storedName);
+      } catch (error) {
+        console.error('Failed to load data from AsyncStorage:', error);
+      }
     };
 
-    setTimeout(() => {
-      setAccountData(fakeAccountData);
-      setLoading(false);
-    }, 1000);
+    fetchData();
   }, []);
-
-  if (loading) {
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator size="large" color="#f57c00" />
-        <Text>Đang tải dữ liệu...</Text>
-      </View>
-    );
-  }
-
-  if (!accountData) {
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Text>Không có dữ liệu tài khoản.</Text>
-      </View>
-    );
-  }
   
-  const handleEditInfo = () => {
-    navigation.navigate('AccountUpdateScreen');
-  };
   const handlePasswordChange = () => {
     navigation.navigate('PasswordChangeScreen');
   };
@@ -106,11 +76,7 @@ const AccountInfoScreen: React.FC = () => {
             style={styles.profileImage}
           />
           <View style={styles.onlineStatusIndicator} />
-          <Text style={styles.userName}>{accountData.userName}</Text>
-          <Text style={styles.friendCount}>
-            {accountData.friendCount} người bạn
-          </Text>
-          <Text style={styles.statusText}>{accountData.statusText}</Text>
+          <Text style={styles.userName}>{name}</Text>
         </View>
 
         {/* Divider */}
@@ -119,25 +85,17 @@ const AccountInfoScreen: React.FC = () => {
         {/* Details Section */}
         <View style={styles.detailsContainer}>
           <View style={styles.detailItem}>
-            <Icon name="calendar" size={20} color="#f57c00" />
+            <Icon name="mail" size={24} color="#C02135" />
             <Text style={styles.detailText}>
-              Tham gia ngày{' '}
-              <Text style={styles.detailTextBold}>{accountData.joinDate}</Text>
+              Email{' : '}
+              <Text style={styles.detailTextBold}>{email}</Text>
             </Text>
           </View>
           <View style={styles.detailItem}>
-            <Icon name="home" size={20} color="#4caf50" />
+            <Icon name="person-circle" size={24} color="#C02135" />
             <Text style={styles.detailText}>
-              Sống tại{' '}
-              <Text style={styles.detailTextBold}>{accountData.location}</Text>
-            </Text>
-          </View>
-          <View style={styles.detailItemLink}>
-            <Icon name="link" size={20} color="#1e88e5" />
-            <Text
-              style={styles.linkText}
-              onPress={() => Linking.openURL(accountData.websiteUrl)}>
-              {accountData.websiteUrl}
+              Role{' : '}
+              <Text style={styles.detailTextBold}>{role}</Text>
             </Text>
           </View>
         </View>
@@ -146,10 +104,6 @@ const AccountInfoScreen: React.FC = () => {
         <TouchableOpacity style={styles.button} onPress={handlePasswordChange}>
           <Icon name="lock-closed-outline" size={20} color="#fff" />
           <Text style={styles.buttonText}>Đổi mật khẩu</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleEditInfo}>
-          <Icon name="create-outline" size={20} color="#fff" />
-          <Text style={styles.buttonText}>Chỉnh sửa thông tin</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>
@@ -210,9 +164,9 @@ const styles = StyleSheet.create({
     borderColor: '#fff',
   },
   userName: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
-    marginTop: 10,
+    marginTop: 15,
   },
   friendCount: {
     fontSize: 16,
@@ -224,7 +178,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   divider: {
-    height: 1,
+    height: 2,
     backgroundColor: '#e0e0e0',
     marginVertical: 2,
     marginHorizontal: 20,
@@ -246,18 +200,13 @@ const styles = StyleSheet.create({
   },
   detailText: {
     marginLeft: 10,
-    fontSize: 16,
+    fontSize: 18,
   },
   detailTextBold: {
     fontWeight: 'bold',
   },
-  linkText: {
-    marginLeft: 10,
-    fontSize: 16,
-    color: '#1e88e5',
-    textDecorationLine: 'underline',
-  },
   button: {
+    marginTop: 250,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#C02135',

@@ -1,6 +1,5 @@
 import {UserInfo} from '../models/User';
 import axiosInstance from './apiConfig';
-// import {getUniqueId} from 'react-native-device-info';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //sau khi login, AsyncStorage sẽ lưu lại token, name, id, role
@@ -145,7 +144,6 @@ export const login = async (
   password: string,
 ): Promise<LoginResponse | null> => {
   try {
-    // const deviceId = getUniqueId(); // Lấy device_id từ thiết bị
     const deviceId = 1;
     const response = await axiosInstance.post('/it4788/login', {
       email,
@@ -154,9 +152,11 @@ export const login = async (
     });
 
     const data: LoginResponse = response.data;
-
-    // Lưu token vào AsyncStorage
     AsyncStorage.setItem('token', data.token);
+    AsyncStorage.setItem('id', data.id);
+    AsyncStorage.setItem('name', data.name);
+    AsyncStorage.setItem('role', data.role);
+    AsyncStorage.setItem('email', data.email);
 
     console.log('Login successful:', data);
     return data;
@@ -181,3 +181,25 @@ export const getUserInfo = async (): Promise<UserInfo | null> => {
     return null;
   }
 };
+export const changePassword = async (
+  oldPassword: string,
+  newPassword: string,
+): Promise<boolean> => {
+  try {
+    const response = await axiosInstance.post('/it4788/change_password', {
+      old_password: oldPassword,
+      new_password: newPassword,
+    });
+
+    if (response.code === '1000') {
+      return true; // Thành công
+    } else {
+      console.error('Error from API:', response.message);
+      return false; // Thất bại
+    }
+  } catch (error) {
+    console.error('Error changing password:', error);
+    return false; // Lỗi kết nối hoặc exception
+  }
+};
+

@@ -95,14 +95,7 @@ const SignupCreateScreen = () => {
     //   setSignupError('');
     //   return;
     // }
-    const signupData = {
-      ho: lastName,
-      ten: firstName,
-      email: email,
-      password: password,
-      uuid: 23,
-      role: 'STUDENT',
-    };
+  
 
     try {
       // Gọi API đăng ký
@@ -116,7 +109,7 @@ const SignupCreateScreen = () => {
       );
       console.log(signupResult);
       if (signupResult?.code === '1000') {
-        navigation.navigate('ClassList');
+        navigation.navigate('LoginScreen', {email});
       } else {
         // Trường hợp mã trả về khác '1000'
         Alert.alert('Lỗi', 'Đăng ký không thành công');
