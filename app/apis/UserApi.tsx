@@ -156,7 +156,7 @@ export const login = async (
     const data: LoginResponse = response.data;
 
     // Lưu token vào AsyncStorage
-    AsyncStorage.setItem('token', data.data.token);
+    AsyncStorage.setItem('token', data.token);
 
     console.log('Login successful:', data);
     return data;

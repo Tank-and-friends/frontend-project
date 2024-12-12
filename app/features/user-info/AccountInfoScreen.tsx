@@ -71,6 +71,7 @@ const AccountInfoScreen: React.FC = () => {
       </View>
     );
   }
+  
   const handleEditInfo = () => {
     navigation.navigate('AccountUpdateScreen');
   };
