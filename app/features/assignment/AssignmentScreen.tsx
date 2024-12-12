@@ -13,8 +13,11 @@ import Assignment from './components/Assignment';
 import StatusButtonGroup from './components/StatusButtonGroup';
 import axios from 'axios';
 import {Servey} from './type';
+import {Text} from 'react-native-paper';
 const AssignmentScreen = () => {
-  const [dataServey, setDataServey] = useState<Servey[]>([]);
+  const [dataServey, setDataSurvey] = useState<Servey[]>([]);
+
+  const [labelStatus, setLabelStatus] = useState('All');
 
   useEffect(() => {
     const getAllServeys = async () => {
@@ -40,7 +43,7 @@ const AssignmentScreen = () => {
             file_url: item.file_url,
             class_id: item.class_id,
           }));
-          setDataServey(apiDataServey);
+          setDataSurvey(apiDataServey);
         }
         // console.log(response.data.data);
       } catch (error) {
@@ -52,8 +55,6 @@ const AssignmentScreen = () => {
 
     getAllServeys();
   }, []);
-
-console.log('Servey: ', dataServey);
 
   const assignments = [
     {
@@ -156,6 +157,101 @@ console.log('Servey: ', dataServey);
     },
   ];
 
+  const [typeStatus, setTypeStatus] = useState('');
+
+  useEffect(() => {
+    // Xác định typeStatus dựa trên labelStatus
+    const mapLabelToTypeStatus = (label: string): string => {
+      switch (label) {
+        case 'Sắp tới':
+          return 'UPCOMING';
+        case 'Quá hạn':
+          return 'PASS_DUE';
+        case 'Đã hoàn thành':
+          return 'COMPLETED';
+        case 'All':
+          return 'All';
+        default:
+          return '';
+      }
+    };
+
+    const newTypeStatus = mapLabelToTypeStatus(labelStatus);
+    setTypeStatus(newTypeStatus);
+    console.log('niu leey bồ: ', newTypeStatus);
+
+    const getAllSurveys = async () => {
+      try {
+        const response = await axios.post(
+          'http://157.66.24.126:8080/it5023e/get_student_assignments',
+          {
+            token: 'Mq9YoW',
+            type: newTypeStatus,
+            class_id: '000254',
+          },
+        );
+
+        if (response.data && response.data.data) {
+          const apiDataSurvey = response.data.data.map((item: Servey) => ({
+            id: item.id,
+            title: item.title,
+            description: item.description,
+            lecturer_id: item.lecturer_id,
+            deadline: item.deadline,
+            file_url: item.file_url,
+            class_id: item.class_id,
+          }));
+          setDataSurvey(apiDataSurvey);
+        }
+      } catch (error) {
+        console.error('Lỗi khi gọi API:', error);
+      } finally {
+        // Tắt trạng thái loading (nếu có)
+        // setLoading(false);
+      }
+    };
+
+    const getAllServeys2 = async () => {
+      try {
+        const response = await axios.post(
+          'http://157.66.24.126:8080/it5023e/get_all_surveys',
+          {
+            token: 'Mq9YoW',
+            class_id: '000254',
+          },
+        );
+
+        // Log meta và data từ API
+        // console.log('Data:', response.data.data);
+
+        if (response.data && response.data.data) {
+          const apiDataServey = response.data.data.map((item: Servey) => ({
+            id: item.id,
+            title: item.title,
+            description: item.description,
+            lecturer_id: item.lecturer_id,
+            deadline: item.deadline,
+            file_url: item.file_url,
+            class_id: item.class_id,
+          }));
+          setDataSurvey(apiDataServey);
+        }
+        // console.log(response.data.data);
+      } catch (error) {
+        console.error('Lỗi khi gọi API:', error);
+      } finally {
+        // setLoading(false); // Tắt trạng thái loading
+      }
+    };
+
+    // Gọi hàm lấy dữ liệu
+    if (newTypeStatus !== 'All') {
+      getAllSurveys();
+    } else {
+      getAllServeys2();
+    }
+  }, [labelStatus]);
+
   return (
     <ImageBackground
       source={require('../../assets/images/background.png')}
@@ -169,8 +265,9 @@ console.log('Servey: ', dataServey);
         />
 
         <View style={styles.statusGroup}>
-          <StatusButtonGroup />
+          <StatusButtonGroup setLabelStatus={setLabelStatus} />
         </View>
+        {false && <Text>{typeStatus}</Text>}
         <View style={styles.listAssgnment}>
           <ScrollView contentContainerStyle={{}}>
             {dataServey.map((item, index) => (

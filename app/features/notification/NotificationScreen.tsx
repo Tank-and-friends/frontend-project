@@ -16,6 +16,7 @@ import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvat
 import {Notification} from './types';
 // import axiosInstance from '../../apis/apiConfig';
 import axios from 'axios';
+import {getUnreadNotificationsCount} from './api';
 // import axiosInstance from '../../apis/apiConfig';
 const NotificationScreen = () => {
   // const notificationdata = [
@@ -120,6 +121,19 @@ const NotificationScreen = () => {
     };
 
     fetchNotifications();
+  }, []);
+
+  useEffect(() => {
+    const unreadNotificationCount = async () => {
+      try {
+        const unreadCount = await getUnreadNotificationsCount();
+        console.log('count: ', unreadCount.data);
+      } catch (error) {
+        console.log('Errror: ', error);
+      }
+    };
+
+    unreadNotificationCount();
   }, []);
 
   // Data mẫu

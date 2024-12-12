@@ -11,6 +11,7 @@ import {
 
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
+// import DrivePreview from './components/DrivePreview';
 // interface TaskDetailData {
 //   title: string;
 //   date: string;
@@ -82,6 +83,10 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
               <Text style={styles.text}>Tài liệu liên quan</Text>
               <View>
                 <Text style={styles.url}>{serveyData.file_url}</Text>
+              </View>
+
+              <View style={styles.preview}>
+                {/* <DrivePreview driveUrl={serveyData.file_url} type="image" /> */}
               </View>
             </View>
           </View>
@@ -304,6 +309,11 @@ const styles = StyleSheet.create({
 
   url: {
     color: 'black',
+  },
+
+  preview: {
+    borderWidth: 2,
+    borderColor: 'green',
   },
 });
 

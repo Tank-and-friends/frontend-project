@@ -25,7 +25,7 @@ const Assignment: React.FC<AssignmentProps> = ({
   tasks,
   serveyData,
 }) => {
-  console.log(serveyData);
+  // console.log(serveyData);
 
   return (
     <View style={styles.assignmentContainer}>
