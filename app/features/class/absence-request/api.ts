@@ -1,16 +1,14 @@
 import axiosInstance from '../../../apis/apiConfig';
-import {AbsenceRequestReponse} from '../type';
+import { AbsenceRequestReponse } from '../type';
 
 export const getAbsenceRequests = async (
-  token = 'rMpDWw',
   class_id = '000268',
   status = null,
   page = 0,
-  page_size = 2,
+  page_size = 10,
 ): Promise<AbsenceRequestReponse[]> => {
   try {
     const response = await axiosInstance.post('/it5023e/get_absence_requests', {
-      token,
       class_id,
       status,
       pageable_request: {
