@@ -54,7 +54,6 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
       setFile(res); // Đặt giá trị state là danh sách file được chọn
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
-        
       } else {
         console.error('Unknown error:', err);
       }
