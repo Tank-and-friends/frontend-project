@@ -17,6 +17,10 @@ interface AssignmentProps {
   day: string;
   tasks: TaskData[];
   serveyData: Servey;
+  checked?: boolean;
+  setChecked: (value: boolean) => void;
+  showFooter: boolean;
+  setShowFooter: (value: boolean) => void;
 }
 
 const Assignment: React.FC<AssignmentProps> = ({
@@ -24,6 +28,10 @@ const Assignment: React.FC<AssignmentProps> = ({
   day,
   tasks,
   serveyData,
+  checked,
+  setChecked,
+  showFooter,
+  setShowFooter,
 }) => {
   // console.log(serveyData);
 
@@ -45,6 +53,10 @@ const Assignment: React.FC<AssignmentProps> = ({
           date={serveyData.deadline}
           content={serveyData.description}
           serveyData={serveyData}
+          checked={checked}
+          setChecked={setChecked}
+          showFooter={showFooter}
+          setShowFooter={setShowFooter}
         />
       ))}
     </View>

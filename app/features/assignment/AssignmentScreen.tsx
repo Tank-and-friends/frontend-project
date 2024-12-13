@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {
+  BackHandler,
   ImageBackground,
   Pressable,
   ScrollView,
   StyleSheet,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import IonIcons from 'react-native-vector-icons/Ionicons';
@@ -14,7 +16,10 @@ import StatusButtonGroup from './components/StatusButtonGroup';
 import axios from 'axios';
 import {Servey} from './type';
 import {Text} from 'react-native-paper';
+import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
+
 const AssignmentScreen = () => {
+  const [role, setRole] = useState('LECTURER');
   const [dataServey, setDataSurvey] = useState<Servey[]>([]);
 
   const [labelStatus, setLabelStatus] = useState('All');
@@ -44,17 +49,18 @@ const AssignmentScreen = () => {
             class_id: item.class_id,
           }));
           setDataSurvey(apiDataServey);
+          setRole(role);
         }
         // console.log(response.data.data);
       } catch (error) {
-        console.error('Lỗi khi gọi API:', error);
+        console.error('Lỗi khi gọi API2:', error);
       } finally {
         // setLoading(false); // Tắt trạng thái loading
       }
     };
 
     getAllServeys();
-  }, []);
+  }, [role]);
 
   const assignments = [
     {
@@ -178,7 +184,7 @@ const AssignmentScreen = () => {
 
     const newTypeStatus = mapLabelToTypeStatus(labelStatus);
     setTypeStatus(newTypeStatus);
-    console.log('niu leey bồ: ', newTypeStatus);
+    // console.log('niu leey bồ: ', newTypeStatus);
 
     const getAllSurveys = async () => {
       try {
@@ -204,7 +210,7 @@ const AssignmentScreen = () => {
           setDataSurvey(apiDataSurvey);
         }
       } catch (error) {
-        console.error('Lỗi khi gọi API:', error);
+        console.error('Lỗi khi gọi API3:', error);
       } finally {
         // Tắt trạng thái loading (nếu có)
         // setLoading(false);
@@ -238,7 +244,7 @@ const AssignmentScreen = () => {
         }
         // console.log(response.data.data);
       } catch (error) {
-        console.error('Lỗi khi gọi API:', error);
+        console.error('Lỗi khi gọi API4:', error);
       } finally {
         // setLoading(false); // Tắt trạng thái loading
       }
@@ -251,6 +257,103 @@ const AssignmentScreen = () => {
       getAllServeys2();
     }
   }, [labelStatus]);
+
+  const [showFooter, setShowFooter] = useState(false);
+
+  const handleEdit = () => {
+    setShowFooter(false);
+  };
+
+  const deleteSurvey = async (survey_id: number) => {
+    if (role !== 'LECTURER') {
+      console.warn('Hành động này chỉ dành cho giảng viên (LECTURER).');
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        'http://157.66.24.126:8080/it5023e/delete_survey',
+        {
+          token: 'l3JuKg',
+          survey_id: survey_id,
+        },
+      );
+
+      console.log(response.data.data);
+    } catch (error) {
+      console.error('Lỗi khi gọi API3:', error);
+    } finally {
+      // Tắt trạng thái loading (nếu có)
+      // setLoading(false);
+    }
+  };
+
+  const [checkedStates, setCheckedStates] = useState(
+    Array(dataServey.length).fill(false), // Khởi tạo mảng với tất cả giá trị `false`
+  );
+
+  useEffect(() => {
+    if (showFooter) {
+      // Reset all checked states to false when showFooter is true
+      setCheckedStates(Array(dataServey.length).fill(false));
+    }
+  }, [showFooter, dataServey.length]);
+
+  const handleDeleteSelected = () => {
+    const selectedIndexes = checkedStates
+      .map((checked, index) => (checked ? index : null)) // Lấy index nếu checked là true
+      .filter(index => index !== null); // Loại bỏ các giá trị null
+    // console.log('Danh sách các index được chọn:', selectedIndexes);
+    const updatedNotifications = dataServey.map((notification, index) => {
+      if (checkedStates[index]) {
+        // markNotificationAsRead(String(notification.id));
+
+        return {...notification, onMarkRead: true}; // Đánh dấu đã đọc
+      }
+      return notification; // Không thay đổi nếu không được chọn
+    });
+    // setNotifications(updatedNotifications); // Cập nhật trạng thái thông báo
+    const markedReadNotifications = updatedNotifications.filter(
+      (_, index) => checkedStates[index],
+    );
+
+    markedReadNotifications.forEach(notification => {
+      // console.log(notification.id);
+      deleteSurvey(notification.id);
+    });
+
+    if (selectedIndexes.length > 0) {
+      setShowFooter(false);
+      // chạy lại ở đây
+
+      const updatedSurveys = dataServey.filter((_, index) => !checkedStates[index]);
+
+    // Cập nhật lại trạng thái dataServey
+    setDataSurvey(updatedSurveys);
+
+    // Reset checkedStates tương ứng với danh sách mới
+    setCheckedStates(Array(updatedSurveys.length).fill(false));
+
+    } else {
+    }
+  };
+
+  useEffect(() => {
+    const handleBackPress = () => {
+      if (showFooter) {
+        setShowFooter(false);
+        return true; // Chặn hành động quay lại mặc định
+      }
+      return false; // Cho phép hành động quay lại mặc định
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      handleBackPress,
+    );
+
+    return () => backHandler.remove(); // Dọn dẹp listener khi component unmount
+  }, [showFooter]);
 
   return (
     <ImageBackground
@@ -278,6 +381,14 @@ const AssignmentScreen = () => {
                   day={assignments[0].date}
                   tasks={assignments[0].tasks}
                   serveyData={item}
+                  checked={checkedStates[index]}
+                  setChecked={value => {
+                    const updatedStates = [...checkedStates];
+                    updatedStates[index] = value;
+                    setCheckedStates(updatedStates);
+                  }}
+                  showFooter={showFooter}
+                  setShowFooter={setShowFooter}
                 />
               </Pressable>
             ))}
@@ -285,8 +396,24 @@ const AssignmentScreen = () => {
         </View>
       </View>
       {/* Footer */}
-      {/* <View>
-        </View> */}
+      {showFooter && (
+        <View style={styles.footer}>
+          <TouchableOpacity style={styles.footerButton} onPress={handleEdit}>
+            <Icon3 name="pencil-outline" size={25} color="white" />
+            <Text style={styles.footerText}>Chỉnh sửa</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.footerButton}
+            onPress={handleDeleteSelected}>
+            <Icon3 name="trash-can-outline" size={25} color="white" />
+            <Text style={styles.footerText}>Xóa</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.footerButton}>
+            <Icon3 name="dots-horizontal" size={25} color="white" />
+            <Text style={styles.footerText}>Xem thêm</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </ImageBackground>
   );
 };
@@ -336,7 +463,23 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 
-  footer: {},
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 8,
+    backgroundColor: '#C02135',
+  },
+  footerButton: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 0,
+    /* Footer button styling */
+  },
+
+  footerText: {
+    color: 'white',
+    opacity: 0.6,
+  },
 });
 
 export default AssignmentScreen;
