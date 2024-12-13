@@ -11,6 +11,10 @@ import {
 
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
+import DocumentPicker, {
+  DocumentPickerResponse,
+} from 'react-native-document-picker';
+import axios from 'axios';
 // import DrivePreview from './components/DrivePreview';
 // interface TaskDetailData {
 //   title: string;
@@ -38,6 +42,69 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
 
     processDeadline();
   }, [deadline]);
+
+  const [file, setFile] = useState<DocumentPickerResponse[] | null>(null);
+
+  const handleAddFile = async () => {
+    try {
+      const res = await DocumentPicker.pick({
+        type: [DocumentPicker.types.allFiles], // Chọn tất cả các loại file
+      });
+      console.log('File picked:', res);
+      setFile(res); // Đặt giá trị state là danh sách file được chọn
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        
+      } else {
+        console.error('Unknown error:', err);
+      }
+    }
+  };
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmitSurvey = async () => {
+    if (!file || file.length === 0) {
+      console.error('No file selected');
+      return;
+    }
+
+    if (isSubmitting) {
+      return;
+    } // Ngăn chặn nếu đang xử lý
+    setIsSubmitting(true);
+
+    const formData = new FormData();
+    formData.append('file', {
+      uri: file[0].uri, // URI của file
+      type: file[0].type, // Loại file (MIME type)
+      name: file[0].name, // Tên file
+    });
+    formData.append('token', 'Mq9YoW');
+    formData.append('assignmentId', serveyData.id);
+    formData.append('textResponse', 'Tạm thời chưa có');
+    console.log('Submit button clicked');
+
+    try {
+      const response = await axios.post(
+        'http://157.66.24.126:8080/it5023e/submit_survey',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+
+      // Sửa lại ngoại lệ (sai role, giáo viên không được nộp bài)
+      // (nộp bài nhiều lần)
+    } finally {
+      setIsSubmitting(false); // Hoàn tất
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -95,9 +162,23 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
             <View>
               <View style={styles.title}>
                 <Text style={styles.text}>Bài nộp của tôi</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleAddFile}>
                   <Text style={styles.addAssignment}>Thêm +</Text>
                 </TouchableOpacity>
+              </View>
+
+              <View style={styles.title}>
+                {file && (
+                  <View>
+                    {file.map((f, index) => (
+                      <View key={index}>
+                        <Text>File Name: {f.name}</Text>
+                        <Text>File Type: {f.type}</Text>
+                        <Text>File URI: {f.uri}</Text>
+                      </View>
+                    ))}
+                  </View>
+                )}
               </View>
               <View style={styles.line} />
               {/* Cuộn các tài liệu đã nộp (Có thể đổi thành tăng dần kích thước) */}
@@ -105,7 +186,9 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
 
             </ScrollView> */}
               <View style={styles.button1}>
-                <TouchableOpacity style={styles.button2}>
+                <TouchableOpacity
+                  style={styles.button2}
+                  onPress={handleSubmitSurvey}>
                   <Text style={styles.buttonText}>Nộp bài</Text>
                 </TouchableOpacity>
               </View>
