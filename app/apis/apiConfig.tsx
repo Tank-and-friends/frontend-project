@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { Alert } from 'react-native';
+import {Alert} from 'react-native';
 
 const axiosInstance = axios.create({
   baseURL: 'http://157.66.24.126:8080',
@@ -66,10 +66,16 @@ axiosInstance.interceptors.request.use(
         // Kiểm tra nếu phương thức request cho phép body
         if (['POST', 'PUT', 'PATCH'].includes(config.method?.toUpperCase())) {
           // Nếu body đã có thì thêm thông tin vào
-          config.data = {
-            ...config.data, // Dữ liệu hiện tại
-            token: token, // Chèn thêm token
-          };
+          if (config.data instanceof FormData) {
+            // Nếu body là FormData, sử dụng append
+            config.data.append('token', token);
+          } else {
+            // Nếu body là object thông thường
+            config.data = {
+              ...config.data, // Dữ liệu hiện tại
+              token: token, // Chèn thêm token
+            };
+          }
         }
       }
       return config;
