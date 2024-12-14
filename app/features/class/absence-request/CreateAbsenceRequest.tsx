@@ -14,6 +14,7 @@ export const CreateAbsenceRequest = () => {
   const [requestForm, setRequestForm] = React.useState<AbsenceRequestForm>({
     title: '',
     date: '',
+    file: undefined,
     reason: '',
   });
   const [file, setFile] = React.useState<DocumentPickerResponse | null>(null);

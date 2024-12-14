@@ -5,6 +5,8 @@ import { CreateAbsenceRequest } from './CreateAbsenceRequest';
 
 const Stack = createStackNavigator();
 
+const AbsenceRequestManageWrapper = (props: any) => <AbsenceRequestManage {...props} />;
+
 export const AbsenceRequestStacks = () => {
   return (
     <Stack.Navigator>
@@ -14,8 +16,8 @@ export const AbsenceRequestStacks = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen
+        component={AbsenceRequestManageWrapper}
         name="AbsenceRequestManage"
-        component={AbsenceRequestManage}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

@@ -1,30 +1,51 @@
-import { useNavigation } from '@react-navigation/core';
+import { RouteProp, useNavigation } from '@react-navigation/core';
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Appbar, Button } from 'react-native-paper';
-import FontAwesome6Icon from 'react-native-vector-icons/FontAwesome6';
 import { Badge } from '../components/Badge';
+import { AbsenceRequestReponse, AbsenceRequestStatus } from '../type';
 
-export const AbsenceRequestManage = () => {
+import { useAsyncStorage } from '@react-native-async-storage/async-storage';
+import { ParamListBase } from '@react-navigation/native';
+import { FileItem } from '../../../components/FileItem';
+import { reviewAbsenceRequest } from '../api';
+
+interface Props {
+  route: RouteProp<ParamListBase, 'AbsenceRequestManage'> & {
+    params: {
+      absenceRequest: AbsenceRequestReponse;
+    };
+  };
+}
+
+export const AbsenceRequestManage: React.FC<Props> = ({route}) => {
   const navigation = useNavigation();
-  const [absenceRequest, setAbsenceRequest] = useState({
-    title: 'Nghỉ ốm',
-    status: 'ACCEPTED',
-    date: '20/09/2021',
-    reason: 'Em bị ốm do bệnh lười học nên xin thầy cho phép em nghỉ ạ',
-    file: 'https://www.google.com',
-    review: 'Chưa có',
-    createdAt: '20/09/2021',
-  });
+  const {absenceRequest} = route.params;
+  const [mode, setMode] = useState<'view' | 'edit'>('view');
+  const [status, setStatus] = useState<AbsenceRequestStatus | undefined>(
+    absenceRequest.status,
+  );
+
+  const role = useAsyncStorage('role');
+
+  const handleReviewAbsenceRequest = async (_status: AbsenceRequestStatus) => {
+    try {
+      await reviewAbsenceRequest(absenceRequest.id, _status);
+      setStatus(_status);
+      setMode('view');
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const statusMarkup =
-    absenceRequest.status === 'ACCEPTED' ? (
+    status === 'ACCEPTED' ? (
       <Badge mode="success">Chấp nhận</Badge>
-    ) : absenceRequest.status === 'PENDING' ? (
+    ) : status === 'PENDING' ? (
       <Badge mode="warning">Chưa duyệt</Badge>
-    ) : (
+    ) : status === 'REJECTED' ? (
       <Badge mode="critical">Từ chối</Badge>
-    );
+    ) : null;
 
   return (
     <View style={styles.container}>
@@ -38,58 +59,66 @@ export const AbsenceRequestManage = () => {
           titleStyle={styles.headerTitle}
           title="Chi tiết đơn xin nghỉ phép"
         />
-        <Appbar.Action icon={'square-edit-outline'} size={20} color="white" />
+        {mode === 'view' ? (
+          <Appbar.Action
+            icon={'square-edit-outline'}
+            size={20}
+            color="white"
+            onPress={async () =>
+              (await role.getItem()) === 'LECTURER' ? setMode('edit') : null
+            }
+          />
+        ) : null}
       </Appbar.Header>
       <View style={styles.body}>
         <View style={styles.preview}>
           <View style={styles.titleContainer}>
-            <Text style={styles.title}>{absenceRequest.title}</Text>
-            {statusMarkup}
+            <Text style={styles.title}>{absenceRequest?.title}</Text>
+            {mode === 'view' ? statusMarkup : null}
           </View>
-          <Text
-            style={
-              styles.previewDate
-            }>{`Ngày tạo: ${absenceRequest.createdAt}`}</Text>
         </View>
         <View style={styles.boxInfo}>
           <Text style={styles.infoTitle}>Ngày nghỉ phép</Text>
-          <Text style={styles.content}>{absenceRequest.date}</Text>
+          <Text style={styles.content}>{absenceRequest?.date}</Text>
         </View>
         <View style={styles.boxInfo}>
           <Text style={styles.infoTitle}>Lý do</Text>
-          <Text style={styles.content}>{absenceRequest.reason}</Text>
+          <Text style={styles.content}>{absenceRequest?.reason}</Text>
         </View>
         <View style={styles.boxInfo}>
           <Text style={styles.infoTitle}>Minh chứng</Text>
-          <Pressable style={styles.uploadArea}>
-            <FontAwesome6Icon name="image" color="#46515f" size={16} />
-            <Text style={styles.uploadContent}>ảnh_minh_chứng.jpg</Text>
-          </Pressable>
-        </View>
-        <View style={styles.boxInfo}>
-          <Text style={styles.infoTitle}>Phản hồi từ giảng viên</Text>
-          <Text style={styles.content}>{absenceRequest.review}</Text>
+          {absenceRequest?.file_url ? (
+            <FileItem
+              file={{title: 'Minh chứng', file_url: absenceRequest.file_url}}
+            />
+          ) : (
+            <Text style={styles.content}>Không có minh chứng</Text>
+          )}
         </View>
       </View>
-      <View style={styles.btnContainer}>
-        <Button
-          mode="outlined"
-          textColor="#c02135"
-          buttonColor="white"
-          theme={{colors: {outline: '#c02135'}}}
-          style={styles.btn}
-          labelStyle={styles.btnContent}>
-          Từ chối
-        </Button>
-        <Button
-          mode="contained"
-          textColor="white"
-          buttonColor="#c02135"
-          style={styles.btn}
-          labelStyle={styles.btnContent}>
-          Chấp nhận
-        </Button>
-      </View>
+      {mode === 'edit' ? (
+        <View style={styles.btnContainer}>
+          <Button
+            mode="outlined"
+            textColor="#c02135"
+            buttonColor="white"
+            theme={{colors: {outline: '#c02135'}}}
+            style={styles.btn}
+            labelStyle={styles.btnContent}
+            onPress={() => handleReviewAbsenceRequest('REJECTED')}>
+            Từ chối
+          </Button>
+          <Button
+            mode="contained"
+            textColor="white"
+            buttonColor="#c02135"
+            style={styles.btn}
+            labelStyle={styles.btnContent}
+            onPress={() => handleReviewAbsenceRequest('ACCEPTED')}>
+            Chấp nhận
+          </Button>
+        </View>
+      ) : null}
     </View>
   );
 };

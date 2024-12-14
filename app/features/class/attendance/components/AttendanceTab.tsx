@@ -1,16 +1,23 @@
-import React, { useState } from 'react';
+import { useFocusEffect } from '@react-navigation/core';
+import React, { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
 import { AttendanceTable } from './AttendanceTable';
 import { FilterTab } from './FilterTab';
 
 export const AttendanceTab = () => {
-  const [lessonsList, setLessonsList] = useState([
-    'Buổi 3 - 27/10/2024',
-    'Buổi 2 - 27/10/2024',
-    'Buổi 1 - 27/10/2024',
-  ]);
+  const [lessonsList, setLessonsList] = useState(['Chọn buổi học']);
   const [lesson, setLesson] = useState(lessonsList[0]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        // Fetch data here
+      };
+
+      fetchData();
+    }, []),
+  );
 
   return (
     <PaperProvider>

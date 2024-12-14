@@ -1,10 +1,10 @@
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import {AbsenceRequestStacks} from './absence-request/navigation';
-import {AbsenceRequestsListScreen} from './AbsenceRequestsListScreen';
+import { AbsenceRequestStacks } from './absence-request/navigation';
+import { AbsenceRequestsListScreen } from './AbsenceRequestsListScreen';
+import { AttendanceScreen } from './attendance/AttendanceScreen';
 import ClassDetailsScreen from './ClassDetailsScreen';
 import ClassListScreen from './ClassListScreen';
-import {AttendanceScreen} from './attendance/AttendanceScreen';
 
 const Stack = createStackNavigator();
 
@@ -32,7 +32,7 @@ export const ClassStacks = () => {
 
 export const ClassFeaturesStacks = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="Attendance">
       <Stack.Screen
         name="AbsenceRequest"
         component={AbsenceRequestStacks}
