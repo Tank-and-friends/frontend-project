@@ -6,13 +6,13 @@ import axiosInstance from './apiConfig';
 //sau khi login, AsyncStorage sẽ lưu lại token, name, id, role
 export const getUserInfo = async (): Promise<UserInfo | null> => {
   try {
-    // const token = AsyncStorage.getItem('token');
-    // const userId = AsyncStorage.getItem('id');
+    // const token = await AsyncStorage.getItem('token');
+    // const userId = await AsyncStorage.getItem('id');
     const response = await axiosInstance.post('/it4788/get_user_info', {
       //user_id: id,
-      user_id: 277,
+      user_id: 397,
       //user_id: token
-      token: 'FAJBzC',
+      token: 'G103PW',
     });
     const data = response.data;
     data.avatar = getDirectImageLink(data.avatar);

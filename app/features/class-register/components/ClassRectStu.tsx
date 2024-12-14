@@ -1,19 +1,41 @@
-import React, {PropsWithChildren} from 'react';
-import {GestureResponderEvent, StyleSheet, Text, View} from 'react-native';
-import {ClassInfo} from '../../../models/Register';
-import {IconButton} from 'react-native-paper';
-type Props = PropsWithChildren<{
-  classInfo: ClassInfo;
-  onEdit: (event: GestureResponderEvent, item: ClassInfo) => void;
-}>;
-const ClassRect = ({classInfo, onEdit}: Props) => {
+/* eslint-disable react-native/no-inline-styles */
+import React from 'react';
+import {StyleSheet, Text, View} from 'react-native';
+
+type ClassRectProps = {
+  classTitle: string;
+  classTime: string;
+  classCode: string;
+  status: string;
+  lecturerName: string;
+  studentNumber: number;
+};
+
+export default function ClassRectStu({
+  classTitle,
+  classTime,
+  classCode,
+  status,
+  lecturerName,
+  studentNumber,
+}: ClassRectProps) {
   const getStatusColor = (_status: string) => {
     switch (_status) {
-      case 'ACTIVE':
+      case 'Thành công':
         return '#21A366';
-      case 'UPCOMING':
+      case 'Chờ xét duyệt':
         return '#FF7F11';
-      case 'COMPLETED':
+      case 'Thất bại':
+        return '#C02135';
+
+      case 'Hủy lớp':
+        return '#C02135';
+
+      case 'Mở đăng ký':
+        return '#21A366';
+      case 'Trùng lịch':
+        return '#BF5A67';
+      case 'Hết hạn':
         return '#C02135';
 
       default:
@@ -21,67 +43,45 @@ const ClassRect = ({classInfo, onEdit}: Props) => {
     }
   };
 
-  const getStatusDesc = (_status: string) => {
-    switch (_status) {
-      case 'ACTIVE':
-        return 'Hoạt động';
-      case 'UPCOMING':
-        return 'Chờ đăng ký';
-      case 'COMPLETED':
-        return 'Kết thúc';
-      default:
-        return _status;
-    }
-  };
-
-  const statusColor = getStatusColor(classInfo.status);
-  const statusDesc = getStatusDesc(classInfo.status);
+  const statusColor = getStatusColor(status);
 
   return (
     <View style={styles.classSquareContainer}>
       <View style={styles.classTitle}>
-        <Text style={[styles.text, styles.mainTitle]}>
-          {classInfo.class_name}
+        <Text style={[styles.text, styles.mainTitle]}>{classTitle}</Text>
+        <Text style={[styles.text, styles.subTitle]}>
+          Giảng viên: {lecturerName}
+        </Text>
+        <Text style={[styles.text, styles.subTitle]}>
+          Thời gian: {classTime}
         </Text>
         <Text style={[styles.text, styles.subTitle]}>
           Mã lớp:{' '}
           <Text style={{fontWeight: 'bold', fontStyle: 'italic'}}>
-            {classInfo.class_id}
+            {classCode}
           </Text>
         </Text>
-        <Text style={[styles.text, styles.subTitle]}>
-          Loại lớp: <Text>{classInfo.class_type}</Text>
-        </Text>
-        <Text style={[styles.text, styles.subTitle]}>
-          Số sinh viên đã đăng ký: <Text>{classInfo.student_count}</Text>
+        <Text style={[styles.text, styles.subTitle, {fontStyle: 'italic'}]}>
+          Đã có {studentNumber} sinh viên đăng ký
         </Text>
       </View>
       <View style={styles.boxContainer}>
         <View style={[styles.Box, {backgroundColor: statusColor}]}>
-          <Text style={styles.BoxText}>{statusDesc}</Text>
+          <Text style={styles.BoxText}>{status}</Text>
         </View>
       </View>
-      <IconButton
-        icon="square-edit-outline"
-        iconColor="#0088ff"
-        onPress={e => onEdit(e, classInfo)}
-        style={{position: 'absolute', right: 0, top: 5}}
-      />
     </View>
   );
-};
-
-export default ClassRect;
+}
 
 const styles = StyleSheet.create({
   classSquareContainer: {
     justifyContent: 'flex-start',
     flexDirection: 'column',
     width: '90%',
+    height: 170,
     borderRadius: 10,
-    paddingTop: 10,
-    paddingHorizontal: 20,
-    paddingBottom: 0,
+    padding: 20,
     backgroundColor: '#e9e9e9',
 
     shadowColor: '#000',
@@ -120,8 +120,8 @@ const styles = StyleSheet.create({
   },
   boxContainer: {
     position: 'absolute',
-    bottom: 15,
-    right: 15,
+    bottom: 10,
+    right: 10,
   },
   Box: {
     backgroundColor: '#174fb2',

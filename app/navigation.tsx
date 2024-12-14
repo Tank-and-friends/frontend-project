@@ -44,7 +44,7 @@ const TabNavigation = () => {
       <Tab.Screen
         name="Register"
         component={ClassRegisterScreen}
-        initialParams={{userRole: 'LECTURER'}}
+        initialParams={{userRole: 'STUDENT'}}
       />
       <Tab.Screen name="Calendar" component={ClassListScreen} />
     </Tab.Navigator>

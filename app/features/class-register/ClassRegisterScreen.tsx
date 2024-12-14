@@ -1,6 +1,5 @@
-/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {ImageBackground, StyleSheet, View} from 'react-native';
+import {ImageBackground, ScrollView, StyleSheet, View} from 'react-native';
 import {PaperProvider} from 'react-native-paper';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import {TextField} from '../../components/TextField/TextField';
@@ -32,7 +31,13 @@ const ClassRegisterScreen = ({route}: {route: any}) => {
             ) : (
             )}
           </ScrollView> */}
+          <ScrollView
+            contentContainerStyle={styles.scrollableContent}
+            style={styles.scrollableContent}
+            showsHorizontalScrollIndicator={false}>
           {userRole === 'LECTURER' ? <TeacherClasses /> : <OpenClasses />}
+
+            </ScrollView>
         </ImageBackground>
       </View>
     </PaperProvider>

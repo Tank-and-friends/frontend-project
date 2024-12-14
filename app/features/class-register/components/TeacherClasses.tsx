@@ -6,7 +6,6 @@ import {
   Text,
   View,
 } from 'react-native';
-import ClassRect from './ClassRect';
 import {
   deleteClass,
   editClass,
@@ -16,8 +15,8 @@ import {ClassInfo, EditClassReq} from '../../../models/Register';
 import {Button, IconButton, Modal, Portal} from 'react-native-paper';
 import {TextField} from '../../../components/TextField/TextField';
 import DatePicker from '../../../components/DatePicker';
-import TransparentBackground from '../../../components/TransparentBackground';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
+import ClassRectLec from './ClassRectLec';
 
 type ParamList = {
   ClassRegisterStacks: {
@@ -145,16 +144,23 @@ export default function TeacherClasses() {
               </View>
               <Button
                 mode="contained"
-                style={{marginHorizontal: 20, marginBottom: 10, borderRadius: 6}}
+                style={{
+                  marginHorizontal: 20,
+                  marginBottom: 10,
+                  borderRadius: 6,
+                }}
                 buttonColor="#FF7F11"
                 textColor="white"
-                onPress={handleSubmit}
-                >
+                onPress={handleSubmit}>
                 Lưu
               </Button>
               <Button
                 mode="contained"
-                style={{marginHorizontal: 20, marginBottom: 30, borderRadius: 6}}
+                style={{
+                  marginHorizontal: 20,
+                  marginBottom: 30,
+                  borderRadius: 6,
+                }}
                 buttonColor="#C02135"
                 textColor="white"
                 onPress={handleDelete}>
@@ -167,7 +173,7 @@ export default function TeacherClasses() {
       <View style={{flex: 1}}>
         <ScrollView contentContainerStyle={styles.classGroupContainer}>
           {classes.map((item, index) => (
-            <ClassRect key={index} classInfo={item} onEdit={showEditModal} />
+            <ClassRectLec key={index} classInfo={item} onEdit={showEditModal} />
           ))}
         </ScrollView>
       </View>

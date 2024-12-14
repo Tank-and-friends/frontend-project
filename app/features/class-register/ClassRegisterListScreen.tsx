@@ -1,39 +1,103 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { Image, ImageBackground, ScrollView, StyleSheet, View } from 'react-native';
-import { Appbar, IconButton, Text } from 'react-native-paper';
-import ClassRect from './components/ClassRect';
-import navigation from '../auth/navigation';
+import {
+  Image,
+  ImageBackground,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
+import {Appbar, IconButton, Text} from 'react-native-paper';
+import ClassRectLec from './components/ClassRectLec';
+import {format} from 'date-fns';
+import ClassRectStu from './components/ClassRectStu';
 
-export default function ClassRegisterListScreen({route, navigation}: any) {
-  const {className} = route.params;
+interface ClassItem {
+  class_id: string;
+  class_name: string;
+  start_date: string;
+  end_date: string;
+  status: string;
+  lecturer_name?: string;
+  student_count?: number;
+  class_type?: string;
+  attached_code?: string | null;
+}
 
-  const classData = [
-    {
-      classTitle: 'Giải tích I',
-      classTime: 'Sáng thứ 3, 6:45 - 10:05',
-      classCode: '154052',
-      status: 'Còn chỗ',
-    },
-    {
-      classTitle: 'Giải tích I',
-      classTime: 'Chiều thứ 5, 13:30 - 17:00',
-      classCode: '154056',
-      status: 'Trùng lịch',
-    },
-    {
-      classTitle: 'Giải tích I',
-      classTime: 'Sáng thứ 7, 8:00 - 12:00',
-      classCode: '154053',
-      status: 'Hết chỗ',
-    },
-    {
-      classTitle: 'Giải tích I',
-      classTime: 'Sáng thứ 3, 6:45 - 10:05',
-      classCode: '154052',
-      status: 'Còn chỗ',
-    },
-  ];
+interface ClassRegisterListScreenProps {
+  route: {
+    params: {
+      className: string;
+      filteredClasses: ClassItem[];
+      classType: string;
+    };
+  };
+  navigation: any;
+}
+
+export default function ClassRegisterListScreen({
+  route,
+  navigation,
+}: ClassRegisterListScreenProps) {
+  const {className, filteredClasses, classType} = route.params;
+
+  const classTypeColors: Record<string, string> = {
+    LT: '#174fb2', // Blue
+    BT: '#ba1b30', // Red
+    LT_BT: '#ff7f11', // Orange
+  };
+
+  const getBoxColor = (classType?: string) => {
+    return classTypeColors[classType || ''] || '#cccccc'; // Default color
+  };
+
+  // const classData = [
+  //   {
+  //     classTitle: 'Giải tích I',
+  //     classTime: 'Sáng thứ 3, 6:45 - 10:05',
+  //     classCode: '154052',
+  //     status: 'Còn chỗ',
+  //   },
+  //   {
+  //     classTitle: 'Giải tích I',
+  //     classTime: 'Chiều thứ 5, 13:30 - 17:00',
+  //     classCode: '154056',
+  //     status: 'Trùng lịch',
+  //   },
+  //   {
+  //     classTitle: 'Giải tích I',
+  //     classTime: 'Sáng thứ 7, 8:00 - 12:00',
+  //     classCode: '154053',
+  //     status: 'Hết chỗ',
+  //   },
+  //   {
+  //     classTitle: 'Giải tích I',
+  //     classTime: 'Sáng thứ 3, 6:45 - 10:05',
+  //     classCode: '154052',
+  //     status: 'Còn chỗ',
+  //   },
+  // ];
+
+  const today = new Date();
+
+  const updatedClasses = filteredClasses.map(classItem => {
+    // Parse the start and end dates
+    const startDate = new Date(classItem.start_date);
+    const endDate = new Date(classItem.end_date);
+
+    // Check if the current date is outside the range
+    const isOutdated = today < startDate || today > endDate;
+
+    // Update status accordingly
+    return {
+      ...classItem,
+      status: isOutdated ? 'Hết hạn' : 'Mở đăng ký',
+      classTime: `${format(startDate, 'dd/MM/yyyy')} - ${format(
+        endDate,
+        'dd/MM/yyyy',
+      )}`,
+    };
+  });
 
   return (
     <View style={{flex: 1}}>
@@ -56,8 +120,6 @@ export default function ClassRegisterListScreen({route, navigation}: any) {
             <IconButton icon="cog-outline" iconColor="white" size={30} />
           </View>
         </Appbar.Header>
-        
-
 
         <View style={styles.container}>
           {/* <Text style={styles.title}>Class List for {className}</Text> */}
@@ -69,7 +131,7 @@ export default function ClassRegisterListScreen({route, navigation}: any) {
             />
             <View style={styles.classSquareContainer}>
               <View style={styles.classTitle}>
-                <Text style={styles.className}>Calculus I</Text>
+                <Text style={styles.className}>{className}</Text>
                 <Text style={styles.classDetails}>{className}</Text>
               </View>
               <View
@@ -78,8 +140,12 @@ export default function ClassRegisterListScreen({route, navigation}: any) {
                   justifyContent: 'space-between',
                   alignItems: 'center',
                 }}>
-                <View style={styles.Box}>
-                  <Text style={styles.Text}>Đại cương</Text>
+                <View
+                  style={[
+                    styles.Box,
+                    {backgroundColor: getBoxColor(classType)},
+                  ]}>
+                  <Text style={styles.Text}>Lớp {classType}</Text>
                 </View>
                 <Text
                   style={{
@@ -90,7 +156,7 @@ export default function ClassRegisterListScreen({route, navigation}: any) {
                     textShadowOffset: {width: 1, height: 1},
                     textShadowRadius: 2,
                   }}>
-                  Hiện còn 234 lớp
+                  Hiện còn {filteredClasses.length} lớp
                 </Text>
               </View>
             </View>
@@ -98,7 +164,7 @@ export default function ClassRegisterListScreen({route, navigation}: any) {
           <ScrollView
             contentContainerStyle={styles.classGroupContainer}
             style={{width: '100%'}}>
-            {classData.map((classItem, index) => (
+            {/* {classData.map((classItem, index) => (
               <ClassRect
                 key={index} 
                 classTitle={classItem.classTitle}
@@ -106,7 +172,21 @@ export default function ClassRegisterListScreen({route, navigation}: any) {
                 classCode={classItem.classCode}
                 status={classItem.status}
               />
-            ))}
+            ))} */}
+            {updatedClasses.length > 0 ? (
+              updatedClasses.map((classItem, index) => (
+                <ClassRectStu key={index} classTitle={classItem.class_name}
+                classTime={classItem.classTime}
+                classCode={classItem.class_id}
+                status={classItem.status}
+                lecturerName={classItem.lecturer_name || 'N/A'}
+                studentNumber={classItem.student_count || 0} />
+              ))
+            ) : (
+              <Text style={{textAlign: 'center', marginTop: 20}}>
+                No classes available.
+              </Text>
+            )}
           </ScrollView>
         </View>
       </ImageBackground>
@@ -157,11 +237,11 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   classTitle: {
-    width: '90%',
+    width: '100%',
     flexDirection: 'column-reverse',
     justifyContent: 'space-between',
     marginBottom: 10,
-    maxWidth: 200,
+    maxWidth: 500,
   },
   Box: {
     backgroundColor: '#174fb2',
@@ -208,7 +288,7 @@ const styles = StyleSheet.create({
   headerContent: {
     justifyContent: 'center',
     alignItems: 'flex-start',
-    gap: 2
+    gap: 2,
   },
   headerTitle: {
     color: 'white',
