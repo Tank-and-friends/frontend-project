@@ -13,10 +13,17 @@ export const ClassRegisterStacks = () => {
         name="ClassRegisterScreen"
         component={ClassRegisterScreen}
         options={{headerShown: false}}
-        initialParams={{userRole: 'teacher'}}
       />
-      <Stack.Screen name="ClassRegisterList" options={{headerShown: false}} component={ClassRegisterListScreen}/>
-      <Stack.Screen name="NewClassForm" options={{headerShown: false}} component={NewClassScreen} />
+      <Stack.Screen
+        name="ClassRegisterList"
+        component={ClassRegisterListScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="NewClassForm"
+        options={{headerShown: false}}
+        component={NewClassScreen}
+      />
     </Stack.Navigator>
   );
 };

@@ -60,7 +60,7 @@ const ClassRegisterScreen = ({navigation, route}: {navigation: any; route: any})
           style={styles.scrollableContent}
           showsHorizontalScrollIndicator={false}>
           {activeScreen === 'Screen1' ? (
-            <OpenClasses navigation={navigation} />
+            <OpenClasses/>
           ) : userRole === 'student' ? (
             <RegisteredClasses />
           ) : (

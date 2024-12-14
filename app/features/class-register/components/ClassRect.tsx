@@ -7,6 +7,8 @@ type ClassRectProps = {
   classTime: string;
   classCode: string;
   status: string;
+  lecturerName: string;
+  studentNumber: number;
 };
 
 export default function ClassRect({
@@ -14,6 +16,8 @@ export default function ClassRect({
   classTime,
   classCode,
   status,
+  lecturerName,
+  studentNumber
 }: ClassRectProps) {
   const getStatusColor = (_status: string) => {
     switch (_status) {
@@ -27,11 +31,11 @@ export default function ClassRect({
       case 'Hủy lớp':
         return '#C02135';
 
-      case 'Còn chỗ':
+      case 'Mở đăng ký':
         return '#21A366';
       case 'Trùng lịch':
         return '#BF5A67';
-      case 'Hết chỗ':
+      case 'Hết hạn':
         return '#C02135';
 
       default:
@@ -45,13 +49,15 @@ export default function ClassRect({
     <View style={styles.classSquareContainer}>
       <View style={styles.classTitle}>
         <Text style={[styles.text, styles.mainTitle]}>{classTitle}</Text>
-        <Text style={[styles.text, styles.subTitle]}>{classTime}</Text>
+        <Text style={[styles.text, styles.subTitle]}>Giảng viên: {lecturerName}</Text>
+        <Text style={[styles.text, styles.subTitle]}>Thời gian: {classTime}</Text>
         <Text style={[styles.text, styles.subTitle]}>
           Mã lớp:{' '}
           <Text style={{fontWeight: 'bold', fontStyle: 'italic'}}>
             {classCode}
           </Text>
         </Text>
+        <Text style={[styles.text, styles.subTitle, {fontStyle: 'italic'}]}>Đã có {studentNumber} sinh viên đăng ký</Text>
       </View>
       <View style={styles.boxContainer}>
         <View style={[styles.Box, {backgroundColor: statusColor}]}>
@@ -67,7 +73,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     flexDirection: 'column',
     width: '90%',
-    height: 120,
+    height: 170,
     borderRadius: 10,
     padding: 20,
     backgroundColor: '#e9e9e9',
