@@ -1,5 +1,5 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -30,7 +30,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
       const currentDate = date || selectedDate;
       setShowPicker(false);
       setSelectedDate(currentDate);
-      onChange(currentDate.toLocaleDateString());
+      onChange(currentDate.toISOString().split('T')[0]);
     } else {
       setShowPicker(false);
     }
@@ -51,7 +51,6 @@ const DatePicker: React.FC<DatePickerProps> = ({
           style={styles.input}
           value={value}
           editable={false}
-          placeholder="Nhập ngày sinh của bạn"
         />
       </TouchableOpacity>
       {showPicker && (
@@ -69,13 +68,15 @@ const DatePicker: React.FC<DatePickerProps> = ({
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    marginBottom: 16,
+    marginBottom: 10,
   },
   label: {
     alignSelf: 'flex-start',
     fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 16,
+    fontWeight: '500',
+    marginBottom: 8,
+    paddingLeft: 10,
+    color: 'black'
   },
   labelContainer: {
     flexDirection: 'row',
@@ -89,9 +90,9 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     height: 50,
-    borderColor: '#CCC',
+    borderColor: '#737077',
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 6,
     paddingHorizontal: 10,
     fontSize: 16,
     backgroundColor: '#FFFFFF',

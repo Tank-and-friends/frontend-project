@@ -4,7 +4,7 @@ import {ImageBackground, ScrollView, StyleSheet, View} from 'react-native';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import {TextField} from '../../components/TextField/TextField';
 import TopComponent from '../../components/TopComponent/TopComponent';
-import ClassRect from './components/ClassRect';
+import ClassRectStu from '../class-register/components/ClassRectStu';
 
 export type ParamList = {
   ClassStacks: {
@@ -85,7 +85,7 @@ const ClassListScreen = () => {
         />
         <ScrollView contentContainerStyle={styles.classGroupContainer}>
           {classes.map(classItem => (
-            <ClassRect
+            <ClassRectStu
               key={classItem.classId}
               classId={classItem.classId}
               className={classItem.className}

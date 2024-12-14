@@ -1,10 +1,16 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { Image, ImageBackground, ScrollView, StyleSheet, View } from 'react-native';
-import { Appbar, IconButton, Text } from 'react-native-paper';
-import ClassRect from './components/ClassRect';
-import { format } from 'date-fns';
-
+import {
+  Image,
+  ImageBackground,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
+import {Appbar, IconButton, Text} from 'react-native-paper';
+import ClassRectLec from './components/ClassRectLec';
+import {format} from 'date-fns';
+import ClassRectStu from './components/ClassRectStu';
 
 interface ClassItem {
   class_id: string;
@@ -29,13 +35,16 @@ interface ClassRegisterListScreenProps {
   navigation: any;
 }
 
-export default function ClassRegisterListScreen({ route, navigation }: ClassRegisterListScreenProps) {
-  const { className, filteredClasses, classType } = route.params;
+export default function ClassRegisterListScreen({
+  route,
+  navigation,
+}: ClassRegisterListScreenProps) {
+  const {className, filteredClasses, classType} = route.params;
 
   const classTypeColors: Record<string, string> = {
-    'LT': '#174fb2', // Blue
-    'BT': '#ba1b30', // Red
-    'LT_BT': '#ff7f11', // Orange
+    LT: '#174fb2', // Blue
+    BT: '#ba1b30', // Red
+    LT_BT: '#ff7f11', // Orange
   };
 
   const getBoxColor = (classType?: string) => {
@@ -71,21 +80,24 @@ export default function ClassRegisterListScreen({ route, navigation }: ClassRegi
 
   const today = new Date();
 
-const updatedClasses = filteredClasses.map((classItem) => {
-  // Parse the start and end dates
-  const startDate = new Date(classItem.start_date);
-  const endDate = new Date(classItem.end_date);
+  const updatedClasses = filteredClasses.map(classItem => {
+    // Parse the start and end dates
+    const startDate = new Date(classItem.start_date);
+    const endDate = new Date(classItem.end_date);
 
-  // Check if the current date is outside the range
-  const isOutdated = today < startDate || today > endDate;
+    // Check if the current date is outside the range
+    const isOutdated = today < startDate || today > endDate;
 
-  // Update status accordingly
-  return {
-    ...classItem,
-    status: isOutdated ? 'Hết hạn' : 'Mở đăng ký',
-    classTime: `${format(startDate, 'dd/MM/yyyy')} - ${format(endDate, 'dd/MM/yyyy')}`,
-  };
-});
+    // Update status accordingly
+    return {
+      ...classItem,
+      status: isOutdated ? 'Hết hạn' : 'Mở đăng ký',
+      classTime: `${format(startDate, 'dd/MM/yyyy')} - ${format(
+        endDate,
+        'dd/MM/yyyy',
+      )}`,
+    };
+  });
 
   return (
     <View style={{flex: 1}}>
@@ -108,7 +120,7 @@ const updatedClasses = filteredClasses.map((classItem) => {
             <IconButton icon="cog-outline" iconColor="white" size={30} />
           </View>
         </Appbar.Header>
-    
+
         <View style={styles.container}>
           {/* <Text style={styles.title}>Class List for {className}</Text> */}
           <View style={styles.classSquareContainerContainer}>
@@ -128,7 +140,11 @@ const updatedClasses = filteredClasses.map((classItem) => {
                   justifyContent: 'space-between',
                   alignItems: 'center',
                 }}>
-                <View style={[styles.Box, { backgroundColor: getBoxColor(classType) }]}>
+                <View
+                  style={[
+                    styles.Box,
+                    {backgroundColor: getBoxColor(classType)},
+                  ]}>
                   <Text style={styles.Text}>Lớp {classType}</Text>
                 </View>
                 <Text
@@ -159,18 +175,15 @@ const updatedClasses = filteredClasses.map((classItem) => {
             ))} */}
             {updatedClasses.length > 0 ? (
               updatedClasses.map((classItem, index) => (
-                <ClassRect
-                  key={index}
-                  classTitle={classItem.class_name}
-                  classTime={classItem.classTime}
-                  classCode={classItem.class_id}
-                  status={classItem.status}
-                  lecturerName={classItem.lecturer_name || 'N/A'}
-                  studentNumber={classItem.student_count || 0}
-                />
+                <ClassRectStu key={index} classTitle={classItem.class_name}
+                classTime={classItem.classTime}
+                classCode={classItem.class_id}
+                status={classItem.status}
+                lecturerName={classItem.lecturer_name || 'N/A'}
+                studentNumber={classItem.student_count || 0} />
               ))
             ) : (
-              <Text style={{ textAlign: 'center', marginTop: 20 }}>
+              <Text style={{textAlign: 'center', marginTop: 20}}>
                 No classes available.
               </Text>
             )}
@@ -275,7 +288,7 @@ const styles = StyleSheet.create({
   headerContent: {
     justifyContent: 'center',
     alignItems: 'flex-start',
-    gap: 2
+    gap: 2,
   },
   headerTitle: {
     color: 'white',

@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 
 type ClassRectProps = {
   classTitle: string;
@@ -11,13 +11,13 @@ type ClassRectProps = {
   studentNumber: number;
 };
 
-export default function ClassRect({
+export default function ClassRectStu({
   classTitle,
   classTime,
   classCode,
   status,
   lecturerName,
-  studentNumber
+  studentNumber,
 }: ClassRectProps) {
   const getStatusColor = (_status: string) => {
     switch (_status) {
@@ -49,15 +49,21 @@ export default function ClassRect({
     <View style={styles.classSquareContainer}>
       <View style={styles.classTitle}>
         <Text style={[styles.text, styles.mainTitle]}>{classTitle}</Text>
-        <Text style={[styles.text, styles.subTitle]}>Giảng viên: {lecturerName}</Text>
-        <Text style={[styles.text, styles.subTitle]}>Thời gian: {classTime}</Text>
+        <Text style={[styles.text, styles.subTitle]}>
+          Giảng viên: {lecturerName}
+        </Text>
+        <Text style={[styles.text, styles.subTitle]}>
+          Thời gian: {classTime}
+        </Text>
         <Text style={[styles.text, styles.subTitle]}>
           Mã lớp:{' '}
           <Text style={{fontWeight: 'bold', fontStyle: 'italic'}}>
             {classCode}
           </Text>
         </Text>
-        <Text style={[styles.text, styles.subTitle, {fontStyle: 'italic'}]}>Đã có {studentNumber} sinh viên đăng ký</Text>
+        <Text style={[styles.text, styles.subTitle, {fontStyle: 'italic'}]}>
+          Đã có {studentNumber} sinh viên đăng ký
+        </Text>
       </View>
       <View style={styles.boxContainer}>
         <View style={[styles.Box, {backgroundColor: statusColor}]}>
