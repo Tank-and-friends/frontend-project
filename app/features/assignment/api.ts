@@ -86,5 +86,3 @@ export const deleteAssignment = async (
     return false;
   }
 };
-
-

@@ -16,7 +16,8 @@ import DocumentPicker, {
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {FileItem} from '../../components/FileItem';
 import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
-import {TextInput} from 'react-native-paper';
+
+import {TextField} from '../../components/TextField/TextField';
 // import DrivePreview from './components/DrivePreview';
 // interface TaskDetailData {
 //   title: string;
@@ -196,17 +197,10 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
                   style={{marginBottom: 5, fontWeight: 400, color: 'black'}}>
                   Nhập phản hồi:
                 </Text>
-                <TextInput
-                  style={{
-                    borderWidth: 1,
-                    borderColor: '#ccc',
-                    borderRadius: 6,
-                    padding: 0,
-                    height: 40,
-                    marginRight: 15,
-                  }}
+
+                <TextField
                   placeholder="Nhập nội dung phản hồi..."
-                  onChangeText={text => setTextResponse(text)} // Cập nhật giá trị
+                  onChange={text => setTextResponse(text)}
                 />
               </View>
               <View style={styles.line} />
