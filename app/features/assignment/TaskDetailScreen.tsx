@@ -8,12 +8,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-
-// import FeatherIcon from 'react-native-vector-icons/Feather';
-import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
 import DocumentPicker, {
   DocumentPickerResponse,
 } from 'react-native-document-picker';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import {FileItem} from '../../components/FileItem';
+import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
+import {submitSurvey} from './api';
 import axios from 'axios';
 // import DrivePreview from './components/DrivePreview';
 // interface TaskDetailData {
@@ -43,7 +44,6 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
     };
     return dateObj.toLocaleString('vi-VN', options);
   };
-
 
   // Gọi API lấy thông tin bài nộp
   useEffect(() => {
@@ -108,45 +108,64 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmitSurvey = async () => {
-    if (!file || file.length === 0) {
-      console.error('No file selected');
-      return;
-    }
+    // if (!file || file.length === 0) {
+    //   console.error('No file selected');
+    //   return;
+    // }
+
+    // if (isSubmitting) {
+    //   return;
+    // } // Ngăn chặn nếu đang xử lý
+    // setIsSubmitting(true);
+
+    // const formData = new FormData();
+    // formData.append('file', {
+    //   uri: file[0].uri, // URI của file
+    //   type: file[0].type, // Loại file (MIME type)
+    //   name: file[0].name, // Tên file
+    // });
+    // formData.append('token', 'Mq9YoW');
+    // formData.append('assignmentId', serveyData.id);
+    // formData.append('textResponse', 'Tạm thời chưa có');
+    // console.log(formData);
+
+    // console.log('Submit button clicked');
+
+    // try {
+    //   const response = await axios.post(
+    //     'http://157.66.24.126:8080/it5023e/submit_survey',
+    //     formData,
+    //     {
+    //       headers: {
+    //         'Content-Type': 'multipart/form-data',
+    //       },
+    //     },
+    //   );
+    //   console.log(response.data);
+    // } catch (error) {
+    //   console.log(error);
+
+    //   // Sửa lại ngoại lệ (sai role, giáo viên không được nộp bài)
+    //   // (nộp bài nhiều lần)
+    //   // sửa textResponse
+    // } finally {
+    //   setIsSubmitting(false); // Hoàn tất
+    // }
 
     if (isSubmitting) {
-      return;
-    } // Ngăn chặn nếu đang xử lý
+      return; // Ngăn chặn nếu đang xử lý
+    }
+
     setIsSubmitting(true);
 
-    const formData = new FormData();
-    formData.append('file', {
-      uri: file[0].uri, // URI của file
-      type: file[0].type, // Loại file (MIME type)
-      name: file[0].name, // Tên file
-    });
-    formData.append('token', 'Mq9YoW');
-    formData.append('assignmentId', serveyData.id);
-    formData.append('textResponse', 'Tạm thời chưa có');
-    console.log('Submit button clicked');
-
     try {
-      const response = await axios.post(
-        'http://157.66.24.126:8080/it5023e/submit_survey',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        },
-      );
-      console.log(response.data);
+      const response = await submitSurvey(file, serveyData.id);
+      console.log('id:', serveyData.id);
+      console.log('Response:', response); // Xử lý phản hồi từ server (thành công)
     } catch (error) {
-      console.log(error);
-
-      // Sửa lại ngoại lệ (sai role, giáo viên không được nộp bài)
-      // (nộp bài nhiều lần)
+      console.error('Error during survey submission:', error); // Xử lý lỗi (nếu có)
     } finally {
-      setIsSubmitting(false); // Hoàn tất
+      setIsSubmitting(false); // Hoàn tất, đảm bảo trạng thái được đặt lại
     }
   };
 
@@ -168,85 +187,108 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
         <ScrollView style={styles.contentContainer}>
           <View style={styles.taskTitleContainer}>
             <View>
-              {/* Tiêu đề */}
               <View style={styles.title}>
                 <Text style={styles.taskTitle}>{title}</Text>
+                {false && (
+                  <View
+                    style={[
+                      styles.badge,
+                      {
+                        backgroundColor: '#FF7F11',
+                      },
+                    ]}>
+                    <Text style={styles.badgeText}>Chưa nộp bài</Text>
+                    <FeatherIcon name="clock" size={24} color="black" />
+                  </View>
+                )}
               </View>
-
-              {/* Deadline */}
-              <Text style={styles.deadline}>{formattedDate}</Text>
+              {!late && <Text style={styles.deadline}>{formattedDate}</Text>}
+              {late && <Text style={styles.deadline}>{formattedDate}</Text>}
               <View style={styles.line} />
-
-              {/* Nội dung bài tập */}
               <Text style={styles.text}>Nội dung</Text>
               <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
                 <Text style={styles.text1}>{content}</Text>
               </ScrollView>
 
-              {/* Tài liệu liên quan */}
               <Text style={styles.text}>Tài liệu liên quan</Text>
               <View>
                 <Text style={styles.url}>{serveyData.file_url}</Text>
               </View>
+              {serveyData.file_url && (
+                <FileItem
+                  file={{title: 'Bài tập', file_url: serveyData.file_url}}
+                />
+              )}
+            </View>
 
-              {/* Hiển thị thông tin bài nộp */}
-              {isLoading ? (
-                <Text style={styles.loadingText}>
-                  Đang tải thông tin bài nộp...
-                </Text>
-              ) : submissionData ? (
-                <>
-                  <View style={styles.line} />
-                  <View style={styles.submissionInfoContainer}>
-                    <Text style={styles.submissionHeader}>
-                      Thông tin bài nộp
+            {/* Tài liệu liên quan */}
+
+            {/* Hiển thị thông tin bài nộp */}
+            {isLoading ? (
+              <Text style={styles.loadingText}>
+                Đang tải thông tin bài nộp...
+              </Text>
+            ) : submissionData ? (
+              <>
+                <View style={styles.line} />
+                <View style={styles.submissionInfoContainer}>
+                  <Text style={styles.submissionHeader}>Thông tin bài nộp</Text>
+
+                  {/* Điểm */}
+                  <View style={styles.row}>
+                    <Text style={styles.label}>Điểm:</Text>
+                    <Text style={styles.value}>
+                      {submissionData.grade ?? 'Chưa chấm điểm'}
                     </Text>
+                  </View>
 
-                    {/* Điểm */}
-                    <View style={styles.row}>
-                      <Text style={styles.label}>Điểm:</Text>
-                      <Text style={styles.value}>
-                        {submissionData.grade ?? 'Chưa chấm điểm'}
-                      </Text>
-                    </View>
+                  <View style={styles.row}>
+                    <Text style={styles.label}>Thời gian nộp bài:</Text>
+                    <Text style={styles.value}>
+                      {submissionData.submission_time
+                        ? formatDateTime(submissionData.submission_time)
+                        : 'Chưa nộp'}
+                    </Text>
+                  </View>
 
-                    <View style={styles.row}>
-                      <Text style={styles.label}>Thời gian nộp bài:</Text>
-                      <Text style={styles.value}>
-                        {submissionData.submission_time
-                          ? formatDateTime(submissionData.submission_time)
-                          : 'Chưa nộp'}
-                      </Text>
-                    </View>
-
-                    {/* File đã nộp */}
-                    <View style={styles.row}>
-                      <Text style={styles.label}>File đã nộp:</Text>
-                      {submissionData.file_url ? (
+                  {/* File đã nộp */}
+                  <View>
+                    <Text style={styles.label}>File đã nộp:</Text>
+                    {submissionData.file_url ? (
+                      <View>
                         <Text style={styles.url}>
                           {submissionData.file_url}
                         </Text>
-                      ) : (
-                        <Text style={styles.value}>Chưa có file</Text>
-                      )}
-                    </View>
 
-                    {/* Nhận xét từ giáo viên */}
-                    <View style={styles.row}>
-                      <Text style={styles.label}>Nhận xét từ giáo viên:</Text>
-                    </View>
-                    <Text style={styles.commentText}>
-                      {submissionData.text_response || 'Chưa có nhận xét'}
-                    </Text>
+                        {submissionData.file_url && (
+                          <FileItem
+                            file={{
+                              title: 'đã nộp',
+                              file_url: serveyData.file_url,
+                            }}
+                          />
+                        )}
+                      </View>
+                    ) : (
+                      <Text style={styles.value}>Chưa có file</Text>
+                    )}
                   </View>
-                </>
-              ) : (
-                <View>
-                  <View style={styles.line} />
-                  <Text style={styles.text}>Không có thông tin bài nộp.</Text>
+
+                  {/* Nhận xét từ giáo viên */}
+                  <View style={styles.row}>
+                    <Text style={styles.label}>Nhận xét từ giáo viên:</Text>
+                  </View>
+                  <Text style={styles.commentText}>
+                    {submissionData.text_response || 'Chưa có nhận xét'}
+                  </Text>
                 </View>
-              )}
-            </View>
+              </>
+            ) : (
+              <View>
+                <View style={styles.line} />
+                <Text style={styles.text}>Không có thông tin bài nộp.</Text>
+              </View>
+            )}
           </View>
 
           <View style={styles.taskTitleContainer}>
@@ -314,12 +356,6 @@ const styles = StyleSheet.create({
   },
   backButton: {
     /* Back button styling */
-  },
-  loadingText:{
-
-  },
-  errorText: {
-
   },
   headerTitle: {
     /* Header title styling */
@@ -531,6 +567,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#555',
   },
+  loadingText: {},
 });
 
 export default TaskDetailScreen;
