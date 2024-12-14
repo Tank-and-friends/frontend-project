@@ -12,7 +12,7 @@ export const getUserInfo = async (): Promise<UserInfo | null> => {
       //user_id: id,
       user_id: 397,
       //user_id: token
-      token: 'G103PW',
+      token: '1mKnHR',
     });
     const data = response.data;
     data.avatar = getDirectImageLink(data.avatar);
