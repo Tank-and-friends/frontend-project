@@ -6,6 +6,8 @@ import ClassSquare from './ClassSquare';
 import axios from 'axios';
 import {NavigationProp, useNavigation} from '@react-navigation/core';
 import { ParamListBase } from '@react-navigation/core';
+import { getOpenClasses } from '../api';
+import { ClassResponse } from '../types';
 
 
 
@@ -37,26 +39,22 @@ import { ParamListBase } from '@react-navigation/core';
 // ];
 
 export default function OpenClasses() {
-  const [classData, setClassData] = useState<any[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [classData, setClassData] = useState<ClassResponse[]>([]);
 
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
   useEffect(() => {
-    const getOpenClasses = async () => {
-      try {
-        const response = await axios.post('http://157.66.24.126:8080/it5023e/get_open_classes', {
-          token: 'G103PW',
-        });
-  
-        setClassData(response.data?.data?.page_content || []);
-      } catch (err) {
-        console.error('Error fetching classes:', err);
-        setError('Could not fetch classes.');
-      }
-    };
+    const fetchData = async () => {
+      const data = await getOpenClasses();
+
+      setClassData(data);
+    }
+    
+    fetchData();
+
     getOpenClasses();
   }, []);
+  
 
   const groupedClasses = classData.reduce((groups: Record<string, any[]>, cls: any) => {
     const { class_type } = cls;
