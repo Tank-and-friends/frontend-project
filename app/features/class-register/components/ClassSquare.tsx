@@ -30,6 +30,7 @@ export default function ClassSquare({ className, onPress, filteredClasses, class
   const boxColor = classTypeColors[classType] || '#cccccc';
 
   const classCount = Array.isArray(filteredClasses) ? filteredClasses.length : 0;
+
   return (
     <TouchableWithoutFeedback
       onPress={onPress}>
@@ -48,7 +49,7 @@ export default function ClassSquare({ className, onPress, filteredClasses, class
           <View style={[styles.Box, { backgroundColor: boxColor }]}>
             <Text style={styles.Text}>Lớp {classType}</Text>
           </View>
-          <Text style={{fontSize: 10, textDecorationLine: 'underline'}}>
+          <Text style={{fontSize: 10, textDecorationLine: 'underline', color: boxColor}}>
             {classCount} lớp →
           </Text>
         </View>

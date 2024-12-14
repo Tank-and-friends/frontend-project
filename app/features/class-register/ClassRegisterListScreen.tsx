@@ -1,13 +1,22 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useState} from 'react';
 import {
+  Button,
   Image,
   ImageBackground,
   ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
-import {Appbar, IconButton, Text} from 'react-native-paper';
+import {
+  Appbar,
+  Dialog,
+  IconButton,
+  PaperProvider,
+  Portal,
+  Text,
+} from 'react-native-paper';
+import ClassRectLec from './components/ClassRectLec';
 import {format} from 'date-fns';
 import ClassRectStu from './components/ClassRectStu';
 
@@ -39,6 +48,8 @@ export default function ClassRegisterListScreen({
   navigation,
 }: ClassRegisterListScreenProps) {
   const {className, filteredClasses, classType} = route.params;
+  const [isDialogVisible, setDialogVisible] = useState(false); // Dialog visibility state
+  const [selectedClass, setSelectedClass] = useState<ClassItem | null>(null); // Selected class state
 
   const classTypeColors: Record<string, string> = {
     LT: '#174fb2', // Blue
@@ -98,101 +109,135 @@ export default function ClassRegisterListScreen({
     };
   });
 
-  return (
-    <View style={{flex: 1}}>
-      <ImageBackground
-        source={require('../../assets/images/background.png')}
-        style={styles.backgroundImage}
-        resizeMode="stretch">
-        <Appbar.Header mode="small" style={styles.header}>
-          <Appbar.BackAction
-            size={30}
-            color="red"
-            containerColor="white"
-            onPress={() => navigation.goBack()}
-          />
-          <View style={styles.headerContent}>
-            <Text style={styles.headerTitle}>{className}</Text>
-            {/* <Text style={styles.headerSubtitle}>Đăng ký mở lớp</Text> */}
-          </View>
-          <View style={styles.actionBtn}>
-            <IconButton icon="cog-outline" iconColor="white" size={30} />
-          </View>
-        </Appbar.Header>
+  const handleClassPress = (classItem: ClassItem) => {
+    setSelectedClass(classItem);
+    setDialogVisible(true);
+  };
 
-        <View style={styles.container}>
-          {/* <Text style={styles.title}>Class List for {className}</Text> */}
-          <View style={styles.classSquareContainerContainer}>
-            <Image
-              source={require('../../assets/images/class-background.jpg')}
-              style={[styles.backgroundClassImage, {borderRadius: 10}]}
-              resizeMode="stretch"
+  const handleDialogDismiss = () => {
+    setDialogVisible(false);
+    setSelectedClass(null);
+  };
+
+  const handleRegister = () => {
+    // Perform registration logic here
+    console.log(`Registering for class: ${selectedClass?.class_name}`);
+    handleDialogDismiss();
+  };
+
+  return (
+    <PaperProvider>
+      <View style={{flex: 1}}>
+        <ImageBackground
+          source={require('../../assets/images/background.png')}
+          style={styles.backgroundImage}
+          resizeMode="stretch">
+          <Appbar.Header mode="small" style={styles.header}>
+            <Appbar.BackAction
+              size={30}
+              color="red"
+              containerColor="white"
+              onPress={() => navigation.goBack()}
             />
-            <View style={styles.classSquareContainer}>
-              <View style={styles.classTitle}>
-                <Text style={styles.className}>{className}</Text>
-                <Text style={styles.classDetails}>{className}</Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}>
-                <View
-                  style={[
-                    styles.Box,
-                    {backgroundColor: getBoxColor(classType)},
-                  ]}>
-                  <Text style={styles.Text}>Lớp {classType}</Text>
+            <View style={styles.headerContent}>
+              <Text style={styles.headerTitle}>{className}</Text>
+              {/* <Text style={styles.headerSubtitle}>Đăng ký mở lớp</Text> */}
+            </View>
+            <View style={styles.actionBtn}>
+              <IconButton icon="cog-outline" iconColor="white" size={30} />
+            </View>
+          </Appbar.Header>
+
+          <View style={styles.container}>
+            {/* <Text style={styles.title}>Class List for {className}</Text> */}
+            <View style={styles.classSquareContainerContainer}>
+              <Image
+                source={require('../../assets/images/class-background.jpg')}
+                style={[styles.backgroundClassImage, {borderRadius: 10}]}
+                resizeMode="stretch"
+              />
+              <View style={styles.classSquareContainer}>
+                <View style={styles.classTitle}>
+                  <Text style={styles.className}>{className}</Text>
+                  <Text style={styles.classDetails}>{className}</Text>
                 </View>
-                <Text
+                <View
                   style={{
-                    fontSize: 14,
-                    fontWeight: '500',
-                    color: '#174FB2',
-                    textShadowColor: 'white',
-                    textShadowOffset: {width: 1, height: 1},
-                    textShadowRadius: 2,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
                   }}>
-                  Hiện còn {filteredClasses.length} lớp
-                </Text>
+                  <View
+                    style={[
+                      styles.Box,
+                      {backgroundColor: getBoxColor(classType)},
+                    ]}>
+                    <Text style={styles.Text}>Lớp {classType}</Text>
+                  </View>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: '500',
+                      color: '#174FB2',
+                      textShadowColor: 'white',
+                      textShadowOffset: {width: 1, height: 1},
+                      textShadowRadius: 2,
+                    }}>
+                    Hiện còn {filteredClasses.length} lớp
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
-          <ScrollView
-            contentContainerStyle={styles.classGroupContainer}
-            style={{width: '100%'}}>
-            {/* {classData.map((classItem, index) => (
-              <ClassRect
-                key={index} 
-                classTitle={classItem.classTitle}
-                classTime={classItem.classTime}
-                classCode={classItem.classCode}
-                status={classItem.status}
-              />
-            ))} */}
-            {updatedClasses.length > 0 ? (
-              updatedClasses.map((classItem, index) => (
-                <ClassRectStu
-                  key={index}
-                  classTitle={classItem.class_name}
+            <ScrollView
+              contentContainerStyle={styles.classGroupContainer}
+              style={{width: '100%'}}>
+              {/* {classData.map((classItem, index) => (
+                <ClassRect
+                  key={index} 
+                  classTitle={classItem.classTitle}
                   classTime={classItem.classTime}
-                  classCode={classItem.class_id}
+                  classCode={classItem.classCode}
                   status={classItem.status}
-                  lecturerName={classItem.lecturer_name || 'N/A'}
-                  studentNumber={classItem.student_count || 0}
                 />
-              ))
-            ) : (
-              <Text style={{textAlign: 'center', marginTop: 20}}>
-                No classes available.
-              </Text>
-            )}
-          </ScrollView>
-        </View>
-      </ImageBackground>
-    </View>
+              ))} */}
+              {updatedClasses.length > 0 ? (
+                updatedClasses.map((classItem, index) => (
+                  <ClassRectStu
+                    key={index}
+                    classTitle={classItem.class_name}
+                    classTime={classItem.classTime}
+                    classCode={classItem.class_id}
+                    status={classItem.status}
+                    lecturerName={classItem.lecturer_name || 'N/A'}
+                    studentNumber={classItem.student_count || 0}
+                    onPress={() => handleClassPress(classItem)}
+                  />
+                ))
+              ) : (
+                <Text style={{textAlign: 'center', marginTop: 20}}>
+                  No classes available.
+                </Text>
+              )}
+            </ScrollView>
+          </View>
+          <Portal>
+            <Dialog visible={isDialogVisible} onDismiss={handleDialogDismiss}>
+              <Dialog.Title>Register for Class</Dialog.Title>
+              <Dialog.Content>
+                <Text>
+                  Are you sure you want to register for{' '}
+                  {selectedClass?.class_name}?
+                </Text>
+              </Dialog.Content>
+              <Dialog.Actions>
+                <Button title="Cancel" onPress={handleDialogDismiss} />
+                <Button title="Register" onPress={handleRegister} />
+              </Dialog.Actions>
+            </Dialog>
+          </Portal>
+        </ImageBackground>
+      </View>
+    </PaperProvider>
   );
 }
 

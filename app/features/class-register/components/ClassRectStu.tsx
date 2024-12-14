@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 type ClassRectProps = {
   classTitle: string;
@@ -9,6 +10,7 @@ type ClassRectProps = {
   status: string;
   lecturerName: string;
   studentNumber: number;
+  onPress: () => void;
 };
 
 export default function ClassRectStu({
@@ -18,6 +20,7 @@ export default function ClassRectStu({
   status,
   lecturerName,
   studentNumber,
+  onPress
 }: ClassRectProps) {
   const getStatusColor = (_status: string) => {
     switch (_status) {
@@ -46,31 +49,33 @@ export default function ClassRectStu({
   const statusColor = getStatusColor(status);
 
   return (
-    <View style={styles.classSquareContainer}>
-      <View style={styles.classTitle}>
-        <Text style={[styles.text, styles.mainTitle]}>{classTitle}</Text>
-        <Text style={[styles.text, styles.subTitle]}>
-          Giảng viên: {lecturerName}
-        </Text>
-        <Text style={[styles.text, styles.subTitle]}>
-          Thời gian: {classTime}
-        </Text>
-        <Text style={[styles.text, styles.subTitle]}>
-          Mã lớp:{' '}
-          <Text style={{fontWeight: 'bold', fontStyle: 'italic'}}>
-            {classCode}
+    <TouchableWithoutFeedback onPress={onPress} style={{width: '100%'}}>
+      <View style={styles.classSquareContainer}>
+        <View style={styles.classTitle}>
+          <Text style={[styles.text, styles.mainTitle]}>{classTitle}</Text>
+          <Text style={[styles.text, styles.subTitle]}>
+            Giảng viên: {lecturerName}
           </Text>
-        </Text>
-        <Text style={[styles.text, styles.subTitle, {fontStyle: 'italic'}]}>
-          Đã có {studentNumber} sinh viên đăng ký
-        </Text>
-      </View>
-      <View style={styles.boxContainer}>
-        <View style={[styles.Box, {backgroundColor: statusColor}]}>
-          <Text style={styles.BoxText}>{status}</Text>
+          <Text style={[styles.text, styles.subTitle]}>
+            Thời gian: {classTime}
+          </Text>
+          <Text style={[styles.text, styles.subTitle]}>
+            Mã lớp:{' '}
+            <Text style={{fontWeight: 'bold', fontStyle: 'italic'}}>
+              {classCode}
+            </Text>
+          </Text>
+          <Text style={[styles.text, styles.subTitle, {fontStyle: 'italic'}]}>
+            Đã có {studentNumber} sinh viên đăng ký
+          </Text>
+        </View>
+        <View style={styles.boxContainer}>
+          <View style={[styles.Box, {backgroundColor: statusColor}]}>
+            <Text style={styles.BoxText}>{status}</Text>
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
