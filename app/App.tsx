@@ -5,15 +5,17 @@
  * @format
  */
 
-import { NavigationContainer } from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
 
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { RootStacks } from './navigation';
-import { UniqueIdProvider } from './utils/uniqueId';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {RootStacks} from './navigation';
+import {UniqueIdProvider} from './utils/uniqueId';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function App(): React.JSX.Element {
+  AsyncStorage.setItem('token', '5MKaPE');
   return (
     <SafeAreaProvider>
       <UniqueIdProvider>

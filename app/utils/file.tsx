@@ -34,15 +34,13 @@ export const exportFileType = (type: string) => {
 
 export const fileSymbol = (type: string) => {
   if (['jpeg', 'jpg', 'png'].includes(type.toLocaleLowerCase())) {
-    return (
-      <Image source={require('../../assets/icons/icon-default-image.png')} />
-    );
+    return <Image source={require('../assets/icons/icon-default-image.png')} />;
   } else if (['docx', 'doc', 'txt'].includes(type.toLocaleLowerCase())) {
-    return <Image source={require('../../assets/icons/icon-word.png')} />;
+    return <Image source={require('../assets/icons/icon-word.png')} />;
   } else if (['pdf'].includes(type.toLocaleLowerCase())) {
-    return <Image source={require('../../assets/icons/icon-pdf.png')} />;
+    return <Image source={require('../assets/icons/icon-pdf.png')} />;
   } else if (['xls', 'xlsx'].includes(type.toLocaleLowerCase())) {
-    return <Image source={require('../../assets/icons/icon-excel.png')} />;
+    return <Image source={require('../assets/icons/icon-excel.png')} />;
   }
 };
 

@@ -4,13 +4,12 @@ import {Alert} from 'react-native';
 import axiosInstance from './apiConfig';
 
 const DOMAIN = '/it5023e';
-const token = '5MKaPE';
 export const getMaterialList = async (
   classId: string,
 ): Promise<MaterialInfo[] | []> => {
   try {
     const response = await axiosInstance.post(`${DOMAIN}/get_material_list`, {
-      token: token,
+
       class_id: classId,
     });
     const data = response.data;
@@ -25,7 +24,7 @@ export const getMaterialInfo = async (
 ): Promise<MaterialInfo | null> => {
   try {
     const response = await axiosInstance.post(`${DOMAIN}/get_material_info`, {
-      token: token,
+
       material_id: materialId,
     });
     const data = response.data;
@@ -38,7 +37,7 @@ export const getMaterialInfo = async (
 export const deleteMaterial = async (materialId: string): Promise<boolean> => {
   try {
     await axiosInstance.post(`${DOMAIN}/delete_material`, {
-      token: token,
+
       material_id: materialId,
     });
     Alert.alert('Xoá tài liệu thành công!');
@@ -57,19 +56,13 @@ export const uploadMaterial = async (
 
     formData.append('file', material.file);
     formData.append('title', material.title);
-    formData.append('token', token);
     formData.append('materialType', exportFileType(material.file.name || ''));
     formData.append('classId', classId);
     formData.append('description', material.description);
 
     const response = await axiosInstance.post(
       `${DOMAIN}/upload_material`,
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      },
+      formData
     );
     const data = response.data;
     Alert.alert('Up tài liệu thành công!');
@@ -88,7 +81,6 @@ export const editMaterial = async (
 
     formData.append('file', material.file);
     formData.append('title', material.title);
-    formData.append('token', token);
     formData.append('materialType', exportFileType(material.file.name || ''));
     formData.append('materialId', materialId);
     formData.append('description', material.description);
