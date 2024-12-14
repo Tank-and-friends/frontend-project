@@ -1,14 +1,20 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
+  Alert,
+  Image,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Checkbox, TextInput } from 'react-native-paper';
+import {Checkbox, TextInput} from 'react-native-paper';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
+import DocumentPicker, {
+  DocumentPickerResponse,
+} from 'react-native-document-picker';
+import axiosInstance from '../../apis/apiConfig';
 
 // interface TaskDetailData {
 //   title: string;
@@ -18,18 +24,71 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 // }
 
 const CreateAssignmentScreen = () => {
-  // const [text, onChangeText] = React.useState('');
-
   const [isFocused, setIsFocused] = useState(false);
-
   const [isChecked, setIsChecked] = useState(false);
+  const [uploadedFile, setUploadedFile] =
+    useState<DocumentPickerResponse | null>(null); // Cập nhật kiểu dữ liệu
+
+  const handleUploadMaterial = async () => {
+    if (!uploadedFile) {
+      Alert.alert('Thông báo', 'Vui lòng chọn tài liệu.');
+      return;
+    }
+
+    const title = 'example-title'; // Thay bằng giá trị thực tế
+    const classId = '000254'; // Thay bằng giá trị thực tế
+    const description = 'example-description'; // Thay bằng giá trị thực tế
+    const deadline = '2024-12-19T14:30:00'; // Thay bằng giá trị thực tế
+
+    try {
+      const formData = new FormData();
+
+      // Thêm file
+      formData.append('file', {
+        uri: uploadedFile.uri,
+        name: uploadedFile.name,
+        type: uploadedFile.type,
+      });
+
+      // Thêm các trường khác
+      formData.append('classId', classId);
+      formData.append('title', title);
+      formData.append('description', description);
+      formData.append('deadline', deadline); // Thêm thời hạn nộp bài
+
+      const response = await axiosInstance.post(
+        '/it5023e/create_survey',
+        formData,
+      );
+
+      Alert.alert('Thành công', 'Tài liệu đã được tải lên.');
+      console.log('Upload response:', response.data);
+
+      // Xóa trạng thái sau khi tải lên
+      setUploadedFile(null);
+    } catch (error) {
+      console.error('Upload error:', error);
+      Alert.alert('Lỗi', 'Không thể tải lên tài liệu.');
+    }
+  };
+
+  const uploadDocument = async () => {
+    try {
+      const res = await DocumentPicker.pickSingle({
+        type: [DocumentPicker.types.allFiles],
+      });
+      setUploadedFile(res); // Lưu thông tin tệp được chọn
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        console.log('User cancelled the upload');
+      } else {
+        console.error('Unknown error: ', err);
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
-      {/* Header */}
-      {/* <View style={styles.header}></View> */}
-
-      {/* Task Title */}
-
       {/* Content */}
       <ScrollView style={styles.contentContainer}>
         <View style={styles.taskTitleContainer}>
@@ -57,11 +116,27 @@ const CreateAssignmentScreen = () => {
             <Text style={styles.text}>Tài liệu liên quan</Text>
 
             <View style={styles.button3}>
-              <TouchableOpacity style={styles.button4}>
-                <Icon name="upload" size={10} />
+              <TouchableOpacity style={styles.button4} onPress={uploadDocument}>
+                <Icon name="upload" size={20} />
                 <Text style={styles.buttonText}>Tải lên tài liệu</Text>
               </TouchableOpacity>
             </View>
+            {uploadedFile && (
+              <View style={styles.previewContainer}>
+                <Text>Tên tài liệu: {uploadedFile.name}</Text>
+                {uploadedFile.type?.includes('image') && (
+                  <Image
+                    source={{uri: uploadedFile.uri}}
+                    style={styles.previewImage}
+                  />
+                )}
+                {!uploadedFile.type?.includes('image') && (
+                  <Text style={styles.previewText}>
+                    Tệp không thể xem trước.
+                  </Text>
+                )}
+              </View>
+            )}
 
             <Text style={styles.text}>Thời hạn nộp bài</Text>
 
@@ -85,14 +160,15 @@ const CreateAssignmentScreen = () => {
             </View>
 
             <View style={styles.button1}>
-              <TouchableOpacity style={styles.button2}>
+              <TouchableOpacity
+                style={styles.button2}
+                onPress={handleUploadMaterial}>
                 <Text style={styles.buttonText}>Đăng bài tập</Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
       </ScrollView>
-
       {/* Footer */}
       <View style={styles.footer}>
         <TouchableOpacity style={styles.footerButton}>
@@ -114,7 +190,6 @@ const CreateAssignmentScreen = () => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -358,6 +433,222 @@ const styles = StyleSheet.create({
   day: {
     width: '50%',
   },
+  previewContainer: {
+    marginVertical: 16,
+    padding: 8,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 8,
+  },
+  previewImage: {
+    width: '100%',
+    height: 200,
+    resizeMode: 'contain',
+    marginTop: 8,
+  },
+  previewText: {
+    marginTop: 8,
+    color: '#555',
+  },
 });
 
 export default CreateAssignmentScreen;
+// import React, {useState} from 'react';
+// import {
+//   ScrollView,
+//   StyleSheet,
+//   Text,
+//   TouchableOpacity,
+//   View,
+//   Image,
+//   Alert,
+// } from 'react-native';
+// import {Checkbox, TextInput} from 'react-native-paper';
+// import DocumentPicker, {
+//   DocumentPickerResponse,
+// } from 'react-native-document-picker';
+// import axios from 'axios';
+// import Icon from 'react-native-vector-icons/FontAwesome';
+
+// const CreateAssignmentScreen = () => {
+//   const [isFocused, setIsFocused] = useState(false);
+//   const [isChecked, setIsChecked] = useState(false);
+//   const [uploadedFile, setUploadedFile] =
+//     useState<DocumentPickerResponse | null>(null);
+//   const [classId, setClassId] = useState('');
+//   const [title, setTitle] = useState('');
+//   const [description, setDescription] = useState('');
+//   const [materialType, setMaterialType] = useState('');
+
+//   const uploadDocument = async () => {
+//     try {
+//       const res = await DocumentPicker.pickSingle({
+//         type: [DocumentPicker.types.allFiles],
+//       });
+//       setUploadedFile(res); // Lưu tệp được chọn
+//     } catch (err) {
+//       if (DocumentPicker.isCancel(err)) {
+//         console.log('User cancelled the upload');
+//       } else {
+//         console.error('Unknown error: ', err);
+//       }
+//     }
+//   };
+
+//   const handleUploadMaterial = async () => {
+//     if (!uploadedFile || !classId || !title || !materialType) {
+//       Alert.alert('Thông báo', 'Vui lòng nhập đầy đủ thông tin và chọn tệp.');
+//       return;
+//     }
+
+//     const formData = new FormData();
+//     formData.append('file', {
+//       uri: uploadedFile.uri,
+//       name: uploadedFile.name,
+//       type: uploadedFile.type,
+//     });
+//     formData.append('classId', classId);
+//     formData.append('title', title);
+//     formData.append('description', description);
+//     formData.append('materialType', materialType);
+
+//     try {
+//       const response = await axios.post('/it5023e/upload_material', formData, {
+//         headers: {
+//           'Content-Type': 'multipart/form-data',
+//         },
+//       });
+//       Alert.alert('Thành công', 'Tải lên tài liệu thành công.');
+//       console.log('Response:', response.data);
+//       // Reset trạng thái sau khi upload
+//       setUploadedFile(null);
+//       setClassId('');
+//       setTitle('');
+//       setDescription('');
+//       setMaterialType('');
+//     } catch (error) {
+//       console.error('Error uploading material:', error);
+//       Alert.alert('Lỗi', 'Tải lên tài liệu thất bại.');
+//     }
+//   };
+
+//   return (
+//     <View style={styles.container}>
+//       <ScrollView style={styles.contentContainer}>
+//         <View style={styles.taskTitleContainer}>
+//           <TextInput
+//             placeholder="Mã lớp"
+//             value={classId}
+//             onChangeText={setClassId}
+//             style={styles.input}
+//           />
+//           <TextInput
+//             placeholder="Tên tài liệu"
+//             value={title}
+//             onChangeText={setTitle}
+//             style={styles.input}
+//           />
+//           <TextInput
+//             placeholder="Mô tả tài liệu"
+//             value={description}
+//             onChangeText={setDescription}
+//             style={styles.input}
+//             multiline
+//           />
+//           <TextInput
+//             placeholder="Loại tài liệu (ví dụ: PDF, Image, Video)"
+//             value={materialType}
+//             onChangeText={setMaterialType}
+//             style={styles.input}
+//           />
+
+//           <TouchableOpacity style={styles.button4} onPress={uploadDocument}>
+//             <Icon name="upload" size={20} />
+//             <Text style={styles.buttonText}>Tải lên tài liệu</Text>
+//           </TouchableOpacity>
+
+//           {uploadedFile && (
+//             <View style={styles.previewContainer}>
+//               <Text>
+//                 Tên tài liệu: {uploadedFile.name || 'Không có tên tài liệu'}
+//               </Text>
+//               {uploadedFile.type?.includes('image') ? (
+//                 <Image
+//                   source={{uri: uploadedFile.uri}}
+//                   style={styles.previewImage}
+//                   resizeMode="contain"
+//                 />
+//               ) : (
+//                 <Text style={styles.previewText}>
+//                   Không thể xem trước (Loại: {uploadedFile.type})
+//                 </Text>
+//               )}
+//             </View>
+//           )}
+
+//           <TouchableOpacity
+//             style={styles.button2}
+//             onPress={handleUploadMaterial}>
+//             <Text style={styles.buttonText}>Đăng tài liệu</Text>
+//           </TouchableOpacity>
+//         </View>
+//       </ScrollView>
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#fff',
+//   },
+//   contentContainer: {
+//     padding: 16,
+//   },
+//   taskTitleContainer: {
+//     marginBottom: 20,
+//   },
+//   input: {
+//     borderBottomWidth: 1,
+//     borderBottomColor: '#ccc',
+//     marginBottom: 16,
+//     paddingHorizontal: 8,
+//     paddingVertical: 4,
+//   },
+//   button4: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     marginBottom: 16,
+//   },
+//   buttonText: {
+//     marginLeft: 8,
+//     fontSize: 16,
+//     color: '#007BFF',
+//   },
+//   previewContainer: {
+//     marginVertical: 16,
+//     alignItems: 'center',
+//   },
+//   previewImage: {
+//     width: 150,
+//     height: 150,
+//     marginTop: 8,
+//   },
+//   previewText: {
+//     fontSize: 14,
+//     color: '#666',
+//     textAlign: 'center',
+//     marginTop: 8,
+//   },
+//   button2: {
+//     backgroundColor: '#007BFF',
+//     padding: 12,
+//     borderRadius: 8,
+//     alignItems: 'center',
+//   },
+//   buttonText: {
+//     color: '#fff',
+//     fontSize: 16,
+//   },
+// });
+
+// export default CreateAssignmentScreen;

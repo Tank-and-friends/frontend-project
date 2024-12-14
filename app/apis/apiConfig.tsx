@@ -4,7 +4,7 @@ import {Alert} from 'react-native';
 
 const axiosInstance = axios.create({
   baseURL: 'http://157.66.24.126:8080',
-  timeout: 10000, //giới hạn thời gian phản hồi trong 10s
+  timeout: 20000, //giới hạn thời gian phản hồi trong 10s
 });
 
 axiosInstance.interceptors.response.use(
