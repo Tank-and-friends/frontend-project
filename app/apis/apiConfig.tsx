@@ -69,6 +69,7 @@ axiosInstance.interceptors.request.use(
           if (config.data instanceof FormData) {
             // Nếu body là FormData, sử dụng append
             config.data.append('token', token);
+            config.headers['Content-Type'] = 'multipart/form-data';
           } else {
             // Nếu body là object thông thường
             config.data = {
