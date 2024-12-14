@@ -8,7 +8,6 @@ import {
   View,
 } from 'react-native';
 import {Appbar, IconButton, Text} from 'react-native-paper';
-import ClassRectLec from './components/ClassRectLec';
 import {format} from 'date-fns';
 import ClassRectStu from './components/ClassRectStu';
 
@@ -175,12 +174,15 @@ export default function ClassRegisterListScreen({
             ))} */}
             {updatedClasses.length > 0 ? (
               updatedClasses.map((classItem, index) => (
-                <ClassRectStu key={index} classTitle={classItem.class_name}
-                classTime={classItem.classTime}
-                classCode={classItem.class_id}
-                status={classItem.status}
-                lecturerName={classItem.lecturer_name || 'N/A'}
-                studentNumber={classItem.student_count || 0} />
+                <ClassRectStu
+                  key={index}
+                  classTitle={classItem.class_name}
+                  classTime={classItem.classTime}
+                  classCode={classItem.class_id}
+                  status={classItem.status}
+                  lecturerName={classItem.lecturer_name || 'N/A'}
+                  studentNumber={classItem.student_count || 0}
+                />
               ))
             ) : (
               <Text style={{textAlign: 'center', marginTop: 20}}>

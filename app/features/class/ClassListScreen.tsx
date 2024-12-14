@@ -1,16 +1,23 @@
 import {NavigationProp, useNavigation} from '@react-navigation/core';
-import React from 'react';
-import {ImageBackground, ScrollView, StyleSheet, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  ImageBackground,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import {TextField} from '../../components/TextField/TextField';
 import TopComponent from '../../components/TopComponent/TopComponent';
-import ClassRectStu from '../class-register/components/ClassRectStu';
+import {ClassInfo} from '../../models/Register';
+import {getListClasses} from '../../apis/RegisterApi';
 
 export type ParamList = {
   ClassStacks: {
     screen: string;
     params: {
-      classId: string; 
+      classId: string;
       className: string;
       classTime: string;
       classPlace: string;
@@ -20,57 +27,36 @@ export type ParamList = {
 };
 
 const ClassListScreen = () => {
-  const navigation = useNavigation<NavigationProp<ParamList>>();
+  // const navigation = useNavigation<NavigationProp<ParamList>>();
 
-  const classes = [
-    {
-      classId: '123456',
-      className: 'Giải tích I',
-      classTime: 'Sáng thứ 3, 6:45 - 10:05',
-      classPlace: 'TC-207',
-      grade: {midTerm: 4.0, endTerm: 3.2},
-    },
-    {
-      classId: '234567',
-      className: 'Giải tích II',
-      classTime: 'Chiều thứ 5, 14:00 - 16:30',
-      classPlace: 'TC-208',
-      grade: {},
-    },
-    {
-      classId: '345678',
-      className: 'Giải tích III',
-      classTime: 'Tối thứ 7, 18:00 - 20:30',
-      classPlace: 'TC-209',
-      grade: {midTerm: 4.0, endTerm: 3.2},
-    },
-    {
-      classId: '456789',
-      className: 'Giải tích IV',
-      classTime: 'Tối thứ 7, 18:00 - 20:30',
-      classPlace: 'TC-209',
-      grade: {endTerm: 3.2},
-    },
-  ];
+  const [classes, setClasses] = useState<ClassInfo[]>([]);
 
-  const handleNavigateToClass = (
-    classId: string,
-    className: string,
-    classTime: string,
-    classPlace: string,
-    grade: {midTerm?: number; endTerm?: number},
-  ) => {
-    navigation.navigate('ClassStacks', {
-      screen: 'ClassDetails',
-      params: {
-        classId,
-        className,
-        classTime,
-        classPlace,
-        grade,
-      },
+  // const handleNavigateToClass = (
+  //   classId: string,
+  //   className: string,
+  //   classTime: string,
+  //   classPlace: string,
+  //   grade: {midTerm?: number; endTerm?: number},
+  // ) => {
+  //   navigation.navigate('ClassStacks', {
+  //     screen: 'ClassDetails',
+  //     params: {
+  //       classId,
+  //       className,
+  //       classTime,
+  //       classPlace,
+  //       grade,
+  //     },
+  //   });
+  // };
+
+  useEffect(() => {
+    getListClasses().then(res => {
+      if (res) {
+        setClasses(res);
+      }
     });
-  };
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -84,27 +70,8 @@ const ClassListScreen = () => {
           placeholder="Bạn muốn tìm gì ..."
         />
         <ScrollView contentContainerStyle={styles.classGroupContainer}>
-          {classes.map(classItem => (
-            <ClassRectStu
-              key={classItem.classId}
-              classId={classItem.classId}
-              className={classItem.className}
-              classTime={classItem.classTime}
-              classPlace={classItem.classPlace}
-              grade={{
-                midTerm: classItem.grade.midTerm ?? 0,
-                endTerm: classItem.grade.endTerm ?? 0,
-              }}
-              onPress={() =>
-                handleNavigateToClass(
-                  classItem.classId,
-                  classItem.className,
-                  classItem.classTime,
-                  classItem.classPlace,
-                  classItem.grade,
-                )
-              }
-            />
+          {classes.map((classItem, index) => (
+            <Text key={index}>{classItem.class_name}</Text>
           ))}
         </ScrollView>
       </ImageBackground>

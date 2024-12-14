@@ -15,7 +15,7 @@ import {UniqueIdProvider} from './utils/uniqueId';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function App(): React.JSX.Element {
-  AsyncStorage.setItem('token', 'tWgBj5');
+  AsyncStorage.setItem('token', 'p6mYzC');
   AsyncStorage.setItem('id', '277');
   AsyncStorage.setItem('role', 'LECTURER');
 
