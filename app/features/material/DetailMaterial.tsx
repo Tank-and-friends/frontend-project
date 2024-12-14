@@ -1,15 +1,29 @@
 /* eslint-disable react-native/no-inline-styles */
+import {RouteProp, useNavigation} from '@react-navigation/native';
 import React, {PropsWithChildren, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {MaterialInfo} from '../../models/Material';
+import {deleteMaterial} from '../../apis/MaterialApi';
 import {Button, Modal, PaperProvider, Portal} from 'react-native-paper';
-import TransparentBackground from '../../components/TransparentBackground';
-import RenamePopup from './components/RenamePopup';
+import {StyleSheet, View} from 'react-native';
 import TopNavBar from './components/TopNavBar';
+import WebView from 'react-native-webview';
+import {getPreviewDocumentUrl} from '../../utils/file';
+import TransparentBackground from '../../components/TransparentBackground';
+import EditMaterialPopup from './components/EditMaterialPopup';
 
-type Props = PropsWithChildren<{}>;
+type Props = PropsWithChildren<{route: RouteProp<RouteProps>}>;
 
-const DetailMaterial = ({}: Props) => {
-  const [isRename, setIsRename] = useState(false);
+type RouteProps = {
+  DetailMaterial: {
+    material: MaterialInfo;
+  };
+};
+
+const DetailMaterial = ({route}: Props) => {
+  const {material} = route.params;
+  const navigation = useNavigation();
+  const [materialInfo, setMaterialInfo] = useState<MaterialInfo>(material);
+  const [isEdit, setIsEdit] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const showPopup = () => {
@@ -18,22 +32,49 @@ const DetailMaterial = ({}: Props) => {
   const hidePopup = () => {
     setIsPopupOpen(false);
   };
-  const toggleRename = () => {
-    setIsRename(false);
+  const toggleEdit = () => {
+    setIsEdit(false);
   };
-  const showRenameModal = () => {
+  const showEditModal = () => {
     hidePopup();
-    setIsRename(true);
+    setIsEdit(true);
   };
+
+  const handleDelete = () => {
+    deleteMaterial(materialInfo.id).then(res => {
+      if (res) {
+        navigation.goBack();
+      }
+    });
+  };
+
   return (
     <PaperProvider>
       <View
         style={{
           flex: 1,
-          backgroundColor: 'white',
           position: 'relative',
         }}>
-        <TopNavBar title="Danh sach phan nhom" onOpenPopup={showPopup} />
+        <TopNavBar
+          title={materialInfo.material_name + '.' + materialInfo.material_type}
+          onOpenPopup={showPopup}
+        />
+        <WebView
+          source={{uri: getPreviewDocumentUrl(materialInfo.material_link)}}
+          style={[
+            styles.webview,
+            {
+              marginTop: ['docx', 'doc', 'txt'].includes(
+                materialInfo.material_type,
+              )
+                ? -60
+                : 0,
+            },
+          ]}
+          startInLoadingState={true}
+          scalesPageToFit={true}
+          domStorageEnabled={true}
+        />
         <Portal>
           <Modal
             visible={isPopupOpen}
@@ -55,8 +96,8 @@ const DetailMaterial = ({}: Props) => {
               mode="text"
               textColor="black"
               contentStyle={{justifyContent: 'flex-start'}}
-              onPress={showRenameModal}>
-              Đổi tên
+              onPress={showEditModal}>
+              Chỉnh sửa
             </Button>
             <Button
               icon="trash-can-outline"
@@ -64,11 +105,17 @@ const DetailMaterial = ({}: Props) => {
               mode="text"
               textColor="black"
               contentStyle={{justifyContent: 'flex-start'}}
-              onPress={() => console.log('Pressed')}>
+              onPress={handleDelete}>
               Xóa
             </Button>
           </Modal>
-          <RenamePopup isVisible={isRename} hideModal={toggleRename} />
+          <EditMaterialPopup
+            isVisible={isEdit}
+            hideModal={toggleEdit}
+            classId={materialInfo.class_id}
+            material={materialInfo}
+            onUpdate={setMaterialInfo}
+          />
         </Portal>
       </View>
     </PaperProvider>
@@ -94,6 +141,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     justifyContent: 'space-between',
     elevation: 20,
+  },
+  container: {
+    flex: 1,
+  },
+  webview: {
+    flex: 1,
   },
 });
 

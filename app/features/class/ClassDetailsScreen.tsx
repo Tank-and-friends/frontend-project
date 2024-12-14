@@ -18,6 +18,9 @@ export type ParamList = {
   };
   MaterialStacks: {
     screen: string;
+    params: {
+      classId: string;
+    };
   };
   AssignmentStacks: {
     screen: string;
@@ -70,15 +73,20 @@ const ClassDetailsScreen = () => {
             onPress={() =>
               navigation.navigate('MaterialStacks', {
                 screen: 'ListMaterial',
+                params: {
+                  classId: '000808',
+                },
               })
             }
           />
+
 
           <ClassRectTab
             title="Xin nghỉ phép"
             subtitle="Gửi đơn xin vắng mặt cho buổi học sắp tới"
             imageSource={require('../../assets/images/XinNghiPhep.png')}
             reverse={true}
+            onPress={() => navigation.navigate('AbsenceRequestsList')}
             onPress={() => navigation.navigate('AbsenceRequestsList')}
           />
 
@@ -112,6 +120,7 @@ const styles = StyleSheet.create({
   headerContent: {
     justifyContent: 'center',
     alignItems: 'flex-start',
+    gap: 2,
     gap: 2,
   },
   headerTitle: {
