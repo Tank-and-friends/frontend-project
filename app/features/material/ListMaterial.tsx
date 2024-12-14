@@ -1,6 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import React, {PropsWithChildren} from 'react';
+import {
+  NavigationProp,
+  RouteProp,
+  useNavigation,
+} from '@react-navigation/native';
+import React, {PropsWithChildren, useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
   GestureResponderEvent,
@@ -19,59 +23,69 @@ import IonIcons from 'react-native-vector-icons/Ionicons';
 import {TextField} from '../../components/TextField/TextField';
 import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
 import MaterialListItem from './components/MaterialListItem';
-import RenamePopup from './components/RenamePopup';
-type Props = PropsWithChildren<{}>;
+import {MaterialInfo} from '../../models/Material';
+import {deleteMaterial, getMaterialList} from '../../apis/MaterialApi';
+import EditMaterialPopup from './components/EditMaterialPopup';
+type Props = PropsWithChildren<{
+  route: RouteProp<RouteProps>;
+}>;
 
 type ParamList = {
   MaterialStacks: {
     screen: string;
+    params: {
+      material: MaterialInfo;
+    };
   };
 };
 
-const ListMaterial = ({}: Props) => {
-  const navigation = useNavigation<NavigationProp<ParamList>>();
-  const [visible, setVisible] = React.useState(false);
-  const [rename, setRename] = React.useState(false);
+type RouteProps = {
+  ListMaterial: {
+    classId: string;
+  };
+};
 
-  const showModal = (event: GestureResponderEvent) => {
+const ListMaterial = ({route}: Props) => {
+  const navigation = useNavigation<NavigationProp<ParamList>>();
+  const {classId} = route.params;
+  const [visible, setVisible] = React.useState(false);
+  const [isEdit, setIsEdit] = React.useState(false);
+  const [listMaterial, setListMaterial] = useState<MaterialInfo[]>([]);
+  const [selectedItem, setSelectedItem] = useState<MaterialInfo | undefined>();
+  // const [isUpload, setIsUpload] = useState<boolean>(false);
+  const showModal = (event: GestureResponderEvent, item: MaterialInfo) => {
     event.stopPropagation();
+    setSelectedItem(item);
     setVisible(true);
   };
-  const showRenameModal = () => {
+  const showEditModal = () => {
     setVisible(false);
-    setRename(true);
+    setIsEdit(true);
   };
-  const hideModal = () => setVisible(false);
-  const hideRenameModal = () => {
-    setRename(false);
+  const hideModal = () => {
+    setSelectedItem(undefined);
+    setVisible(false);
   };
-  const DATA = [
-    {
-      name: 'Sơ đồ UC',
-      type: 'jpg',
-      lastestModified: 'Nguyen Thi Thu Trang',
-      showModal: showModal,
-    },
-    {
-      name: 'Danh sách phân nhóm',
-      type: 'xlsx',
-      lastestModified: 'Nguyen Thi Thu Trang',
-      showModal: showModal,
-    },
-    {
-      name: 'UC Specification',
-      type: 'docx',
-      lastestModified: 'Third Item',
-      showModal: showModal,
-    },
-    {
-      name: 'AIMS project',
-      type: 'pdf',
-      lastestModified: 'Fourth Item',
-      showModal: showModal,
-    },
-  ];
-
+  const hideEditModal = () => {
+    setIsEdit(false);
+    setSelectedItem(undefined);
+  };
+  const fetchMaterialList = useCallback((_classId: string) => {
+    getMaterialList(classId).then(res => {
+      setListMaterial(res);
+    });
+  }, [classId]);
+  const handleDelete = (materialId: string) => {
+    deleteMaterial(materialId).then(res => {
+      if (res) {
+        fetchMaterialList(classId);
+        hideModal();
+      }
+    });
+  };
+  useEffect(() => {
+    fetchMaterialList(classId);
+  }, [classId, fetchMaterialList]);
   return (
     <PaperProvider>
       <View style={{flex: 1}}>
@@ -85,10 +99,12 @@ const ListMaterial = ({}: Props) => {
             placeholder="Bạn muốn tìm gì ..."
           />
           <FlatList
-            data={DATA}
+            data={listMaterial}
             style={styles.listMessage}
-            renderItem={({item}) => <MaterialListItem item={item} />}
-            keyExtractor={item => item.name}
+            renderItem={({item}) => (
+              <MaterialListItem item={item} moreOption={showModal} />
+            )}
+            keyExtractor={item => item.id}
           />
           <IconButton
             icon="plus"
@@ -97,6 +113,7 @@ const ListMaterial = ({}: Props) => {
             containerColor="#C02135"
             size={30}
             style={styles.uploadMaterialButton}
+            onPress={showEditModal}
           />
 
           <Portal>
@@ -112,9 +129,14 @@ const ListMaterial = ({}: Props) => {
                 contentStyle={{justifyContent: 'flex-start'}}
                 onPress={() => {
                   hideModal();
-                  navigation.navigate('MaterialStacks', {
-                    screen: 'DetailMaterial',
-                  });
+                  if (selectedItem) {
+                    navigation.navigate('MaterialStacks', {
+                      screen: 'DetailMaterial',
+                      params: {
+                        material: selectedItem,
+                      },
+                    });
+                  }
                 }}>
                 Mở
               </Button>
@@ -133,8 +155,8 @@ const ListMaterial = ({}: Props) => {
                 mode="text"
                 textColor="black"
                 contentStyle={{justifyContent: 'flex-start'}}
-                onPress={showRenameModal}>
-                Đổi tên
+                onPress={showEditModal}>
+                Chỉnh sửa
               </Button>
               <Button
                 icon="trash-can-outline"
@@ -142,11 +164,17 @@ const ListMaterial = ({}: Props) => {
                 mode="text"
                 textColor="black"
                 contentStyle={{justifyContent: 'flex-start'}}
-                onPress={() => console.log('Pressed')}>
+                onPress={() => handleDelete(selectedItem?.id || '')}>
                 Xóa
               </Button>
             </Modal>
-            <RenamePopup isVisible={rename} hideModal={hideRenameModal} />
+            <EditMaterialPopup
+              isVisible={isEdit}
+              hideModal={hideEditModal}
+              classId={classId}
+              material={selectedItem}
+              onUpdate={() => fetchMaterialList(classId)}
+            />
           </Portal>
         </ImageBackground>
       </View>

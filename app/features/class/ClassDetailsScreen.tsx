@@ -7,11 +7,10 @@ import {
 } from '@react-navigation/core';
 import React from 'react';
 import {ImageBackground, StyleSheet, Text, View} from 'react-native';
-import {Appbar, Button, IconButton} from 'react-native-paper';
-import { TextField } from '../../components/TextField/TextField';
+import {Appbar, IconButton} from 'react-native-paper';
+import {TextField} from '../../components/TextField/TextField';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import ClassRectTab from './components/ClassRectTab';
-
 
 export type ParamList = {
   ClassStacks: {
@@ -19,6 +18,9 @@ export type ParamList = {
   };
   MaterialStacks: {
     screen: string;
+    params: {
+      classId: string;
+    };
   };
   AssignmentStacks: {
     screen: string;
@@ -71,18 +73,19 @@ const ClassDetailsScreen = () => {
             onPress={() =>
               navigation.navigate('MaterialStacks', {
                 screen: 'ListMaterial',
+                params: {
+                  classId: '000808',
+                },
               })
             }
           />
-          
+
           <ClassRectTab
             title="Xin nghỉ phép"
             subtitle="Gửi đơn xin vắng mặt cho buổi học sắp tới"
             imageSource={require('../../assets/images/XinNghiPhep.png')}
             reverse={true}
-            onPress={() =>
-              navigation.navigate('AbsenceRequestsList')
-            }
+            onPress={() => navigation.navigate('AbsenceRequestsList')}
           />
 
           <ClassRectTab
@@ -96,7 +99,6 @@ const ClassDetailsScreen = () => {
               })
             }
           />
-          
         </View>
       </ImageBackground>
     </View>
@@ -116,7 +118,7 @@ const styles = StyleSheet.create({
   headerContent: {
     justifyContent: 'center',
     alignItems: 'flex-start',
-    gap: 2
+    gap: 2,
   },
   headerTitle: {
     color: 'white',

@@ -9,7 +9,7 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.response.use(
   response => {
-    if (response.data?.code === '1000') {
+    if (response.data?.code === '1000' || response.data?.meta.code === '1000') {
       return response.data;
     }
   },
@@ -69,6 +69,7 @@ axiosInstance.interceptors.request.use(
           if (config.data instanceof FormData) {
             // Nếu body là FormData, sử dụng append
             config.data.append('token', token);
+            config.headers['Content-Type'] = 'multipart/form-data';
           } else {
             // Nếu body là object thông thường
             config.data = {
