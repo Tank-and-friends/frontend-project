@@ -24,7 +24,7 @@ const ClassListScreen = () => {
 
   const classes = [
     {
-      classId: '123456',
+      classId: '000254',
       className: 'Giải tích I',
       classTime: 'Sáng thứ 3, 6:45 - 10:05',
       classPlace: 'TC-207',

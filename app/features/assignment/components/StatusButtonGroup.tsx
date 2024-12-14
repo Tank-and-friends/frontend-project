@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 interface StatusButtonProps {
   label: string;
   backgroundColor: string;
   onPress: () => void; // Thêm thuộc tính onPress
+}
+
+interface StatusButtonGroupProps {
+  setLabelStatus: (label: string) => void;
 }
 
 const StatusButton: React.FC<StatusButtonProps> = ({
@@ -21,15 +25,23 @@ const StatusButton: React.FC<StatusButtonProps> = ({
   );
 };
 
-const StatusButtonGroup: React.FC = () => {
-  const [selectedButton, setSelectedButton] = useState<string>('Sắp tới');
+const StatusButtonGroup: React.FC<StatusButtonGroupProps> = ({
+  setLabelStatus,
+}) => {
+  const [selectedButton, setSelectedButton] = useState<string>('All');
 
   const handlePress = (label: string) => {
     setSelectedButton(label);
+    setLabelStatus(label);
   };
 
   return (
     <View style={styles.container}>
+      <StatusButton
+        label="All"
+        backgroundColor={selectedButton === 'All' ? '#FF7F11' : '#C62828'}
+        onPress={() => handlePress('All')}
+      />
       <StatusButton
         label="Sắp tới"
         backgroundColor={selectedButton === 'Sắp tới' ? '#FF7F11' : '#C62828'}

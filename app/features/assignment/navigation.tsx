@@ -1,8 +1,9 @@
-import { createStackNavigator } from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
 import AssignmentScreen from './AssignmentScreen';
 import CreateAssignmentScreen from './CreateAssignmentScreen';
 import TaskDetailScreen from './TaskDetailScreen';
+import {Survey} from './type';
 
 export type RootStackParamList = {
   CreateAssignmentScreen: undefined;
@@ -12,6 +13,8 @@ export type RootStackParamList = {
     date: string;
     deadline: string;
     content: string;
+    formattedDate: string;
+    serveyData: Survey;
   };
 };
 
@@ -32,7 +35,7 @@ export const AssignmentStacks = () => {
       <Stack.Screen
         name="TaskDetailScreen"
         component={TaskDetailScreen}
-        options={({ route }) => ({
+        options={({route}) => ({
           title: route.params.title,
           headerShown: false, // Ẩn top navigator
         })}

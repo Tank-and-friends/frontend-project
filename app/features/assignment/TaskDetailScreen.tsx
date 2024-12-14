@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ImageBackground,
   ScrollView,
@@ -11,6 +11,11 @@ import {
 
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
+import DocumentPicker, {
+  DocumentPickerResponse,
+} from 'react-native-document-picker';
+import axios from 'axios';
+// import DrivePreview from './components/DrivePreview';
 // interface TaskDetailData {
 //   title: string;
 //   date: string;
@@ -19,7 +24,8 @@ import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvat
 // }
 
 const TaskDetailScreen: React.FC = ({route}: any) => {
-  const {title, date, deadline, content} = route.params;
+  const {title, date, deadline, content, formattedDate, serveyData} =
+    route.params;
   const [late, setLate] = useState(false);
   const [processedDeadline, setProcessedDeadline] = useState('');
 
@@ -37,6 +43,69 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
     processDeadline();
   }, [deadline]);
 
+  const [file, setFile] = useState<DocumentPickerResponse[] | null>(null);
+
+  const handleAddFile = async () => {
+    try {
+      const res = await DocumentPicker.pick({
+        type: [DocumentPicker.types.allFiles], // Chọn tất cả các loại file
+      });
+      console.log('File picked:', res);
+      setFile(res); // Đặt giá trị state là danh sách file được chọn
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+      } else {
+        console.error('Unknown error:', err);
+      }
+    }
+  };
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmitSurvey = async () => {
+    if (!file || file.length === 0) {
+      console.error('No file selected');
+      return;
+    }
+
+    if (isSubmitting) {
+      return;
+    } // Ngăn chặn nếu đang xử lý
+    setIsSubmitting(true);
+
+    const formData = new FormData();
+    formData.append('file', {
+      uri: file[0].uri, // URI của file
+      type: file[0].type, // Loại file (MIME type)
+      name: file[0].name, // Tên file
+    });
+    formData.append('token', 'Mq9YoW');
+    formData.append('assignmentId', serveyData.id);
+    formData.append('textResponse', 'Tạm thời chưa có');
+    console.log('Submit button clicked');
+
+    try {
+      const response = await axios.post(
+        'http://157.66.24.126:8080/it5023e/submit_survey',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+
+      // Sửa lại ngoại lệ (sai role, giáo viên không được nộp bài)
+      // (nộp bài nhiều lần)
+      // sửa textResponse
+    } finally {
+      setIsSubmitting(false); // Hoàn tất
+    }
+  };
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -46,28 +115,32 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
         {/* Task Title */}
         <TopNavWithoutAvatar title="Chi tiết bài tập" />
         {/* Content */}
+        {false && (
+          <View>
+            <Text>{date}</Text>
+            <Text>{processedDeadline}</Text>
+          </View>
+        )}
         <ScrollView style={styles.contentContainer}>
           <View style={styles.taskTitleContainer}>
             <View>
               <View style={styles.title}>
                 <Text style={styles.taskTitle}>{title}</Text>
-                <View
-                  style={[
-                    styles.badge,
-                    {
-                      backgroundColor: '#FF7F11',
-                    },
-                  ]}>
-                  <Text style={styles.badgeText}>Chưa nộp bài</Text>
-                  <FeatherIcon name="clock" size={24} color="black" />
-                </View>
+                {false && (
+                  <View
+                    style={[
+                      styles.badge,
+                      {
+                        backgroundColor: '#FF7F11',
+                      },
+                    ]}>
+                    <Text style={styles.badgeText}>Chưa nộp bài</Text>
+                    <FeatherIcon name="clock" size={24} color="black" />
+                  </View>
+                )}
               </View>
-              {!late && <Text style={styles.deadline}>
-                Đến hạn vào ngày {date} lúc {processedDeadline}
-              </Text>}
-              {late && <Text style={styles.deadline}>
-                {processedDeadline}
-              </Text>}
+              {!late && <Text style={styles.deadline}>{formattedDate}</Text>}
+              {late && <Text style={styles.deadline}>{formattedDate}</Text>}
               <View style={styles.line} />
               <Text style={styles.text}>Nội dung</Text>
               <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
@@ -75,6 +148,13 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
               </ScrollView>
 
               <Text style={styles.text}>Tài liệu liên quan</Text>
+              <View>
+                <Text style={styles.url}>{serveyData.file_url}</Text>
+              </View>
+
+              <View style={styles.preview}>
+                {/* <DrivePreview driveUrl={serveyData.file_url} type="image" /> */}
+              </View>
             </View>
           </View>
 
@@ -82,9 +162,23 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
             <View>
               <View style={styles.title}>
                 <Text style={styles.text}>Bài nộp của tôi</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleAddFile}>
                   <Text style={styles.addAssignment}>Thêm +</Text>
                 </TouchableOpacity>
+              </View>
+
+              <View style={styles.title}>
+                {file && (
+                  <View>
+                    {file.map((f, index) => (
+                      <View key={index}>
+                        <Text>File Name: {f.name}</Text>
+                        <Text>File Type: {f.type}</Text>
+                        <Text>File URI: {f.uri}</Text>
+                      </View>
+                    ))}
+                  </View>
+                )}
               </View>
               <View style={styles.line} />
               {/* Cuộn các tài liệu đã nộp (Có thể đổi thành tăng dần kích thước) */}
@@ -92,7 +186,9 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
 
             </ScrollView> */}
               <View style={styles.button1}>
-                <TouchableOpacity style={styles.button2}>
+                <TouchableOpacity
+                  style={styles.button2}
+                  onPress={handleSubmitSurvey}>
                   <Text style={styles.buttonText}>Nộp bài</Text>
                 </TouchableOpacity>
               </View>
@@ -151,7 +247,7 @@ const styles = StyleSheet.create({
     width: '65%',
   },
   deadline: {
-    color: '#071013',
+    color: '#21A366',
     marginTop: 8,
   },
   statusText: {
@@ -239,7 +335,7 @@ const styles = StyleSheet.create({
   },
 
   scrollView: {
-    height: 200,
+    maxHeight: 200,
     width: '96%',
     padding: 0,
     borderColor: '#ccc',
@@ -292,6 +388,15 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+
+  url: {
+    color: 'black',
+  },
+
+  preview: {
+    borderWidth: 2,
+    borderColor: 'green',
   },
 });
 

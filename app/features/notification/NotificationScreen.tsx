@@ -12,6 +12,12 @@ import {
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import TaskNotification from './components/TaskNotification';
 import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
+// import axios from 'axios';
+import {Notification} from './types';
+// import axiosInstance from '../../apis/apiConfig';
+import axios from 'axios';
+import {getUnreadNotificationsCount} from './api';
+// import axiosInstance from '../../apis/apiConfig';
 const NotificationScreen = () => {
   // const notificationdata = [
   //   {
@@ -71,57 +77,117 @@ const NotificationScreen = () => {
 
   // const [notifications, setNotifications] = useState(notificationdata);
 
-  const [notifications, setNotifications] = useState([
-    {
-      subject: 'TKXDPM.20241',
-      time: '15:15',
-      notificationName: 'Bài tập',
-      notificationText: 'Nguyen Thi Thu Trang đã tạo một bài tập mới',
-      onMarkRead: false,
-      iconName: 'file-invoice', // Thêm thuộc tính iconName
-    },
-    {
-      subject: 'CTDLGT.20241',
-      time: '09:30',
-      notificationName: 'Thông báo',
-      notificationText: 'Lịch kiểm tra giữa kỳ đã được cập nhật.',
-      onMarkRead: true,
-      iconName: 'bell', // Thêm thuộc tính iconName
-    },
-    {
-      subject: 'HTTTQL.20241',
-      time: '11:00',
-      notificationName: 'Tài liệu',
-      notificationText: 'Thầy Nguyễn Văn A đã đăng tài liệu ôn tập cuối kỳ.',
-      onMarkRead: false,
-      iconName: 'file', // Thêm thuộc tính iconName
-    },
-    {
-      subject: 'LTHDT.20241',
-      time: '14:45',
-      notificationName: 'Câu hỏi',
-      notificationText:
-        'Sinh viên cần hoàn thành bài thảo luận trước ngày 25/11.',
-      onMarkRead: false,
-      iconName: 'clipboard-question', // Thêm thuộc tính iconName
-    },
-    {
-      subject: 'PTTKHT.20241',
-      time: '08:20',
-      notificationName: 'Hướng dẫn',
-      notificationText: 'Video hướng dẫn đồ án cuối kỳ đã được tải lên.',
-      onMarkRead: true,
-      iconName: 'readme', // Thêm thuộc tính iconName
-    },
-    {
-      subject: 'MKT.20241',
-      time: '16:30',
-      notificationName: 'Đánh giá',
-      notificationText: 'Đánh giá bài tập nhóm đã được đăng.',
-      onMarkRead: false,
-      iconName: 'star', // Thêm thuộc tính iconName
-    },
-  ]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const response = await axios.post(
+          'http://157.66.24.126:8080/it5023e/get_notifications',
+          {
+            token: 'Mq9YoW',
+            index: 0,
+            count: 20,
+          },
+        );
+
+        // Log meta và data từ API
+        // console.log('Data:', response.data.data);
+
+        if (response.data && response.data.data) {
+          const apiNotifications = response.data.data.map(
+            (item: Notification) => ({
+              id: item.id,
+              message: item.message,
+              status: item.status,
+              fromUser: item.from_user,
+              toUser: item.to_user,
+              type: item.type,
+              time: new Date(item.sent_time).toLocaleTimeString(), // Định dạng lại thời gian nếu cần
+              notificationName: item.type,
+              notificationText: item.message,
+              onMarkRead: item.status === 'READ', // Đánh dấu đã đọc nếu trạng thái là READ
+              iconName: 'bell',
+            }),
+          );
+          setNotifications(apiNotifications); // Lưu thông báo vào state
+          // console.log('Notifi:', apiNotifications);
+        }
+      } catch (error) {
+        console.error('Lỗi khi gọi API:', error);
+      } finally {
+        // setLoading(false); // Tắt trạng thái loading
+      }
+    };
+
+    fetchNotifications();
+  }, []);
+
+  useEffect(() => {
+    const unreadNotificationCount = async () => {
+      try {
+        const unreadCount = await getUnreadNotificationsCount();
+        console.log('count: ', unreadCount.data);
+      } catch (error) {
+        console.log('Errror: ', error);
+      }
+    };
+
+    unreadNotificationCount();
+  }, []);
+
+  // Data mẫu
+  // const [notifications, setNotifications] = useState([
+  //   {
+  //     subject: 'TKXDPM.20241',
+  //     time: '15:15',
+  //     notificationName: 'Bài tập',
+  //     notificationText: 'Nguyen Thi Thu Trang đã tạo một bài tập mới',
+  //     onMarkRead: false,
+  //     iconName: 'file-invoice', // Thêm thuộc tính iconName
+  //   },
+  //   {
+  //     subject: 'CTDLGT.20241',
+  //     time: '09:30',
+  //     notificationName: 'Thông báo',
+  //     notificationText: 'Lịch kiểm tra giữa kỳ đã được cập nhật.',
+  //     onMarkRead: true,
+  //     iconName: 'bell', // Thêm thuộc tính iconName
+  //   },
+  //   {
+  //     subject: 'HTTTQL.20241',
+  //     time: '11:00',
+  //     notificationName: 'Tài liệu',
+  //     notificationText: 'Thầy Nguyễn Văn A đã đăng tài liệu ôn tập cuối kỳ.',
+  //     onMarkRead: false,
+  //     iconName: 'file', // Thêm thuộc tính iconName
+  //   },
+  //   {
+  //     subject: 'LTHDT.20241',
+  //     time: '14:45',
+  //     notificationName: 'Câu hỏi',
+  //     notificationText:
+  //       'Sinh viên cần hoàn thành bài thảo luận trước ngày 25/11.',
+  //     onMarkRead: false,
+  //     iconName: 'clipboard-question', // Thêm thuộc tính iconName
+  //   },
+  //   {
+  //     subject: 'PTTKHT.20241',
+  //     time: '08:20',
+  //     notificationName: 'Hướng dẫn',
+  //     notificationText: 'Video hướng dẫn đồ án cuối kỳ đã được tải lên.',
+  //     onMarkRead: true,
+  //     iconName: 'readme', // Thêm thuộc tính iconName
+  //   },
+  //   {
+  //     subject: 'MKT.20241',
+  //     time: '16:30',
+  //     notificationName: 'Đánh giá',
+  //     notificationText: 'Đánh giá bài tập nhóm đã được đăng.',
+  //     onMarkRead: false,
+  //     iconName: 'star', // Thêm thuộc tính iconName
+  //   },
+  // ]);
 
   const [showFooter, setShowFooter] = useState(false);
   const [unConflic, setUnConflic] = useState(true);
@@ -161,14 +227,31 @@ const NotificationScreen = () => {
     }
   }, [showFooter, notifications.length]);
 
+  const markNotificationAsRead = async (notificationId: string) => {
+    try {
+      const response = await axios.post(
+        'http://157.66.24.126:8080/it5023e/mark_notification_as_read',
+        {
+          token: 'Mq9YoW',
+          notification_id: notificationId,
+        },
+      );
+
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+    }
+  };
+
   const handleMarkRead = () => {
     const selectedIndexes = checkedStates
       .map((checked, index) => (checked ? index : null)) // Lấy index nếu checked là true
       .filter(index => index !== null); // Loại bỏ các giá trị null
     // console.log('Danh sách các index được chọn:', selectedIndexes);
-
     const updatedNotifications = notifications.map((notification, index) => {
       if (checkedStates[index]) {
+        markNotificationAsRead(String(notification.id));
+
         return {...notification, onMarkRead: true}; // Đánh dấu đã đọc
       }
       return notification; // Không thay đổi nếu không được chọn
@@ -176,7 +259,6 @@ const NotificationScreen = () => {
     setNotifications(updatedNotifications); // Cập nhật trạng thái thông báo
     // const markedReadNotifications = updatedNotifications.filter((_, index) => checkedStates[index]);
     // console.log('Các thông báo đã đánh dấu là đã đọc:', markedReadNotifications);
-
     if (selectedIndexes.length > 0) {
       setShowFooter(false);
     } else {
@@ -219,8 +301,9 @@ const NotificationScreen = () => {
             }}>
             {notifications.map((item, index) => (
               <TaskNotification
+                id={item.id}
                 key={index}
-                subject={item.subject}
+                subject="Nhóm 10"
                 time={item.time}
                 notificationName={item.notificationName}
                 notificationText={item.notificationText}
@@ -301,7 +384,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     paddingHorizontal: 16,
-    marginBottom: 0,
+    marginBottom: 110,
     paddingVertical: 10,
     // paddingVertical: 10,
   },
@@ -383,6 +466,7 @@ const styles = StyleSheet.create({
   },
   test: {
     flex: 1,
+    borderRadius: 10,
   },
 });
 

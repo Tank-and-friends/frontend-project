@@ -2,6 +2,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
 import BottomNavBar from './components/BottomNavBar/BottomNavBar';
+import PreviewFile from './components/PreviewFile';
 import {AssignmentStacks} from './features/assignment/navigation';
 import {AuthStacks} from './features/auth/navigation';
 import ClassRegisterScreen from './features/class-register/ClassRegisterScreen';
@@ -27,6 +28,10 @@ export type RootStackParamList = {
   ClassStacks: undefined;
   ClassNavigator: undefined;
   ClassRegisterStacks: undefined;
+  PreviewFile: {
+    title: string;
+    url: string;
+  };
 };
 
 const Tab = createBottomTabNavigator();
@@ -95,6 +100,11 @@ export const RootStacks = () => {
       <Stack.Screen
         name="ClassRegisterStacks"
         component={ClassRegisterStacks}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="PreviewFile"
+        component={PreviewFile}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

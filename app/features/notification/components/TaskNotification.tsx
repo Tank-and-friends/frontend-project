@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import axios from 'axios';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 // import { IconButton } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome6'; // Assuming you're using FontAwesome icons
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -17,6 +18,7 @@ interface NotificationProps {
   checked?: boolean;
   setChecked: (value: boolean) => void;
   iconName: string;
+  id: number
 }
 
 const TaskNotification: React.FC<NotificationProps> = ({
@@ -31,6 +33,7 @@ const TaskNotification: React.FC<NotificationProps> = ({
   checked, // Nhận trạng thái checked
   setChecked, // Nhận hàm cập nhật trạng thái
   iconName,
+  id,
 }) => {
   const [unRead, setUnRead] = useState(onMarkRead);
   const textColor = unRead ? '#B6B6B6' : '#020202'; // Change text color based on unread state
@@ -44,22 +47,62 @@ const TaskNotification: React.FC<NotificationProps> = ({
     setUnRead(onMarkRead);
   }, [onMarkRead]);
 
+  const markNotificationAsRead = async (notificationId: string) => {
+    try {
+      const response = await axios.post(
+        'http://157.66.24.126:8080/it5023e/mark_notification_as_read',
+        {
+          token: 'Mq9YoW',
+          notification_id: notificationId,
+        },
+      );
+
+      console.log(notificationId);
+
+      console.log(response.data);
+
+      // Kiểm tra phản hồi API
+      if (response.data.meta?.code === '1000') {
+        console.log('Notification marked as read successfully!');
+      } else {
+        console.error(
+          'Failed to mark notification as read:',
+          response.data.meta?.message,
+        );
+      }
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+    }
+  };
+
+  // Hàm cắt chuỗi
+  const formatTime = (timeString: string) => {
+    return timeString.substring(0, 5); // Cắt từ vị trí 0 đến 5
+  };
+
+  // Kết quả sau khi cắt
+  const timeResult = formatTime(time);
+
   return (
     <View style={styles.taskTitleContainer}>
       <TouchableOpacity onLongPress={toggleFooter}>
         <View>
           <View style={styles.title}>
             <Text style={styles.subject}>{subject}</Text>
-            <Text style={[styles.time, {color: textColor}]}>{time}</Text>
+            <Text style={[styles.time, {color: textColor}]}>{timeResult}</Text>
           </View>
           <View style={styles.notification}>
-            <Icon name={iconName} size={30} color="black" />
+            {false && <Icon name={iconName} size={30} color="black" />}
             <Text style={styles.notificationName}>{notificationName}</Text>
           </View>
           <View style={styles.line} />
           <Text style={styles.text}>{notificationText}</Text>
           {!unRead && unConflic && (
-            <TouchableOpacity onPress={() => setUnRead(!unRead)}>
+            <TouchableOpacity
+              onPress={() => {
+                setUnRead(!unRead);
+                markNotificationAsRead(String(id));
+              }}>
               <View style={styles.mark}>
                 <Text style={styles.text2}>Đánh dấu là đã đọc</Text>
                 <Icon3 name="pencil-outline" size={20} color="#42A4EE" />
@@ -167,7 +210,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '700',
     lineHeight: 20, // Chỉnh lineHeight tùy thuộc vào khoảng cách bạn muốn
-    marginLeft: 10,
+    marginLeft: 0,
   },
 
   mark: {

@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import Task from './Task';
+import {Survey} from '../type';
 
 interface TaskData {
   title: string;
@@ -15,40 +16,47 @@ interface AssignmentProps {
   date: string;
   day: string;
   tasks: TaskData[];
+  serveyData: Survey;
+  checked?: boolean;
+  setChecked: (value: boolean) => void;
+  showFooter: boolean;
+  setShowFooter: (value: boolean) => void;
 }
 
-const Assignment: React.FC<AssignmentProps> = ({date, day, tasks}) => {
+const Assignment: React.FC<AssignmentProps> = ({
+  date,
+  day,
+  tasks,
+  serveyData,
+  checked,
+  setChecked,
+  showFooter,
+  setShowFooter,
+}) => {
+  // console.log(serveyData);
+
   return (
     <View style={styles.assignmentContainer}>
-      <View style={styles.abc}>
+      {false && <View style={styles.abc}>
         <Text style={styles.date}>{date}</Text>
         <Text style={styles.day}>{day}</Text>
-      </View>
+      </View>}
       {tasks.map((task, index) => (
         <Task
           key={index}
-          title={task.title}
+          title={serveyData.title}
           status={task.status}
           statusColor={task.statusColor}
           hasBadge={task.hasBadge}
           badgeText={task.badgeText}
           badgeColor={task.badgeColor}
-          date={date}
-          content="hahahahDưới đây là nội dung bài tập bla bla Lorem ipsum dolor sit amet,
-                consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                commodo consequat. Duis aute irure dolor in reprehenderit in
-                voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                qui officia deserunt mollit anim id est laborum. tetur
-                adipiscingF elit, sed do eiusmod tempor incididunt ut labore et
-                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                consequat. Duis aute irure dolor in reprehenderit in voluptate
-                velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-                sint occaecat cupidatat non proident, sunt in culpa qui officia
-                deserunt mollit anim id est laborumww."
+          date={serveyData.deadline}
+          content={serveyData.description}
+          serveyData={serveyData}
+          checked={checked}
+          setChecked={setChecked}
+          showFooter={showFooter}
+          setShowFooter={setShowFooter}
         />
       ))}
     </View>
