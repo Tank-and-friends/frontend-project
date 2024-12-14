@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 
-import FeatherIcon from 'react-native-vector-icons/Feather';
+// import FeatherIcon from 'react-native-vector-icons/Feather';
 import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
 import DocumentPicker, {
   DocumentPickerResponse,
@@ -28,6 +28,51 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
     route.params;
   const [late, setLate] = useState(false);
   const [processedDeadline, setProcessedDeadline] = useState('');
+  const [submissionData, setSubmissionData] = useState<any>(null); // Dữ liệu bài nộp
+  const [isLoading, setIsLoading] = useState(true); // Trạng thái tải dữ liệu
+  const [error, setError] = useState<string | null>(null); // Lỗi khi gọi API
+
+  const formatDateTime = (isoString: string) => {
+    const dateObj = new Date(isoString);
+    const options: Intl.DateTimeFormatOptions = {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    };
+    return dateObj.toLocaleString('vi-VN', options);
+  };
+
+
+  // Gọi API lấy thông tin bài nộp
+  useEffect(() => {
+    const fetchSubmissionData = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.post(
+          'http://157.66.24.126:8080/it5023e/get_submission',
+          {
+            token: 'SkmzMU',
+            assignment_id: serveyData.id,
+          },
+        );
+
+        if (response.data.meta.code === '1000') {
+          setSubmissionData(response.data.data);
+        } else {
+          setError('Không thể tải thông tin bài nộp.');
+        }
+      } catch (err) {
+        setError('Có lỗi xảy ra khi kết nối với máy chủ.');
+        console.log(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSubmissionData();
+  }, [serveyData.id]);
 
   useEffect(() => {
     const processDeadline = () => {
@@ -123,37 +168,84 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
         <ScrollView style={styles.contentContainer}>
           <View style={styles.taskTitleContainer}>
             <View>
+              {/* Tiêu đề */}
               <View style={styles.title}>
                 <Text style={styles.taskTitle}>{title}</Text>
-                {false && (
-                  <View
-                    style={[
-                      styles.badge,
-                      {
-                        backgroundColor: '#FF7F11',
-                      },
-                    ]}>
-                    <Text style={styles.badgeText}>Chưa nộp bài</Text>
-                    <FeatherIcon name="clock" size={24} color="black" />
-                  </View>
-                )}
               </View>
-              {!late && <Text style={styles.deadline}>{formattedDate}</Text>}
-              {late && <Text style={styles.deadline}>{formattedDate}</Text>}
+
+              {/* Deadline */}
+              <Text style={styles.deadline}>{formattedDate}</Text>
               <View style={styles.line} />
+
+              {/* Nội dung bài tập */}
               <Text style={styles.text}>Nội dung</Text>
               <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
                 <Text style={styles.text1}>{content}</Text>
               </ScrollView>
 
+              {/* Tài liệu liên quan */}
               <Text style={styles.text}>Tài liệu liên quan</Text>
               <View>
                 <Text style={styles.url}>{serveyData.file_url}</Text>
               </View>
 
-              <View style={styles.preview}>
-                {/* <DrivePreview driveUrl={serveyData.file_url} type="image" /> */}
-              </View>
+              {/* Hiển thị thông tin bài nộp */}
+              {isLoading ? (
+                <Text style={styles.loadingText}>
+                  Đang tải thông tin bài nộp...
+                </Text>
+              ) : submissionData ? (
+                <>
+                  <View style={styles.line} />
+                  <View style={styles.submissionInfoContainer}>
+                    <Text style={styles.submissionHeader}>
+                      Thông tin bài nộp
+                    </Text>
+
+                    {/* Điểm */}
+                    <View style={styles.row}>
+                      <Text style={styles.label}>Điểm:</Text>
+                      <Text style={styles.value}>
+                        {submissionData.grade ?? 'Chưa chấm điểm'}
+                      </Text>
+                    </View>
+
+                    <View style={styles.row}>
+                      <Text style={styles.label}>Thời gian nộp bài:</Text>
+                      <Text style={styles.value}>
+                        {submissionData.submission_time
+                          ? formatDateTime(submissionData.submission_time)
+                          : 'Chưa nộp'}
+                      </Text>
+                    </View>
+
+                    {/* File đã nộp */}
+                    <View style={styles.row}>
+                      <Text style={styles.label}>File đã nộp:</Text>
+                      {submissionData.file_url ? (
+                        <Text style={styles.url}>
+                          {submissionData.file_url}
+                        </Text>
+                      ) : (
+                        <Text style={styles.value}>Chưa có file</Text>
+                      )}
+                    </View>
+
+                    {/* Nhận xét từ giáo viên */}
+                    <View style={styles.row}>
+                      <Text style={styles.label}>Nhận xét từ giáo viên:</Text>
+                    </View>
+                    <Text style={styles.commentText}>
+                      {submissionData.text_response || 'Chưa có nhận xét'}
+                    </Text>
+                  </View>
+                </>
+              ) : (
+                <View>
+                  <View style={styles.line} />
+                  <Text style={styles.text}>Không có thông tin bài nộp.</Text>
+                </View>
+              )}
             </View>
           </View>
 
@@ -222,6 +314,12 @@ const styles = StyleSheet.create({
   },
   backButton: {
     /* Back button styling */
+  },
+  loadingText:{
+
+  },
+  errorText: {
+
   },
   headerTitle: {
     /* Header title styling */
@@ -389,13 +487,49 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  url: {
-    color: 'black',
-  },
-
   preview: {
     borderWidth: 2,
     borderColor: 'green',
+  },
+  submissionInfoContainer: {
+    padding: 6,
+    marginTop: 6,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  submissionHeader: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 16,
+    color: '#333',
+  },
+  row: {
+    flexDirection: 'row',
+    marginBottom: 12,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#555',
+    width: '40%', // Điều chỉnh để label căn trái
+  },
+  value: {
+    fontSize: 16,
+    color: '#333',
+    flex: 1, // Căn đều phần còn lại
+  },
+  url: {
+    fontSize: 14,
+    color: '#1E90FF',
+    textDecorationLine: 'underline',
+    flex: 1,
+  },
+  commentText: {
+    fontSize: 14,
+    color: '#555',
   },
 });
 

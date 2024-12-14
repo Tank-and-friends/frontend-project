@@ -17,13 +17,13 @@ import axios from 'axios';
 import {Servey} from './type';
 import {Text} from 'react-native-paper';
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useNavigation } from '@react-navigation/core';
 
 const AssignmentScreen = () => {
   const [role, setRole] = useState('LECTURER');
   const [dataServey, setDataSurvey] = useState<Servey[]>([]);
-
   const [labelStatus, setLabelStatus] = useState('All');
-
+  const navigation = useNavigation();
   useEffect(() => {
     const getAllServeys = async () => {
       try {
@@ -263,6 +263,10 @@ const AssignmentScreen = () => {
   const handleEdit = () => {
     setShowFooter(false);
   };
+  const handleCreateAssignment = () => {
+      navigation.navigate('CreateAssignmentScreen');
+
+  };
 
   const deleteSurvey = async (survey_id: number) => {
     if (role !== 'LECTURER') {
@@ -393,6 +397,14 @@ const AssignmentScreen = () => {
               </Pressable>
             ))}
           </ScrollView>
+          {/* Button Create Assignment */}
+          {role === 'LECTURER' && (
+            <TouchableOpacity
+              style={styles.createButton}
+              onPress={() => handleCreateAssignment()}>
+              <Text style={styles.createButtonText}>Create Assignment</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
       {/* Footer */}
@@ -479,6 +491,19 @@ const styles = StyleSheet.create({
   footerText: {
     color: 'white',
     opacity: 0.6,
+  },
+  createButton: {
+    backgroundColor: '#C02135',
+    padding: 15,
+    marginVertical: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    margin: 10,
+  },
+  createButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

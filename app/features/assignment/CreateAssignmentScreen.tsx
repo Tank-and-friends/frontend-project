@@ -188,6 +188,24 @@ const CreateAssignmentScreen = () => {
           </View>
         </View>
       </ScrollView>
+      {/* Footer */}
+      <View style={styles.footer}>
+        <TouchableOpacity style={styles.footerButton}>
+          <Text>Thông báo</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.footerButton}>
+          <Text>Tin nhắn</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.footerButton}>
+          <Text>Lớp học</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.footerButton}>
+          <Text>Đăng ký lớp</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.footerButton}>
+          <Text>Xem thêm</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

@@ -1,4 +1,4 @@
-import { createStackNavigator } from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
 import AssignmentScreen from './AssignmentScreen';
 import CreateAssignmentScreen from './CreateAssignmentScreen';
@@ -19,15 +19,15 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 export const AssignmentStacks = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="CreateAssignmentScreen"
-        component={CreateAssignmentScreen}
-      />
+    <Stack.Navigator initialRouteName="AssignmentScreen">
       <Stack.Screen
         name="AssignmentScreen"
         component={AssignmentScreen}
         options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="CreateAssignmentScreen"
+        component={CreateAssignmentScreen}
       />
       <Stack.Screen
         name="TaskDetailScreen"
