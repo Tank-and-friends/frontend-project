@@ -87,40 +87,4 @@ export const deleteAssignment = async (
   }
 };
 
-export const submitSurvey = async (
-  file: any,
-  surveyId: string,
-  token = 'Mq9YoW',
-  textResponse = 'Tạm thời chưa có'
-): Promise<any> => {
-  if (!file || file.length === 0) {
-    console.error('No file selected');
-    return;
-  }
 
-  const formData = new FormData();
-  formData.append('file', {
-    uri: file[0].uri,
-    type: file[0].type,
-    name: file[0].name,
-  });
-  formData.append('token', token);
-  formData.append('assignmentId', surveyId);
-  formData.append('textResponse', textResponse);
-
-  try {
-    const response = await axiosInstance.post(
-      '/it5023e/submit_survey',
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
-    );
-    return response.data; // Trả về dữ liệu phản hồi từ server
-  } catch (error) {
-    console.error('Error submitting survey:', error);
-    throw error; // Ném lỗi ra ngoài để xử lý ở nơi gọi
-  }
-};

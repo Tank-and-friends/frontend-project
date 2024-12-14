@@ -8,13 +8,15 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+
+import axios from 'axios';
 import DocumentPicker, {
   DocumentPickerResponse,
 } from 'react-native-document-picker';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {FileItem} from '../../components/FileItem';
 import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
-import {submitSurvey} from './api';
+import {TextInput} from 'react-native-paper';
 // import DrivePreview from './components/DrivePreview';
 // interface TaskDetailData {
 //   title: string;
@@ -62,65 +64,53 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const [textResponse, setTextResponse] = useState('');
+
   const handleSubmitSurvey = async () => {
-    // if (!file || file.length === 0) {
-    //   console.error('No file selected');
-    //   return;
-    // }
-
-    // if (isSubmitting) {
-    //   return;
-    // } // Ngăn chặn nếu đang xử lý
-    // setIsSubmitting(true);
-
-    // const formData = new FormData();
-    // formData.append('file', {
-    //   uri: file[0].uri, // URI của file
-    //   type: file[0].type, // Loại file (MIME type)
-    //   name: file[0].name, // Tên file
-    // });
-    // formData.append('token', 'Mq9YoW');
-    // formData.append('assignmentId', serveyData.id);
-    // formData.append('textResponse', 'Tạm thời chưa có');
-    // console.log(formData);
-
-    // console.log('Submit button clicked');
-
-    // try {
-    //   const response = await axios.post(
-    //     'http://157.66.24.126:8080/it5023e/submit_survey',
-    //     formData,
-    //     {
-    //       headers: {
-    //         'Content-Type': 'multipart/form-data',
-    //       },
-    //     },
-    //   );
-    //   console.log(response.data);
-    // } catch (error) {
-    //   console.log(error);
-
-    //   // Sửa lại ngoại lệ (sai role, giáo viên không được nộp bài)
-    //   // (nộp bài nhiều lần)
-    //   // sửa textResponse
-    // } finally {
-    //   setIsSubmitting(false); // Hoàn tất
-    // }
-
-    if (isSubmitting) {
-      return; // Ngăn chặn nếu đang xử lý
+    if (!file || file.length === 0) {
+      console.error('No file selected');
+      return;
     }
 
+    if (isSubmitting) {
+      return;
+    } // Ngăn chặn nếu đang xử lý
     setIsSubmitting(true);
 
+    const formData = new FormData();
+    formData.append('file', {
+      uri: file[0].uri, // URI của file
+      type: file[0].type, // Loại file (MIME type)
+      name: file[0].name, // Tên file
+    });
+    console.log('responeText', textResponse);
+
+    formData.append('token', 'Mq9YoW');
+    formData.append('assignmentId', serveyData.id);
+    formData.append('textResponse', textResponse);
+    console.log(formData);
+
+    console.log('Submit button clicked');
+
     try {
-      const response = await submitSurvey(file, serveyData.id);
-      console.log('id:', serveyData.id);
-      console.log('Response:', response); // Xử lý phản hồi từ server (thành công)
+      const response = await axios.post(
+        'http://157.66.24.126:8080/it5023e/submit_survey',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
+      console.log(response.data);
     } catch (error) {
-      console.error('Error during survey submission:', error); // Xử lý lỗi (nếu có)
+      console.log(error);
+
+      // Sửa lại ngoại lệ (sai role, giáo viên không được nộp bài)
+      // (nộp bài nhiều lần)
+      // sửa textResponse
     } finally {
-      setIsSubmitting(false); // Hoàn tất, đảm bảo trạng thái được đặt lại
+      setIsSubmitting(false); // Hoàn tất
     }
   };
 
@@ -166,13 +156,12 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
               </ScrollView>
 
               <Text style={styles.text}>Tài liệu liên quan</Text>
-              <View>
-                <Text style={styles.url}>{serveyData.file_url}</Text>
-              </View>
               {serveyData.file_url && (
-                <FileItem
-                  file={{title: 'Bài tập', file_url: serveyData.file_url}}
-                />
+                <View style={{marginRight: 15, marginTop: 10}}>
+                  <FileItem
+                    file={{title: 'Bài tập', file_url: serveyData.file_url}}
+                  />
+                </View>
               )}
             </View>
           </View>
@@ -189,15 +178,36 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
               <View style={styles.title}>
                 {file && (
                   <View>
-                    {file.map((f, index) => (
-                      <View key={index}>
-                        <Text>File Name: {f.name}</Text>
-                        <Text>File Type: {f.type}</Text>
-                        <Text>File URI: {f.uri}</Text>
-                      </View>
-                    ))}
+                    {/* Hiển thị text nếu có file */}
+                    <Text
+                      style={{
+                        fontWeight: 400,
+                        marginBottom: 10,
+                        color: 'green',
+                      }}>
+                      Đã nhận được file
+                    </Text>
                   </View>
                 )}
+              </View>
+
+              <View style={{marginTop: 0}}>
+                <Text
+                  style={{marginBottom: 5, fontWeight: 400, color: 'black'}}>
+                  Nhập phản hồi:
+                </Text>
+                <TextInput
+                  style={{
+                    borderWidth: 1,
+                    borderColor: '#ccc',
+                    borderRadius: 6,
+                    padding: 0,
+                    height: 40,
+                    marginRight: 15,
+                  }}
+                  placeholder="Nhập nội dung phản hồi..."
+                  onChangeText={text => setTextResponse(text)} // Cập nhật giá trị
+                />
               </View>
               <View style={styles.line} />
               {/* Cuộn các tài liệu đã nộp (Có thể đổi thành tăng dần kích thước) */}
