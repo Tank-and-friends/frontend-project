@@ -8,64 +8,81 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Checkbox, TextInput} from 'react-native-paper';
-
+import {TextInput} from 'react-native-paper';
+import DateTimePicker from '@react-native-community/datetimepicker'; // Thêm import
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DocumentPicker, {
   DocumentPickerResponse,
 } from 'react-native-document-picker';
 import axiosInstance from '../../apis/apiConfig';
 
-// interface TaskDetailData {
-//   title: string;
-//   date: string;
-//   deadline: string;
-//   content: string;
-// }
-
 const CreateAssignmentScreen = () => {
-  const [isFocused, setIsFocused] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
   const [uploadedFile, setUploadedFile] =
-    useState<DocumentPickerResponse | null>(null); // Cập nhật kiểu dữ liệu
+    useState<DocumentPickerResponse | null>(null);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [deadline, setDeadline] = useState(new Date()); // Hợp nhất ngày giờ
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+
+  const handleDateChange = (event: any, selectedDate?: Date): void => {
+    setShowDatePicker(false);
+    if (selectedDate) {
+      const updatedDeadline = new Date(deadline);
+      updatedDeadline.setFullYear(selectedDate.getFullYear());
+      updatedDeadline.setMonth(selectedDate.getMonth());
+      updatedDeadline.setDate(selectedDate.getDate());
+      setDeadline(updatedDeadline);
+    }
+  };
+
+  const handleTimeChange = (event: any, selectedTime?: Date): void => {
+    setShowTimePicker(false);
+    if (selectedTime) {
+      const updatedDeadline = new Date(deadline);
+      updatedDeadline.setHours(selectedTime.getHours());
+      updatedDeadline.setMinutes(selectedTime.getMinutes());
+      updatedDeadline.setSeconds('00');
+      setDeadline(updatedDeadline);
+    }
+  };
 
   const handleUploadMaterial = async () => {
+    if (!title || !description) {
+      Alert.alert('Thông báo', 'Vui lòng điền đầy đủ thông tin.');
+      return;
+    }
+
     if (!uploadedFile) {
       Alert.alert('Thông báo', 'Vui lòng chọn tài liệu.');
       return;
     }
 
-    const title = 'example-title'; // Thay bằng giá trị thực tế
-    const classId = '000254'; // Thay bằng giá trị thực tế
-    const description = 'example-description'; // Thay bằng giá trị thực tế
-    const deadline = '2024-12-19T14:30:00'; // Thay bằng giá trị thực tế
-
     try {
       const formData = new FormData();
-
-      // Thêm file
       formData.append('file', {
         uri: uploadedFile.uri,
         name: uploadedFile.name,
         type: uploadedFile.type,
       });
-
-      // Thêm các trường khác
-      formData.append('classId', classId);
       formData.append('title', title);
       formData.append('description', description);
-      formData.append('deadline', deadline); // Thêm thời hạn nộp bài
+      const formattedDeadline = deadline.toISOString().split('.')[0];
+      formData.append('deadline', formattedDeadline);
+      formData.append('classId', '000254');
 
       const response = await axiosInstance.post(
         '/it5023e/create_survey',
         formData,
       );
 
-      Alert.alert('Thành công', 'Tài liệu đã được tải lên.');
+      Alert.alert('Thành công', 'Bài tập đã được đăng.');
       console.log('Upload response:', response.data);
 
-      // Xóa trạng thái sau khi tải lên
       setUploadedFile(null);
+      setTitle('');
+      setDescription('');
+      setDeadline(new Date());
     } catch (error) {
       console.error('Upload error:', error);
       Alert.alert('Lỗi', 'Không thể tải lên tài liệu.');
@@ -77,7 +94,7 @@ const CreateAssignmentScreen = () => {
       const res = await DocumentPicker.pickSingle({
         type: [DocumentPicker.types.allFiles],
       });
-      setUploadedFile(res); // Lưu thông tin tệp được chọn
+      setUploadedFile(res);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         console.log('User cancelled the upload');
@@ -89,32 +106,28 @@ const CreateAssignmentScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* Content */}
       <ScrollView style={styles.contentContainer}>
         <View style={styles.taskTitleContainer}>
           <View>
-            <View style={styles.title}>
-              <TextInput
-                placeholder={isFocused ? '' : 'Tên bài tập'}
-                style={styles.textInput}
-                underlineColor="transparent"
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-                placeholderTextColor="rgba(7, 16, 19, 0.5)"
-              />
-            </View>
+            <Text style={styles.text}>Tên bài tập</Text>
+            <TextInput
+              style={styles.inputAssignment}
+              underlineColor="transparent"
+              placeholderTextColor="rgba(7, 16, 19, 0.5)"
+              value={title}
+              onChangeText={setTitle}
+            />
 
-            <View style={styles.line} />
             <Text style={styles.text}>Nội dung</Text>
-
             <TextInput
               style={styles.input}
               underlineColor="transparent"
               multiline
+              value={description}
+              onChangeText={setDescription}
             />
 
             <Text style={styles.text}>Tài liệu liên quan</Text>
-
             <View style={styles.button3}>
               <TouchableOpacity style={styles.button4} onPress={uploadDocument}>
                 <Icon name="upload" size={20} />
@@ -123,7 +136,9 @@ const CreateAssignmentScreen = () => {
             </View>
             {uploadedFile && (
               <View style={styles.previewContainer}>
-                <Text>Tên tài liệu: {uploadedFile.name}</Text>
+                <Text style={styles.preText}>
+                  Tên tài liệu: {uploadedFile.name}
+                </Text>
                 {uploadedFile.type?.includes('image') && (
                   <Image
                     source={{uri: uploadedFile.uri}}
@@ -131,65 +146,52 @@ const CreateAssignmentScreen = () => {
                   />
                 )}
                 {!uploadedFile.type?.includes('image') && (
-                  <Text style={styles.previewText}>
-                    Tệp không thể xem trước.
-                  </Text>
+                  <Text style={styles.previewText}>{}</Text>
                 )}
               </View>
             )}
 
             <Text style={styles.text}>Thời hạn nộp bài</Text>
-
-            <View style={styles.timeOfDeadline}>
-              <View style={styles.day}>
-                <Text style={styles.text1}>Ngày</Text>
-                <TextInput style={styles.input} underlineColor="transparent" />
-              </View>
-              <View style={styles.day}>
-                <Text style={styles.text1}>Giờ</Text>
-                <TextInput style={styles.input} underlineColor="transparent" />
-              </View>
-            </View>
-
-            <View style={styles.checkBox}>
-              <Text style={styles.text}>Cho phép nộp bài muộn</Text>
-              <Checkbox
-                status={isChecked ? 'checked' : 'unchecked'}
-                onPress={() => setIsChecked(!isChecked)}
+            <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+              <Text style={styles.input1}>
+                Ngày: {deadline.toLocaleDateString('vi-VN')}
+              </Text>
+            </TouchableOpacity>
+            {showDatePicker && (
+              <DateTimePicker
+                value={deadline}
+                mode="date"
+                display="default"
+                onChange={handleDateChange}
               />
-            </View>
+            )}
 
-            <View style={styles.button1}>
-              <TouchableOpacity
-                style={styles.button2}
-                onPress={handleUploadMaterial}>
-                <Text style={styles.buttonText}>Đăng bài tập</Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity onPress={() => setShowTimePicker(true)}>
+              <Text style={styles.input1}>
+                Giờ: {deadline.toLocaleTimeString('vi-VN')}
+              </Text>
+            </TouchableOpacity>
+            {showTimePicker && (
+              <DateTimePicker
+                value={deadline}
+                mode="time"
+                display="default"
+                onChange={handleTimeChange}
+              />
+            )}
+
+            <TouchableOpacity
+              style={styles.button2}
+              onPress={handleUploadMaterial}>
+              <Text style={styles.buttonText}>Đăng bài tập</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
-      {/* Footer */}
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text>Thông báo</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text>Tin nhắn</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text>Lớp học</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text>Đăng ký lớp</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text>Xem thêm</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -335,7 +337,7 @@ const styles = StyleSheet.create({
 
   text1: {
     color: '#071013',
-    fontFamily: 'Inter', // Make sure the font is installed or linked properly
+    fontFamily: 'Inter',
     fontSize: 14,
     fontStyle: 'normal',
     fontWeight: '600', // React Native expects a string for fontWeight (not a number)
@@ -356,20 +358,23 @@ const styles = StyleSheet.create({
   },
 
   button1: {
-    paddingVertical: 2,
+    paddingVertical: 20,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 10,
   },
   button2: {
+    marginTop: 100,
+    marginBottom: 40,
     backgroundColor: '#FF7F11',
     paddingHorizontal: 20,
     borderRadius: 10, // bo tròn các góc cho giống nút trong ảnh\
-    width: 240,
-    height: 30,
+    height: 40,
     justifyContent: 'center',
+    alignSelf: 'center',
     alignItems: 'center',
+    width: 300,
   },
   button3: {
     paddingVertical: 2,
@@ -407,8 +412,41 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginTop: 8,
     paddingHorizontal: 4,
-    height: 35,
-    marginBottom: 20,
+    height: 90,
+    fontSize: 18,
+    padding: 5,
+    marginBottom: 30,
+  },
+  inputAssignment: {
+    margin: 0,
+    flexShrink: 1,
+    marginRight: 15,
+    backgroundColor: '#EFF2EF',
+    borderWidth: 1,
+    borderColor: '#D9D9D9',
+    borderRadius: 4,
+    marginTop: 8,
+    paddingHorizontal: 4,
+    height: 40,
+    fontSize: 18,
+    padding: 5,
+    marginBottom: 30,
+  },
+  input1: {
+    margin: 0,
+    flexShrink: 1,
+    marginRight: 15,
+    backgroundColor: '#EFF2EF',
+    borderWidth: 1,
+    borderColor: '#D9D9D9',
+    borderRadius: 4,
+    marginTop: 8,
+    paddingHorizontal: 4,
+    height: 40,
+    fontSize: 18,
+    padding: 6,
+    marginBottom: 10,
+    paddingLeft: 15,
   },
   textInput: {
     borderRadius: 10,
@@ -434,14 +472,17 @@ const styles = StyleSheet.create({
     width: '50%',
   },
   previewContainer: {
-    marginVertical: 16,
-    padding: 8,
-    backgroundColor: '#f9f9f9',
+    flexDirection: 'row',
     borderRadius: 8,
+    alignContent: 'center',
+    alignSelf: 'center',
+    width: 400,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   previewImage: {
-    width: '100%',
-    height: 200,
+    width: '20%',
+    height: 60,
     resizeMode: 'contain',
     marginTop: 8,
   },
@@ -449,206 +490,11 @@ const styles = StyleSheet.create({
     marginTop: 8,
     color: '#555',
   },
+  preText: {
+    marginTop: -10,
+    color: '#555',
+    alignSelf: 'center',
+  },
 });
 
 export default CreateAssignmentScreen;
-// import React, {useState} from 'react';
-// import {
-//   ScrollView,
-//   StyleSheet,
-//   Text,
-//   TouchableOpacity,
-//   View,
-//   Image,
-//   Alert,
-// } from 'react-native';
-// import {Checkbox, TextInput} from 'react-native-paper';
-// import DocumentPicker, {
-//   DocumentPickerResponse,
-// } from 'react-native-document-picker';
-// import axios from 'axios';
-// import Icon from 'react-native-vector-icons/FontAwesome';
-
-// const CreateAssignmentScreen = () => {
-//   const [isFocused, setIsFocused] = useState(false);
-//   const [isChecked, setIsChecked] = useState(false);
-//   const [uploadedFile, setUploadedFile] =
-//     useState<DocumentPickerResponse | null>(null);
-//   const [classId, setClassId] = useState('');
-//   const [title, setTitle] = useState('');
-//   const [description, setDescription] = useState('');
-//   const [materialType, setMaterialType] = useState('');
-
-//   const uploadDocument = async () => {
-//     try {
-//       const res = await DocumentPicker.pickSingle({
-//         type: [DocumentPicker.types.allFiles],
-//       });
-//       setUploadedFile(res); // Lưu tệp được chọn
-//     } catch (err) {
-//       if (DocumentPicker.isCancel(err)) {
-//         console.log('User cancelled the upload');
-//       } else {
-//         console.error('Unknown error: ', err);
-//       }
-//     }
-//   };
-
-//   const handleUploadMaterial = async () => {
-//     if (!uploadedFile || !classId || !title || !materialType) {
-//       Alert.alert('Thông báo', 'Vui lòng nhập đầy đủ thông tin và chọn tệp.');
-//       return;
-//     }
-
-//     const formData = new FormData();
-//     formData.append('file', {
-//       uri: uploadedFile.uri,
-//       name: uploadedFile.name,
-//       type: uploadedFile.type,
-//     });
-//     formData.append('classId', classId);
-//     formData.append('title', title);
-//     formData.append('description', description);
-//     formData.append('materialType', materialType);
-
-//     try {
-//       const response = await axios.post('/it5023e/upload_material', formData, {
-//         headers: {
-//           'Content-Type': 'multipart/form-data',
-//         },
-//       });
-//       Alert.alert('Thành công', 'Tải lên tài liệu thành công.');
-//       console.log('Response:', response.data);
-//       // Reset trạng thái sau khi upload
-//       setUploadedFile(null);
-//       setClassId('');
-//       setTitle('');
-//       setDescription('');
-//       setMaterialType('');
-//     } catch (error) {
-//       console.error('Error uploading material:', error);
-//       Alert.alert('Lỗi', 'Tải lên tài liệu thất bại.');
-//     }
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <ScrollView style={styles.contentContainer}>
-//         <View style={styles.taskTitleContainer}>
-//           <TextInput
-//             placeholder="Mã lớp"
-//             value={classId}
-//             onChangeText={setClassId}
-//             style={styles.input}
-//           />
-//           <TextInput
-//             placeholder="Tên tài liệu"
-//             value={title}
-//             onChangeText={setTitle}
-//             style={styles.input}
-//           />
-//           <TextInput
-//             placeholder="Mô tả tài liệu"
-//             value={description}
-//             onChangeText={setDescription}
-//             style={styles.input}
-//             multiline
-//           />
-//           <TextInput
-//             placeholder="Loại tài liệu (ví dụ: PDF, Image, Video)"
-//             value={materialType}
-//             onChangeText={setMaterialType}
-//             style={styles.input}
-//           />
-
-//           <TouchableOpacity style={styles.button4} onPress={uploadDocument}>
-//             <Icon name="upload" size={20} />
-//             <Text style={styles.buttonText}>Tải lên tài liệu</Text>
-//           </TouchableOpacity>
-
-//           {uploadedFile && (
-//             <View style={styles.previewContainer}>
-//               <Text>
-//                 Tên tài liệu: {uploadedFile.name || 'Không có tên tài liệu'}
-//               </Text>
-//               {uploadedFile.type?.includes('image') ? (
-//                 <Image
-//                   source={{uri: uploadedFile.uri}}
-//                   style={styles.previewImage}
-//                   resizeMode="contain"
-//                 />
-//               ) : (
-//                 <Text style={styles.previewText}>
-//                   Không thể xem trước (Loại: {uploadedFile.type})
-//                 </Text>
-//               )}
-//             </View>
-//           )}
-
-//           <TouchableOpacity
-//             style={styles.button2}
-//             onPress={handleUploadMaterial}>
-//             <Text style={styles.buttonText}>Đăng tài liệu</Text>
-//           </TouchableOpacity>
-//         </View>
-//       </ScrollView>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//   },
-//   contentContainer: {
-//     padding: 16,
-//   },
-//   taskTitleContainer: {
-//     marginBottom: 20,
-//   },
-//   input: {
-//     borderBottomWidth: 1,
-//     borderBottomColor: '#ccc',
-//     marginBottom: 16,
-//     paddingHorizontal: 8,
-//     paddingVertical: 4,
-//   },
-//   button4: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     marginBottom: 16,
-//   },
-//   buttonText: {
-//     marginLeft: 8,
-//     fontSize: 16,
-//     color: '#007BFF',
-//   },
-//   previewContainer: {
-//     marginVertical: 16,
-//     alignItems: 'center',
-//   },
-//   previewImage: {
-//     width: 150,
-//     height: 150,
-//     marginTop: 8,
-//   },
-//   previewText: {
-//     fontSize: 14,
-//     color: '#666',
-//     textAlign: 'center',
-//     marginTop: 8,
-//   },
-//   button2: {
-//     backgroundColor: '#007BFF',
-//     padding: 12,
-//     borderRadius: 8,
-//     alignItems: 'center',
-//   },
-//   buttonText: {
-//     color: '#fff',
-//     fontSize: 16,
-//   },
-// });
-
-// export default CreateAssignmentScreen;
