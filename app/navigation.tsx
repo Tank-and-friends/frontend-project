@@ -5,6 +5,7 @@ import BottomNavBar from './components/BottomNavBar/BottomNavBar';
 import {AssignmentStacks} from './features/assignment/navigation';
 import {AuthStacks} from './features/auth/navigation';
 import ClassRegisterScreen from './features/class-register/ClassRegisterScreen';
+import {ClassRegisterStacks} from './features/class-register/navigation';
 import ClassListScreen from './features/class/ClassListScreen';
 import {ClassFeaturesStacks, ClassStacks} from './features/class/navigation';
 import {MaterialStacks} from './features/material/navigation';
@@ -12,7 +13,6 @@ import MessageScreen from './features/message/MessageScreen';
 import {MessageFeaturesStacks} from './features/message/navigation';
 import NotificationScreen from './features/notification/NotificationScreen';
 import {UserInfoStacks} from './features/user-info/navigation';
-import {ClassRegisterStacks} from './features/class-register/navigation';
 
 export type RootStackParamList = {
   Home: undefined;
