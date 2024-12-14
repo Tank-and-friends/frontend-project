@@ -5,7 +5,7 @@ import {GestureResponderEvent, StyleSheet, View} from 'react-native';
 import {Pressable} from 'react-native-gesture-handler';
 import {IconButton, Text} from 'react-native-paper';
 import {MaterialInfo} from '../../../models/Material';
-import {fileSymbol} from '../actions';
+import {fileSymbol} from '../../../utils/file';
 
 type Props = PropsWithChildren<{
   item: MaterialInfo;

@@ -1,10 +1,10 @@
 import {MaterialInfo, MaterialUploadReq} from '../models/Material';
-import {exportFileType} from '../features/material/actions';
+import {exportFileType} from '../utils/file';
 import {Alert} from 'react-native';
 import axiosInstance from './apiConfig';
 
 const DOMAIN = '/it5023e';
-const token = 'VQQmC0';
+const token = '5MKaPE';
 export const getMaterialList = async (
   classId: string,
 ): Promise<MaterialInfo[] | []> => {

@@ -4,7 +4,7 @@ import {
   RouteProp,
   useNavigation,
 } from '@react-navigation/native';
-import React, {PropsWithChildren, useEffect, useState} from 'react';
+import React, {PropsWithChildren, useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
   GestureResponderEvent,
@@ -70,11 +70,11 @@ const ListMaterial = ({route}: Props) => {
     setIsEdit(false);
     setSelectedItem(undefined);
   };
-  const fetchMaterialList = (classId: string) => {
+  const fetchMaterialList = useCallback((_classId: string) => {
     getMaterialList(classId).then(res => {
       setListMaterial(res);
     });
-  };
+  }, [classId]);
   const handleDelete = (materialId: string) => {
     deleteMaterial(materialId).then(res => {
       if (res) {
@@ -85,7 +85,7 @@ const ListMaterial = ({route}: Props) => {
   };
   useEffect(() => {
     fetchMaterialList(classId);
-  }, [classId]);
+  }, [classId, fetchMaterialList]);
   return (
     <PaperProvider>
       <View style={{flex: 1}}>

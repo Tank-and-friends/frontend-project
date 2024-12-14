@@ -1,15 +1,15 @@
 /* eslint-disable react-native/no-inline-styles */
+import {RouteProp, useNavigation} from '@react-navigation/native';
 import React, {PropsWithChildren, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {Button, Modal, PaperProvider, Portal} from 'react-native-paper';
-import TransparentBackground from '../../components/TransparentBackground';
-import TopNavBar from './components/TopNavBar';
 import {MaterialInfo} from '../../models/Material';
-import EditMaterialPopup from './components/EditMaterialPopup';
-import {RouteProp, useNavigation} from '@react-navigation/core';
-import WebView from 'react-native-webview';
 import {deleteMaterial} from '../../apis/MaterialApi';
-import {getPreviewDocumentUrl} from './actions';
+import {Button, Modal, PaperProvider, Portal} from 'react-native-paper';
+import {StyleSheet, View} from 'react-native';
+import TopNavBar from './components/TopNavBar';
+import WebView from 'react-native-webview';
+import {getPreviewDocumentUrl} from '../../utils/file';
+import TransparentBackground from '../../components/TransparentBackground';
+import EditMaterialPopup from './components/EditMaterialPopup';
 
 type Props = PropsWithChildren<{route: RouteProp<RouteProps>}>;
 
@@ -73,7 +73,6 @@ const DetailMaterial = ({route}: Props) => {
           ]}
           startInLoadingState={true}
           scalesPageToFit={true}
-          javaScriptEnabled={true}
           domStorageEnabled={true}
         />
         <Portal>

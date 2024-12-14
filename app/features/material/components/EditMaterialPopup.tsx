@@ -5,7 +5,7 @@ import {Button, Icon, Modal} from 'react-native-paper';
 import {TextField} from '../../../components/TextField/TextField';
 import {MaterialInfo, MaterialUploadReq} from '../../../models/Material';
 import {Pressable} from 'react-native-gesture-handler';
-import {fileSymbol, pickFile} from '../actions';
+import {fileSymbol, pickFile} from '../../../utils/file';
 import {editMaterial, uploadMaterial} from '../../../apis/MaterialApi';
 type Props = PropsWithChildren<{
   isVisible: boolean;
