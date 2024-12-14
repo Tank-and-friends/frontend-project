@@ -1,10 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
-import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 // import { IconButton } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome6'; // Assuming you're using FontAwesome icons
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
+import {markNotificationAsRead} from '../api';
 
 interface NotificationProps {
   subject: string;
@@ -18,7 +18,7 @@ interface NotificationProps {
   checked?: boolean;
   setChecked: (value: boolean) => void;
   iconName: string;
-  id: number
+  id: number;
 }
 
 const TaskNotification: React.FC<NotificationProps> = ({
@@ -47,34 +47,6 @@ const TaskNotification: React.FC<NotificationProps> = ({
     setUnRead(onMarkRead);
   }, [onMarkRead]);
 
-  const markNotificationAsRead = async (notificationId: string) => {
-    try {
-      const response = await axios.post(
-        'http://157.66.24.126:8080/it5023e/mark_notification_as_read',
-        {
-          token: 'Mq9YoW',
-          notification_id: notificationId,
-        },
-      );
-
-      console.log(notificationId);
-
-      console.log(response.data);
-
-      // Kiểm tra phản hồi API
-      if (response.data.meta?.code === '1000') {
-        console.log('Notification marked as read successfully!');
-      } else {
-        console.error(
-          'Failed to mark notification as read:',
-          response.data.meta?.message,
-        );
-      }
-    } catch (error) {
-      console.error('Error marking notification as read:', error);
-    }
-  };
-
   // Hàm cắt chuỗi
   const formatTime = (timeString: string) => {
     return timeString.substring(0, 5); // Cắt từ vị trí 0 đến 5
@@ -83,9 +55,15 @@ const TaskNotification: React.FC<NotificationProps> = ({
   // Kết quả sau khi cắt
   const timeResult = formatTime(time);
 
+  const handlePress = () => {
+    if (showFooter) {
+      setChecked(!checked); // Đổi giá trị của checked khi showFooter là true
+    }
+  };
+
   return (
     <View style={styles.taskTitleContainer}>
-      <TouchableOpacity onLongPress={toggleFooter}>
+      <TouchableOpacity onPress={handlePress} onLongPress={toggleFooter}>
         <View>
           <View style={styles.title}>
             <Text style={styles.subject}>{subject}</Text>
@@ -102,7 +80,8 @@ const TaskNotification: React.FC<NotificationProps> = ({
               onPress={() => {
                 setUnRead(!unRead);
                 markNotificationAsRead(String(id));
-              }}>
+              }}
+              onLongPress={() => setShowFooter(true)}>
               <View style={styles.mark}>
                 <Text style={styles.text2}>Đánh dấu là đã đọc</Text>
                 <Icon3 name="pencil-outline" size={20} color="#42A4EE" />

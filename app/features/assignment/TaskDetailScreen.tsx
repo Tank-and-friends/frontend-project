@@ -8,13 +8,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-
-import FeatherIcon from 'react-native-vector-icons/Feather';
-import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
 import DocumentPicker, {
   DocumentPickerResponse,
 } from 'react-native-document-picker';
-import axios from 'axios';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import {FileItem} from '../../components/FileItem';
+import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
+import {submitSurvey} from './api';
 // import DrivePreview from './components/DrivePreview';
 // interface TaskDetailData {
 //   title: string;
@@ -63,46 +63,64 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmitSurvey = async () => {
-    if (!file || file.length === 0) {
-      console.error('No file selected');
-      return;
-    }
+    // if (!file || file.length === 0) {
+    //   console.error('No file selected');
+    //   return;
+    // }
+
+    // if (isSubmitting) {
+    //   return;
+    // } // Ngăn chặn nếu đang xử lý
+    // setIsSubmitting(true);
+
+    // const formData = new FormData();
+    // formData.append('file', {
+    //   uri: file[0].uri, // URI của file
+    //   type: file[0].type, // Loại file (MIME type)
+    //   name: file[0].name, // Tên file
+    // });
+    // formData.append('token', 'Mq9YoW');
+    // formData.append('assignmentId', serveyData.id);
+    // formData.append('textResponse', 'Tạm thời chưa có');
+    // console.log(formData);
+
+    // console.log('Submit button clicked');
+
+    // try {
+    //   const response = await axios.post(
+    //     'http://157.66.24.126:8080/it5023e/submit_survey',
+    //     formData,
+    //     {
+    //       headers: {
+    //         'Content-Type': 'multipart/form-data',
+    //       },
+    //     },
+    //   );
+    //   console.log(response.data);
+    // } catch (error) {
+    //   console.log(error);
+
+    //   // Sửa lại ngoại lệ (sai role, giáo viên không được nộp bài)
+    //   // (nộp bài nhiều lần)
+    //   // sửa textResponse
+    // } finally {
+    //   setIsSubmitting(false); // Hoàn tất
+    // }
 
     if (isSubmitting) {
-      return;
-    } // Ngăn chặn nếu đang xử lý
+      return; // Ngăn chặn nếu đang xử lý
+    }
+
     setIsSubmitting(true);
 
-    const formData = new FormData();
-    formData.append('file', {
-      uri: file[0].uri, // URI của file
-      type: file[0].type, // Loại file (MIME type)
-      name: file[0].name, // Tên file
-    });
-    formData.append('token', 'Mq9YoW');
-    formData.append('assignmentId', serveyData.id);
-    formData.append('textResponse', 'Tạm thời chưa có');
-    console.log('Submit button clicked');
-
     try {
-      const response = await axios.post(
-        'http://157.66.24.126:8080/it5023e/submit_survey',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        },
-      );
-      console.log(response.data);
+      const response = await submitSurvey(file, serveyData.id);
+      console.log('id:', serveyData.id);
+      console.log('Response:', response); // Xử lý phản hồi từ server (thành công)
     } catch (error) {
-      console.log(error);
-
-      // Sửa lại ngoại lệ (sai role, giáo viên không được nộp bài)
-      // (nộp bài nhiều lần)
-      // sửa textResponse
+      console.error('Error during survey submission:', error); // Xử lý lỗi (nếu có)
     } finally {
-      setIsSubmitting(false); // Hoàn tất
+      setIsSubmitting(false); // Hoàn tất, đảm bảo trạng thái được đặt lại
     }
   };
 
@@ -151,10 +169,11 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
               <View>
                 <Text style={styles.url}>{serveyData.file_url}</Text>
               </View>
-
-              <View style={styles.preview}>
-                {/* <DrivePreview driveUrl={serveyData.file_url} type="image" /> */}
-              </View>
+              {serveyData.file_url && (
+                <FileItem
+                  file={{title: 'Bài tập', file_url: serveyData.file_url}}
+                />
+              )}
             </View>
           </View>
 
