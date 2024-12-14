@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {Alert} from 'react-native';
 
@@ -54,6 +55,37 @@ axiosInstance.interceptors.response.use(
       }
     }
     return Promise.reject(error); // Để giữ lỗi tiếp tục được truyền qua catch
+  },
+);
+
+axiosInstance.interceptors.request.use(
+  async (config: any) => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (token) {
+        // Kiểm tra nếu phương thức request cho phép body
+        if (['POST', 'PUT', 'PATCH'].includes(config.method?.toUpperCase())) {
+          // Nếu body đã có thì thêm thông tin vào
+          if (config.data instanceof FormData) {
+            // Nếu body là FormData, sử dụng append
+            config.data.append('token', token);
+          } else {
+            // Nếu body là object thông thường
+            config.data = {
+              ...config.data, // Dữ liệu hiện tại
+              token: token, // Chèn thêm token
+            };
+          }
+        }
+      }
+      return config;
+    } catch (error) {
+      console.error('Error retrieving token:', error);
+      return Promise.reject(error);
+    }
+  },
+  error => {
+    return Promise.reject(error);
   },
 );
 
