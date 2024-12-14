@@ -1,25 +1,37 @@
+import {NavigationProp, useNavigation} from '@react-navigation/core';
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import {Pressable, StyleSheet, Text, View} from 'react-native';
 import FontAwesome6Icon from 'react-native-vector-icons/FontAwesome6';
-import { FileInfo } from '../types/file';
-import { useToggle } from '../utils/useToggle';
+import {FileInfo} from '../types/file';
 
 interface Props {
   file: FileInfo;
 }
 
-export const FileItem = ({file}: Props) => {
-  const {
-    value: isOpenPreview,
-    setFalse: closePreview,
-    setTrue: openPreview,
-  } = useToggle(false);
+type ParamList = {
+  PreviewFile: {
+    title: string;
+    url: string;
+  };
+};
 
+export const FileItem = ({file}: Props) => {
+  const navigation = useNavigation<NavigationProp<ParamList>>();
   return (
     <>
       <Pressable>
         <View style={styles.itemContainer}>
-          <Pressable style={styles.uploadArea} onPress={openPreview}>
+          <Pressable
+            style={styles.uploadArea}
+            onPress={() =>
+              navigation.navigate(
+                'PreviewFile',
+                {
+                  title: file.title,
+                  url: file.file_url,
+                },
+              )
+            }>
             <FontAwesome6Icon name="file" color="#46515f" size={16} />
             <Text style={styles.uploadContent}>
               File {file.title.toLowerCase()}
@@ -27,8 +39,6 @@ export const FileItem = ({file}: Props) => {
           </Pressable>
         </View>
       </Pressable>
-
-      {isOpenPreview && (<></>)}
     </>
   );
 };
