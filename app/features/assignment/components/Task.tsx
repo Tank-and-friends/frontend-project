@@ -3,7 +3,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import React, {useRef, useState} from 'react';
 import {Animated, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {RootStackParamList} from '../navigation';
-import {Servey} from '../type';
+import {Survey} from '../type';
 import Icon from 'react-native-vector-icons/FontAwesome6'; // Assuming you're using FontAwesome icons
 
 type TaskNavigationProp = StackNavigationProp<
@@ -19,7 +19,7 @@ interface TaskProps {
   badgeColor?: string;
   date: string;
   content: string;
-  serveyData: Servey;
+  serveyData: Survey;
   checked?: boolean;
   setChecked: (value: boolean) => void;
   showFooter: boolean;

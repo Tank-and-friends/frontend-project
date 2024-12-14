@@ -100,6 +100,7 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
 
       // Sửa lại ngoại lệ (sai role, giáo viên không được nộp bài)
       // (nộp bài nhiều lần)
+      // sửa textResponse
     } finally {
       setIsSubmitting(false); // Hoàn tất
     }

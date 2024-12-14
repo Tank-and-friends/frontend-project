@@ -3,7 +3,7 @@ import React from 'react';
 import AssignmentScreen from './AssignmentScreen';
 import CreateAssignmentScreen from './CreateAssignmentScreen';
 import TaskDetailScreen from './TaskDetailScreen';
-import {Servey} from './type';
+import {Survey} from './type';
 
 export type RootStackParamList = {
   CreateAssignmentScreen: undefined;
@@ -14,7 +14,7 @@ export type RootStackParamList = {
     deadline: string;
     content: string;
     formattedDate: string;
-    serveyData: Servey;
+    serveyData: Survey;
   };
 };
 

@@ -1,4 +1,4 @@
-export type Servey = {
+export type Survey = {
   id: number;
   title: string;
   description: string;

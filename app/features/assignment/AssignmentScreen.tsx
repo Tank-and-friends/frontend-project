@@ -13,53 +13,70 @@ import {TextField} from '../../components/TextField/TextField';
 import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
 import Assignment from './components/Assignment';
 import StatusButtonGroup from './components/StatusButtonGroup';
-import axios from 'axios';
-import {Servey} from './type';
+import {Survey} from './type';
 import {Text} from 'react-native-paper';
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
+import {deleteAssignment, getAllSurveys, getStudentAssignments} from './api';
+import NoTasks from './components/NoTask';
 
 const AssignmentScreen = () => {
   const [role, setRole] = useState('LECTURER');
-  const [dataServey, setDataSurvey] = useState<Servey[]>([]);
+  const [dataServey, setDataSurvey] = useState<Survey[]>([]);
 
   const [labelStatus, setLabelStatus] = useState('All');
+  const [isDataEmpty, setIsDataEmpty] = useState(true);
+
+  // useEffect(() => {
+  //   const getAllServeys = async () => {
+  //     try {
+  //       const response = await axios.post(
+  //         'http://157.66.24.126:8080/it5023e/get_all_surveys',
+  //         {
+  //           token: 'Mq9YoW',
+  //           class_id: '000254',
+  //         },
+  //       );
+
+  //       // Log meta và data từ API
+  //       // console.log('Data:', response.data.data);
+
+  //       if (response.data && response.data.data) {
+  //         const apiDataServey = response.data.data.map((item: Survey) => ({
+  //           id: item.id,
+  //           title: item.title,
+  //           description: item.description,
+  //           lecturer_id: item.lecturer_id,
+  //           deadline: item.deadline,
+  //           file_url: item.file_url,
+  //           class_id: item.class_id,
+  //         }));
+  //         setDataSurvey(apiDataServey);
+  //
+  //       }
+  //       // console.log(response.data.data);
+  //     } catch (error) {
+  //       console.error('Lỗi khi gọi API2:', error);
+  //     } finally {
+  //       // setLoading(false); // Tắt trạng thái loading
+  //     }
+  //   };
+
+  //   getAllServeys();
+  // }, [role]);
 
   useEffect(() => {
-    const getAllServeys = async () => {
-      try {
-        const response = await axios.post(
-          'http://157.66.24.126:8080/it5023e/get_all_surveys',
-          {
-            token: 'Mq9YoW',
-            class_id: '000254',
-          },
-        );
+    if (role !== 'LECTURER') {
+      return;
+    }
+    const fetchData = async () => {
+      const data = await getAllSurveys();
 
-        // Log meta và data từ API
-        // console.log('Data:', response.data.data);
-
-        if (response.data && response.data.data) {
-          const apiDataServey = response.data.data.map((item: Servey) => ({
-            id: item.id,
-            title: item.title,
-            description: item.description,
-            lecturer_id: item.lecturer_id,
-            deadline: item.deadline,
-            file_url: item.file_url,
-            class_id: item.class_id,
-          }));
-          setDataSurvey(apiDataServey);
-          setRole(role);
-        }
-        // console.log(response.data.data);
-      } catch (error) {
-        console.error('Lỗi khi gọi API2:', error);
-      } finally {
-        // setLoading(false); // Tắt trạng thái loading
-      }
+      setDataSurvey(data);
+      setIsDataEmpty(data.length === 0);
     };
 
-    getAllServeys();
+    fetchData();
+    setRole(role);
   }, [role]);
 
   const assignments = [
@@ -163,11 +180,14 @@ const AssignmentScreen = () => {
     },
   ];
 
-  const [typeStatus, setTypeStatus] = useState('');
+  const [typeStatus, setTypeStatus] = useState<string | null>('');
 
   useEffect(() => {
+    if (role !== 'STUDENT') {
+      return;
+    }
     // Xác định typeStatus dựa trên labelStatus
-    const mapLabelToTypeStatus = (label: string): string => {
+    const mapLabelToTypeStatus = (label: string): string | null => {
       switch (label) {
         case 'Sắp tới':
           return 'UPCOMING';
@@ -175,10 +195,8 @@ const AssignmentScreen = () => {
           return 'PASS_DUE';
         case 'Đã hoàn thành':
           return 'COMPLETED';
-        case 'All':
-          return 'All';
         default:
-          return '';
+          return null;
       }
     };
 
@@ -186,77 +204,15 @@ const AssignmentScreen = () => {
     setTypeStatus(newTypeStatus);
     // console.log('niu leey bồ: ', newTypeStatus);
 
-    const getAllSurveys = async () => {
-      try {
-        const response = await axios.post(
-          'http://157.66.24.126:8080/it5023e/get_student_assignments',
-          {
-            token: 'Mq9YoW',
-            type: newTypeStatus,
-            class_id: '000254',
-          },
-        );
+    const fetchData = async () => {
+      const data = await getStudentAssignments('000254', newTypeStatus);
 
-        if (response.data && response.data.data) {
-          const apiDataSurvey = response.data.data.map((item: Servey) => ({
-            id: item.id,
-            title: item.title,
-            description: item.description,
-            lecturer_id: item.lecturer_id,
-            deadline: item.deadline,
-            file_url: item.file_url,
-            class_id: item.class_id,
-          }));
-          setDataSurvey(apiDataSurvey);
-        }
-      } catch (error) {
-        console.error('Lỗi khi gọi API3:', error);
-      } finally {
-        // Tắt trạng thái loading (nếu có)
-        // setLoading(false);
-      }
+      setDataSurvey(data);
+      setIsDataEmpty(data.length === 0);
     };
 
-    const getAllServeys2 = async () => {
-      try {
-        const response = await axios.post(
-          'http://157.66.24.126:8080/it5023e/get_all_surveys',
-          {
-            token: 'Mq9YoW',
-            class_id: '000254',
-          },
-        );
-
-        // Log meta và data từ API
-        // console.log('Data:', response.data.data);
-
-        if (response.data && response.data.data) {
-          const apiDataServey = response.data.data.map((item: Servey) => ({
-            id: item.id,
-            title: item.title,
-            description: item.description,
-            lecturer_id: item.lecturer_id,
-            deadline: item.deadline,
-            file_url: item.file_url,
-            class_id: item.class_id,
-          }));
-          setDataSurvey(apiDataServey);
-        }
-        // console.log(response.data.data);
-      } catch (error) {
-        console.error('Lỗi khi gọi API4:', error);
-      } finally {
-        // setLoading(false); // Tắt trạng thái loading
-      }
-    };
-
-    // Gọi hàm lấy dữ liệu
-    if (newTypeStatus !== 'All') {
-      getAllSurveys();
-    } else {
-      getAllServeys2();
-    }
-  }, [labelStatus]);
+    fetchData();
+  }, [labelStatus, role]);
 
   const [showFooter, setShowFooter] = useState(false);
 
@@ -270,22 +226,11 @@ const AssignmentScreen = () => {
       return;
     }
 
-    try {
-      const response = await axios.post(
-        'http://157.66.24.126:8080/it5023e/delete_survey',
-        {
-          token: 'l3JuKg',
-          survey_id: survey_id,
-        },
-      );
+    const fetchData = async () => {
+      await deleteAssignment('rKXjuw', survey_id.toString());
+    };
 
-      console.log(response.data.data);
-    } catch (error) {
-      console.error('Lỗi khi gọi API3:', error);
-    } finally {
-      // Tắt trạng thái loading (nếu có)
-      // setLoading(false);
-    }
+    fetchData();
   };
 
   const [checkedStates, setCheckedStates] = useState(
@@ -326,14 +271,15 @@ const AssignmentScreen = () => {
       setShowFooter(false);
       // chạy lại ở đây
 
-      const updatedSurveys = dataServey.filter((_, index) => !checkedStates[index]);
+      const updatedSurveys = dataServey.filter(
+        (_, index) => !checkedStates[index],
+      );
 
-    // Cập nhật lại trạng thái dataServey
-    setDataSurvey(updatedSurveys);
+      // Cập nhật lại trạng thái dataServey
+      setDataSurvey(updatedSurveys);
 
-    // Reset checkedStates tương ứng với danh sách mới
-    setCheckedStates(Array(updatedSurveys.length).fill(false));
-
+      // Reset checkedStates tương ứng với danh sách mới
+      setCheckedStates(Array(updatedSurveys.length).fill(false));
     } else {
     }
   };
@@ -367,12 +313,12 @@ const AssignmentScreen = () => {
           placeholder="Bạn muốn tìm gì ..."
         />
 
-        <View style={styles.statusGroup}>
+        {role === 'STUDENT' && <View style={styles.statusGroup}>
           <StatusButtonGroup setLabelStatus={setLabelStatus} />
-        </View>
+        </View>}
         {false && <Text>{typeStatus}</Text>}
         <View style={styles.listAssgnment}>
-          <ScrollView contentContainerStyle={{}}>
+          {!isDataEmpty && <ScrollView contentContainerStyle={{}}>
             {dataServey.map((item, index) => (
               <Pressable key={index}>
                 <Assignment
@@ -392,7 +338,9 @@ const AssignmentScreen = () => {
                 />
               </Pressable>
             ))}
-          </ScrollView>
+          </ScrollView>}
+
+          {isDataEmpty && <NoTasks />}
         </View>
       </View>
       {/* Footer */}

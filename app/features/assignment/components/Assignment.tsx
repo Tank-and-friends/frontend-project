@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import Task from './Task';
-import {Servey} from '../type';
+import {Survey} from '../type';
 
 interface TaskData {
   title: string;
@@ -16,7 +16,7 @@ interface AssignmentProps {
   date: string;
   day: string;
   tasks: TaskData[];
-  serveyData: Servey;
+  serveyData: Survey;
   checked?: boolean;
   setChecked: (value: boolean) => void;
   showFooter: boolean;
