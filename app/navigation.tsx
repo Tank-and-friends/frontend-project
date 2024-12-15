@@ -39,6 +39,7 @@ const Tab = createBottomTabNavigator();
 const renderBottomNavBar = (props: any) => <BottomNavBar {...props} />;
 
 export const TabNavigation = () => {
+
   return (
     <Tab.Navigator
       screenOptions={{headerShown: false}}
@@ -49,7 +50,6 @@ export const TabNavigation = () => {
       <Tab.Screen
         name="Register"
         component={ClassRegisterScreen}
-        initialParams={{userRole: 'STUDENT'}}
       />
       <Tab.Screen name="Calendar" component={ClassListScreen} />
     </Tab.Navigator>

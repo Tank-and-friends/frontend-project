@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {ImageBackground, ScrollView, StyleSheet, View} from 'react-native';
 import {PaperProvider} from 'react-native-paper';
 import IonIcons from 'react-native-vector-icons/Ionicons';
@@ -8,7 +8,7 @@ import OpenClasses from './components/OpenClasses';
 import TeacherClasses from './components/TeacherClasses';
 
 const ClassRegisterScreen = ({route}: {route: any}) => {
-  const {userRole} = route.params;
+  const userRole = 'LECTURER';
   return (
     <PaperProvider>
       <View style={styles.container}>
@@ -35,9 +35,8 @@ const ClassRegisterScreen = ({route}: {route: any}) => {
             contentContainerStyle={styles.scrollableContent}
             style={styles.scrollableContent}
             showsHorizontalScrollIndicator={false}>
-          {userRole === 'LECTURER' ? <TeacherClasses /> : <OpenClasses />}
-
-            </ScrollView>
+            {userRole === 'LECTURER' ? <TeacherClasses /> : <OpenClasses />}
+          </ScrollView>
         </ImageBackground>
       </View>
     </PaperProvider>
