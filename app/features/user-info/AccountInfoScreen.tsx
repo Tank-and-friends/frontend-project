@@ -13,9 +13,8 @@ import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from './navigation';
 import {StackNavigationProp} from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as ImagePicker from 'react-native-image-picker';
-import {UserInfo} from '../../models/User';
-import {getUserInfo} from '../../apis/UserApi';
+import {changeInfo} from '../../apis/UserApi';
+import DocumentPicker, {types} from 'react-native-document-picker';
 
 type AccountInfoScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -36,7 +35,7 @@ const AccountInfoScreen: React.FC = () => {
         const storedEmail = await AsyncStorage.getItem('email');
         const storedRole = await AsyncStorage.getItem('role');
         const storedName = await AsyncStorage.getItem('name');
-        const storedImage = await AsyncStorage.getItem('profileImage');
+        const storedImage = await AsyncStorage.getItem('avatar');
 
         setEmail(storedEmail);
         setRole(storedRole);
@@ -49,22 +48,33 @@ const AccountInfoScreen: React.FC = () => {
 
     fetchData();
   }, []);
-  const handleImageUpload = async () => {
+  const pickFile = async () => {
     try {
-      const result = await ImagePicker.launchImageLibrary({
-        mediaType: 'photo',
-        quality: 0.8,
+      const result = await DocumentPicker.pickSingle({
+        type: [types.images],
       });
-
-      if (result.assets && result.assets.length > 0) {
-        const imageUri = result.assets[0].uri ?? null; // Chuyển undefined thành null
-        setProfileImage(imageUri);
-
-        // Lưu ảnh vào AsyncStorage
-        await AsyncStorage.setItem('profileImage', imageUri || '');
+      return {
+        uri: result.uri,
+        type: result.type,
+        name: result.name,
+      };
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        console.log('File selection was canceled');
+      } else {
+        console.error('Error picking file:', err);
       }
-    } catch (error) {
-      console.error('Failed to pick image:', error);
+      return null;
+    }
+  };
+
+  const handleImageUpload = async () => {
+    const file = await pickFile();
+
+    if (file) {
+      changeInfo(file).then(res => {
+        setProfileImage(res);
+      });
     }
   };
 

@@ -2072,17 +2072,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-async-storage/async-storage@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "@react-native-async-storage/async-storage@npm:2.1.0"
-  dependencies:
-    merge-options: ^3.0.4
-  peerDependencies:
-    react-native: ^0.0.0-0 || >=0.65 <1.0
-  checksum: bc6cdf3554fdd09f3e7916b105d966e56dbaca48475f33da378dd40c3823f7a6978057ca8207bc161c8e0b8c2b08161797dab48955bce1f3e3e457aeaa4ffaf9
-  languageName: node
-  linkType: hard
-
 "@react-native-community/cli-clean@npm:14.1.0":
   version: 14.1.0
   resolution: "@react-native-community/cli-clean@npm:14.1.0"

@@ -1,6 +1,6 @@
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useState } from 'react';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import React, {useState} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -10,8 +10,8 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { validatePassword } from '../../utils/validation';
-import { RootStackParamList } from './navigation';
+import {validatePassword} from '../../utils/validation';
+import {RootStackParamList} from './navigation';
 import {changePassword} from '../../apis/UserApi'; // Import API login function
 import {Alert} from 'react-native';
 
@@ -75,7 +75,6 @@ const PasswordChangeScreen = () => {
       }
     }
   };
-
 
   return (
     <View style={styles.container}>
@@ -255,7 +254,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   saveButton: {
-    marginTop: 300,
+    marginTop: 150,
     backgroundColor: '#C02135',
     borderRadius: 5,
     paddingVertical: 13,

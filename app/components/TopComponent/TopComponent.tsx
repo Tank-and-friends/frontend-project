@@ -1,9 +1,9 @@
 /* eslint-disable react-native/no-inline-styles */
-import { NavigationProp, useNavigation } from '@react-navigation/core';
-import React, { PropsWithChildren } from 'react';
-import { Image, Pressable, StyleSheet, View } from 'react-native';
-import { IconButton, Text } from 'react-native-paper';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {NavigationProp, useNavigation} from '@react-navigation/core';
+import React, {PropsWithChildren, useEffect, useState} from 'react';
+import {Image, Pressable, StyleSheet, View} from 'react-native';
+import {IconButton, Text} from 'react-native-paper';
 type Props = PropsWithChildren<{
   title: string;
 }>;
@@ -15,6 +15,14 @@ type ParamsList = {
 };
 export default function TopComponent({title}: Props) {
   const navigation = useNavigation<NavigationProp<ParamsList>>();
+  const [avatarUrl, setAvatarUrl] = useState<string>();
+  useEffect(() => {
+    const fetchAvatar = async () => {
+      var avatar = (await AsyncStorage.getItem('avatar')) || avatarUrl;
+      setAvatarUrl(avatar);
+    };
+    fetchAvatar();
+  }, [avatarUrl]);
   return (
     <View style={{width: '100%'}}>
       <View style={styles.topContainer}>
@@ -25,7 +33,9 @@ export default function TopComponent({title}: Props) {
             })
           }>
           <Image
-            source={require('../../assets/images/bachmahoangtu.jpg')}
+            source={
+              avatarUrl ? {uri: avatarUrl} : require('../../assets/avt.jpg')
+            }
             style={styles.profileImage}
           />
         </Pressable>
