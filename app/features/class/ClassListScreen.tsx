@@ -12,6 +12,7 @@ import {TextField} from '../../components/TextField/TextField';
 import TopComponent from '../../components/TopComponent/TopComponent';
 import {ClassInfo} from '../../models/Register';
 import {getListClasses} from '../../apis/RegisterApi';
+import ClassRect from './components/ClassRect';
 
 export type ParamList = {
   ClassStacks: {
@@ -64,14 +65,22 @@ const ClassListScreen = () => {
         source={require('../../assets/images/background.png')}
         style={styles.backgroundImage}
         resizeMode="cover">
-        <TopComponent title="Đăng ký lớp" />
+        <TopComponent title="Lớp học" />
         <TextField
           prefix={<IonIcons name="search" size={20} />}
           placeholder="Bạn muốn tìm gì ..."
         />
         <ScrollView contentContainerStyle={styles.classGroupContainer}>
           {classes.map((classItem, index) => (
-            <Text key={index}>{classItem.class_name}</Text>
+            <ClassRect 
+              key={index}
+              className={classItem.class_name}
+              classId={classItem.class_id}
+              startTime={classItem.start_date}
+              endTime={classItem.end_date}
+              lecturerName={classItem.lecturer_name}
+              classType={classItem.class_type}
+            ></ClassRect>
           ))}
         </ScrollView>
       </ImageBackground>

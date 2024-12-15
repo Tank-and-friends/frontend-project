@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import {NavigationProp, useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Image, StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
 import {Text} from 'react-native-paper';
 
 interface ClassSquareProps {
@@ -32,8 +32,9 @@ export default function ClassSquare({ className, onPress, filteredClasses, class
   const classCount = Array.isArray(filteredClasses) ? filteredClasses.length : 0;
 
   return (
-    <TouchableWithoutFeedback
-      onPress={onPress}>
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.9}>
       <View style={styles.classSquareContainer}>
         <Image
           source={require('../../../assets/images/class-background.jpg')}
@@ -80,7 +81,7 @@ export default function ClassSquare({ className, onPress, filteredClasses, class
           </Text>
         </View>
       </View>
-    </TouchableWithoutFeedback>
+    </TouchableOpacity>
   );
 }
 

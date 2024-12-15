@@ -1,32 +1,47 @@
 /* eslint-disable react-native/no-inline-styles */
+import { format } from 'date-fns';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 type ClassRectProps = {
   className: string;
   classId: string;
-  classTime: string;
-  classPlace: string;
-  grade: {
-    midTerm: number;
-    endTerm: number;
-  };
-  onPress: () => void;
+  lecturerName?: string;
+  startTime: string;
+  endTime: string;
+  onPress?: () => void;
+  classType: string;
 };
 
 export default function ClassRect({
   className,
   classId,
-  classTime,
-  classPlace,
-  grade,
+  lecturerName,
+  startTime,
+  endTime,
   onPress,
+  classType,
 }: ClassRectProps) {
-  const midTermGrade =
-    typeof grade.midTerm === 'number' ? grade.midTerm : '_ _';
-  const endTermGrade =
-    typeof grade.endTerm === 'number' ? grade.endTerm : '_ _';
 
+  const startDate = new Date(startTime);
+  const endDate = new Date(endTime);
+
+  const classTime = `${format(startDate, 'dd/MM/yyyy')} - ${format(endDate,'dd/MM/yyyy',)}`
+
+  const getStatusColor = (_status: string) => {
+    switch (_status) {
+      case 'LT':
+        return '#174fb2';
+      case 'BT':
+        return '#ba1b30';
+      case 'LT_BT':
+        return '#ff7f11';
+      default:
+        return '#e9e9e9e';
+    }
+  };
+
+  const statusColor = getStatusColor(classType);
   return (
     <TouchableOpacity
       style={styles.classSquareContainer}
@@ -34,17 +49,17 @@ export default function ClassRect({
       activeOpacity={0.9}>
       <View style={styles.classTitle}>
         <Text style={[styles.text, styles.mainTitle]}>{className}</Text>
-        <Text style={[styles.text, styles.subTitle]}>▪ {classTime}</Text>
-        <Text style={[styles.text, styles.subTitle]}>▪ {classPlace}</Text>
         <Text style={[styles.text, styles.subTitle]}>
           ▪ Mã lớp:{' '}
           <Text style={{fontWeight: 'bold', fontStyle: 'italic'}}>
             {classId}
           </Text>
         </Text>
+        <Text style={[styles.text, styles.subTitle]}>▪ Giảng viên: {lecturerName}</Text>
+        <Text style={[styles.text, styles.subTitle]}>▪ Thời gian: {classTime}</Text>
       </View>
       <View style={styles.boxContainer}>
-        <View
+        {/* <View
           style={[
             styles.Box,
             {borderTopLeftRadius: 4, borderTopRightRadius: 4},
@@ -65,6 +80,9 @@ export default function ClassRect({
               ? endTermGrade.toFixed(1)
               : endTermGrade}
           </Text>
+        </View> */}
+        <View style={[styles.Box, {backgroundColor: statusColor}]}>
+          <Text style={styles.BoxText}>Lớp {classType}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -116,20 +134,22 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
   boxContainer: {
+    position: 'absolute',
     flexDirection: 'column',
     gap: 4,
+    right: 15,
+    top: 20,
   },
   Box: {
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#174fb2',
+    borderRadius: 4,
+    width: 100,
+    height: 25,
     justifyContent: 'center',
     alignItems: 'center',
-    flex: 1,
-    padding: 10,
-    width: 52,
   },
   BoxText: {
-    color: '#071013',
-    fontSize: 20,
-    fontWeight: 'bold',
+    color: 'white',
+    fontSize: 12,
   },
 });

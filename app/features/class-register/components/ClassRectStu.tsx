@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 type ClassRectProps = {
@@ -49,7 +49,7 @@ export default function ClassRectStu({
   const statusColor = getStatusColor(status);
 
   return (
-    <TouchableWithoutFeedback onPress={onPress} style={{width: '100%'}}>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.9} style={{width: '100%', alignItems: 'center'}}>
       <View style={styles.classSquareContainer}>
         <View style={styles.classTitle}>
           <Text style={[styles.text, styles.mainTitle]}>{classTitle}</Text>
@@ -75,7 +75,7 @@ export default function ClassRectStu({
           </View>
         </View>
       </View>
-    </TouchableWithoutFeedback>
+    </TouchableOpacity>
   );
 }
 

@@ -2,7 +2,6 @@
 import React, {useState} from 'react';
 import {
   Alert,
-  Button,
   Image,
   ImageBackground,
   ScrollView,
@@ -16,6 +15,7 @@ import {
   PaperProvider,
   Portal,
   Text,
+  Button
 } from 'react-native-paper';
 import ClassRectLec from './components/ClassRectLec';
 import {format} from 'date-fns';
@@ -104,10 +104,7 @@ export default function ClassRegisterListScreen({
     return {
       ...classItem,
       status: isOutdated ? 'Hết hạn' : 'Mở đăng ký',
-      classTime: `${format(startDate, 'dd/MM/yyyy')} - ${format(
-        endDate,
-        'dd/MM/yyyy',
-      )}`,
+      classTime: `${format(startDate, 'dd/MM/yyyy')} - ${format(endDate,'dd/MM/yyyy',)}`,
     };
   });
 
@@ -243,16 +240,27 @@ export default function ClassRegisterListScreen({
           </View>
           <Portal>
             <Dialog visible={isDialogVisible} onDismiss={handleDialogDismiss}>
-              <Dialog.Title>Register for Class</Dialog.Title>
+              <Dialog.Title style={{fontWeight: '700'}}>Đăng ký lớp</Dialog.Title>
               <Dialog.Content>
                 <Text>
-                  Are you sure you want to register for{' '}
-                  {selectedClass?.class_id}?
+                  Bạn muốn đăng ký vào lớp {selectedClass?.class_name} với mã lớp {selectedClass?.class_id}?
                 </Text>
               </Dialog.Content>
-              <Dialog.Actions>
-                <Button title="Cancel" onPress={handleDialogDismiss} />
-                <Button title="Register" onPress={handleRegister} />
+              <Dialog.Actions style={{justifyContent: 'space-evenly'}}>
+                <Button
+                  mode="contained"
+                  style={{borderRadius: 6, width: 120}}
+                  buttonColor="#C02135"
+                  textColor="white" 
+                  onPress={handleDialogDismiss}>
+                  Hủy
+                </Button>
+                <Button
+                  mode="contained"
+                  style={{borderRadius: 6, width: 120}}
+                  buttonColor="#FF7F11"
+                  textColor="white" 
+                  onPress={handleRegister}>Đăng ký</Button>
               </Dialog.Actions>
             </Dialog>
           </Portal>
