@@ -54,24 +54,24 @@ export const TablePagination = ({
         <IconButton
           icon="page-first"
           onPress={() => onPageChange(0)}
-          disabled={page === 0}
+          disabled={Number(page) === 0}
         />
       )}
       <IconButton
         icon="chevron-left"
         onPress={() => onPageChange(page - 1)}
-        disabled={page === 0}
+        disabled={Number(page) === 0}
       />
       <IconButton
         icon="chevron-right"
         onPress={() => onPageChange(page + 1)}
-        disabled={page === numberOfPages - 1}
+        disabled={Number(page) === numberOfPages - 1}
       />
       {showFastPaginationControls && (
         <IconButton
           icon="page-last"
           onPress={() => onPageChange(numberOfPages - 1)}
-          disabled={page === numberOfPages - 1}
+          disabled={Number(page) === numberOfPages - 1}
         />
       )}
     </View>

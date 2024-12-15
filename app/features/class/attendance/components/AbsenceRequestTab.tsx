@@ -1,24 +1,37 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { NavigationProp, useFocusEffect, useNavigation } from '@react-navigation/core';
+import React, { useCallback, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { List } from 'react-native-paper';
 import { formatDateTime } from '../../../../utils/datetime';
-import { getAbsenceRequests } from '../../absence-request/api';
 import { AbsenceRequestReponse } from '../../type';
 import { getDayOfWeek } from '../../utils/date-time-util';
+import { getAbsenceRequests } from '../../api';
+
+interface ParamsList {
+  AbsenceRequest: {
+    screen: string;
+    params: {
+      absenceRequest: AbsenceRequestReponse;
+    };
+  };
+}
 
 export const AbsenceRequestTab = () => {
+  const navigation = useNavigation<NavigationProp<ParamsList>>();
   const [absenceRequests, setAbsenceRequests] = useState<
     AbsenceRequestReponse[]
   >([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getAbsenceRequests();
-      setAbsenceRequests(data);
-    };
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        const data = await getAbsenceRequests();
+        setAbsenceRequests(data);
+      };
 
-    fetchData();
-  }, []);
+      fetchData();
+    }, []),
+  );
 
   const absenceRequestGroups = useMemo(() => {
     const groups: {[key: string]: AbsenceRequestReponse[]} = {};
@@ -77,6 +90,7 @@ export const AbsenceRequestTab = () => {
                     </Text>
                   </View>
                 }
+                onPress={() => navigation.navigate('AbsenceRequest', {screen: 'AbsenceRequestManage', params: {absenceRequest: item}})}
               />
             ))}
           </List.Accordion>

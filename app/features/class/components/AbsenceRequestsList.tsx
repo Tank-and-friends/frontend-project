@@ -17,7 +17,7 @@ export const AbsenceRequestsList = ({groups}: Props) => {
           <View key={group.title} style={styles.groupContainer}>
             <View style={styles.titleContainer}>
               <Text style={styles.title}>{group.title}</Text>
-              <Text style={styles.subtitle}>{getDayOfWeek('2024-10-27')}</Text>
+              <Text style={styles.subtitle}>{getDayOfWeek(group.title)}</Text>
             </View>
             <View style={styles.listContainer}>
               {group.items.map(item => {
@@ -25,7 +25,6 @@ export const AbsenceRequestsList = ({groups}: Props) => {
                   <AbsenceRequestCard
                     key={item.title}
                     title={item.title}
-                    date={item.date}
                     status={item.status}
                   />
                 );

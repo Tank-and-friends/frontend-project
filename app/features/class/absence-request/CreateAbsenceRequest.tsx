@@ -8,12 +8,14 @@ import { Appbar, Button } from 'react-native-paper';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome6';
 import { TextField } from '../../../components/TextField/TextField';
 import { AbsenceRequestForm } from '../type';
+import { createAbsenceRequest } from '../api';
 
 export const CreateAbsenceRequest = () => {
   const navigation = useNavigation();
   const [requestForm, setRequestForm] = React.useState<AbsenceRequestForm>({
     title: '',
     date: '',
+    file: undefined,
     reason: '',
   });
   const [file, setFile] = React.useState<DocumentPickerResponse | null>(null);
@@ -39,6 +41,10 @@ export const CreateAbsenceRequest = () => {
         console.error('Lỗi khi chọn file: ', err);
       }
     }
+  };
+
+  const handleSubmit = async () => {
+    await createAbsenceRequest('classId', requestForm);
   };
 
   return (
@@ -95,7 +101,8 @@ export const CreateAbsenceRequest = () => {
             textColor="white"
             buttonColor="#c02135"
             style={styles.btnSubmit}
-            labelStyle={styles.btnContent}>
+            labelStyle={styles.btnContent}
+            onPress={handleSubmit}>
             Xác nhận
           </Button>
         </View>

@@ -8,9 +8,10 @@ interface Props {
   lessonsList: string[];
   value: string;
   onChange: (value: string) => void;
+  onSave?: () => void;
 }
 
-export const FilterTab = ({lessonsList, value, onChange}: Props) => {
+export const FilterTab = ({lessonsList, value, onChange, onSave}: Props) => {
   const {
     value: isOpenMenu,
     setTrue: openMenu,
@@ -52,7 +53,7 @@ export const FilterTab = ({lessonsList, value, onChange}: Props) => {
           contentStyle={styles.menu}
           visible={isOpenMenu}
           onDismiss={closeMenu}
-          anchor={{x: anchorPosition.x + 26, y: anchorPosition.y - 80}}>
+          anchor={{x: anchorPosition.x, y: anchorPosition.y - 80}}>
           {lessonsList.map((item, index) => (
             <Menu.Item
               key={index}
@@ -70,7 +71,8 @@ export const FilterTab = ({lessonsList, value, onChange}: Props) => {
         textColor="white"
         buttonColor="#c02135"
         style={styles.btnSubmit}
-        labelStyle={styles.btnContent}>
+        labelStyle={styles.btnContent}
+        onPress={onSave}>
         Lưu
       </Button>
     </View>
