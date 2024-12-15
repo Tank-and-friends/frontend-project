@@ -18,7 +18,7 @@ export const CreateAbsenceRequest = () => {
     file: undefined,
     reason: '',
   });
-  const [file, setFile] = React.useState<DocumentPickerResponse | null>(null);
+  const [file, setFile] = React.useState<DocumentPickerResponse | undefined>(undefined);
 
   const handleChangeForm = (key: string, value: string) => {
     setRequestForm({
@@ -44,7 +44,7 @@ export const CreateAbsenceRequest = () => {
   };
 
   const handleSubmit = async () => {
-    await createAbsenceRequest('classId', requestForm);
+    await createAbsenceRequest('classId', {...requestForm, file});
   };
 
   return (

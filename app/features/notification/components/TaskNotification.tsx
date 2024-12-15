@@ -52,7 +52,6 @@ const TaskNotification: React.FC<NotificationProps> = ({
       const response = await axios.post(
         'http://157.66.24.126:8080/it5023e/mark_notification_as_read',
         {
-          token: 'Mq9YoW',
           notification_id: notificationId,
         },
       );

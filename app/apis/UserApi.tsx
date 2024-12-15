@@ -154,13 +154,12 @@ export const login = async (
     });
 
     const data: LoginResponse = response.data;
-    console.log(data.token);
     AsyncStorage.setItem('token', data.token);
     AsyncStorage.setItem('id', data.id);
     AsyncStorage.setItem('name', data.name);
     AsyncStorage.setItem('role', data.role);
     AsyncStorage.setItem('email', data.email);
-    AsyncStorage.setItem('avatar', getDirectImageLink(data.avatar) || '');
+    AsyncStorage.setItem('avatar', data.avatar ? getDirectImageLink(data.avatar) : '');
 
     return data;
   } catch (error) {
@@ -175,8 +174,6 @@ export const getUserInfo = async (): Promise<UserInfo | null> => {
     const response = await axiosInstance.post('/it4788/get_user_info', {
       //user_id: id,
       user_id: 397,
-      //user_id: token
-      token: '1mKnHR',
     });
     const data = response.data;
     return data;

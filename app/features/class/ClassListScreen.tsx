@@ -1,17 +1,16 @@
-import {NavigationProp, useFocusEffect, useNavigation} from '@react-navigation/core';
-import React, {useCallback, useEffect, useState} from 'react';
+import { NavigationProp, useFocusEffect, useNavigation } from '@react-navigation/core';
+import React, { useCallback, useState } from 'react';
 import {
   ImageBackground,
   ScrollView,
   StyleSheet,
-  Text,
-  View,
+  View
 } from 'react-native';
 import IonIcons from 'react-native-vector-icons/Ionicons';
+import { getListClasses } from '../../apis/RegisterApi';
 import { TextField } from '../../components/TextField/TextField';
 import TopComponent from '../../components/TopComponent/TopComponent';
-import {ClassInfo} from '../../models/Register';
-import {getListClasses} from '../../apis/RegisterApi';
+import { ClassInfo } from '../../models/Register';
 import ClassRect from './components/ClassRect';
 
 export type ParamList = {

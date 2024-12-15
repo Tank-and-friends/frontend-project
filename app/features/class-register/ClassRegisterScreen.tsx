@@ -6,9 +6,21 @@ import {TextField} from '../../components/TextField/TextField';
 import TopComponent from '../../components/TopComponent/TopComponent';
 import OpenClasses from './components/OpenClasses';
 import TeacherClasses from './components/TeacherClasses';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ClassRegisterScreen = ({route}: {route: any}) => {
-  const userRole = 'LECTURER';
+  const [role, setRole] = useState('');
+
+  useEffect(() => {
+    const fetchRole = async () => {
+      const _role = await AsyncStorage.getItem('role');
+      console.log(_role);
+
+      setRole(_role || '');
+    };
+    fetchRole();
+  }, []);
+
   return (
     <PaperProvider>
       <View style={styles.container}>
@@ -35,7 +47,7 @@ const ClassRegisterScreen = ({route}: {route: any}) => {
             contentContainerStyle={styles.scrollableContent}
             style={styles.scrollableContent}
             showsHorizontalScrollIndicator={false}>
-            {userRole === 'LECTURER' ? <TeacherClasses /> : <OpenClasses />}
+            {role === 'LECTURER' ? <TeacherClasses /> : <OpenClasses />}
           </ScrollView>
         </ImageBackground>
       </View>

@@ -6,7 +6,7 @@ import { AbsenceRequestInfo } from '../type';
 import { Badge } from './Badge';
 
 type ParamsList = {
-  ClassFeatures: {
+  ClassFeaturesStacks: {
     screen: string;
     params: {
       screen: string;
@@ -31,10 +31,10 @@ export const AbsenceRequestCard = ({title, status}: AbsenceRequestInfo) => {
       elevation={4}
       style={styles.card}
       onPress={() =>
-        navigation.navigate('ClassFeatures', {
+        navigation.navigate('ClassFeaturesStacks', {
           screen: 'AbsenceRequest',
           params: {
-            screen: 'AbsenceRequestDetails',
+            screen: 'AbsenceRequestManage',
           },
         })
       }>

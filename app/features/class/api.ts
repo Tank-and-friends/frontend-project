@@ -99,7 +99,7 @@ export const createAbsenceRequest = async (
     const formData = new FormData();
     formData.append('class_id', classId);
     Object.entries(absenceRequest).forEach(([key, value]) => {
-      if (key === 'file') {
+      if (key === 'file' && value) {
         if (typeof value !== 'string') {
           formData.append(key, {
             uri: value.uri,
@@ -229,7 +229,7 @@ export const getAttendanceList = async (
 
 /** attendance_list là id truyền vào cho những đứa vắng ko phép */
 export const takeAttendance = async (
-  classId: string,
+  classId: string | undefined,
   date: string,
   attendanceList: string[],
 ): Promise<void> => {

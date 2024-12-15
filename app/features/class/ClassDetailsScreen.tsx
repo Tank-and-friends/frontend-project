@@ -5,12 +5,13 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/core';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {ImageBackground, StyleSheet, Text, View} from 'react-native';
 import {Appbar, IconButton} from 'react-native-paper';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import {TextField} from '../../components/TextField/TextField';
 import ClassRectTab from './components/ClassRectTab';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export type ParamList = {
   ClassStacks: {
@@ -35,6 +36,12 @@ export type ParamList = {
       classId: string;
     };
   };
+  ClassFeaturesStacks: {
+    screen: string;
+    params: {
+      classId: string;
+    };
+  };
 };
 
 const ClassDetailsScreen = () => {
@@ -42,6 +49,17 @@ const ClassDetailsScreen = () => {
 
   const route = useRoute<RouteProp<ParamList, 'ClassDetailsScreen'>>();
   const {classId, className} = route.params;
+  const [role, setRole] = useState('');
+
+  useEffect(() => {
+    const fetchRole = async () => {
+      const _role = await AsyncStorage.getItem('role');
+      console.log(_role);
+
+      setRole(_role || '');
+    };
+    fetchRole();
+  }, []);
 
   return (
     <View style={{flex: 1}}>
@@ -87,21 +105,37 @@ const ClassDetailsScreen = () => {
               })
             }
           />
-
-          <ClassRectTab
-            title="Xin nghỉ phép"
-            subtitle="Gửi đơn xin vắng mặt cho buổi học sắp tới"
-            imageSource={require('../../assets/images/XinNghiPhep.png')}
-            reverse={true}
-            onPress={() =>
-              navigation.navigate('AbsenceRequestsList', {
-                screen: 'AbsenceRequestsList',
-                params: {
-                  classId: classId,
-                },
-              })
-            }
-          />
+          {role === 'LECTURER' ? (
+            <ClassRectTab
+              title="Điểm danh"
+              subtitle="Điểm danh cho buổi học"
+              imageSource={require('../../assets/images/XinNghiPhep.png')}
+              reverse={true}
+              onPress={() =>
+                navigation.navigate('ClassFeaturesStacks', {
+                  screen: 'Attendance',
+                  params: {
+                    classId: classId,
+                  },
+                })
+              }
+            />
+          ) : (
+            <ClassRectTab
+              title="Xin nghỉ phép"
+              subtitle="Gửi đơn xin vắng mặt cho buổi học sắp tới"
+              imageSource={require('../../assets/images/XinNghiPhep.png')}
+              reverse={true}
+              onPress={() =>
+                navigation.navigate('AbsenceRequestsList', {
+                  screen: 'AbsenceRequestsList',
+                  params: {
+                    classId: classId,
+                  },
+                })
+              }
+            />
+          )}
 
           <ClassRectTab
             title="Bài tập"

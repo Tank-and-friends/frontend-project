@@ -1,4 +1,4 @@
-import {ParamListBase, RouteProp, useFocusEffect} from '@react-navigation/core';
+import {useFocusEffect} from '@react-navigation/core';
 import {format} from 'date-fns';
 import React, {useCallback, useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
@@ -21,15 +21,10 @@ import {AttendanceTable} from './AttendanceTable';
 import {FilterTab} from './FilterTab';
 
 interface Props {
-  route: RouteProp<ParamListBase, 'Attenda'> & {
-    params: {
-      classId: string;
-    };
-  };
+  classId?: string;
 }
 
-export const AttendanceTab = ({route}: Props) => {
-  const {classId} = route.params;
+export const AttendanceTab = ({classId}: Props) => {
   const [lessonsList, setLessonsList] = useState(['Hôm nay']);
   const [lesson, setLesson] = useState(lessonsList[0]);
   const [studentsList, setStudentsList] = useState<StudentAccount[]>([]);
@@ -43,18 +38,18 @@ export const AttendanceTab = ({route}: Props) => {
 
   useEffect(() => {
     const fetchStudentsList = async () => {
-      const data = await getStudentsList('000268');
+      const data = await getStudentsList(classId);
 
       setStudentsList(data);
     };
 
     fetchStudentsList();
-  }, []);
+  }, [classId]);
 
   useFocusEffect(
     useCallback(() => {
       const fetchAttendanceDates = async () => {
-        const data = await getAttendanceDates('000268');
+        const data = await getAttendanceDates(classId);
 
         const formattedData = data.reverse().map((date, index) => {
           const formattedDate = formatDateTime(date);
@@ -74,7 +69,7 @@ export const AttendanceTab = ({route}: Props) => {
       };
 
       fetchAttendanceDates();
-    }, []),
+    }, [classId]),
   );
 
   useEffect(() => {
@@ -82,7 +77,7 @@ export const AttendanceTab = ({route}: Props) => {
 
     const fetchAttendanceList = async () => {
       const data = await getAttendanceList(
-        '000268',
+        classId,
         formatDateTime(date, 'dd/MM/yyyy', 'yyyy-MM-dd'),
         page,
         pageSize,
@@ -95,7 +90,7 @@ export const AttendanceTab = ({route}: Props) => {
     if (date) {
       fetchAttendanceList();
     }
-  }, [lesson, page, pageSize]);
+  }, [classId, lesson, page, pageSize]);
 
   useEffect(() => {
     const list = studentsList.map(student => {
@@ -144,13 +139,13 @@ export const AttendanceTab = ({route}: Props) => {
         .map(student => student.attendance_id ?? '');
 
       await takeAttendance(
-        '000268',
+        classId,
         format(new Date(), 'yyyy-MM-dd'),
         attendanceListDetails,
       );
 
       const data = await getAttendanceList(
-        '000268',
+        classId,
         format(new Date(), 'yyyy-MM-dd'),
         page,
         pageSize,
@@ -170,7 +165,7 @@ export const AttendanceTab = ({route}: Props) => {
         await setAttendanceStatus(attendance.attendance_id, student.status);
       }
     }
-  }, [students, attendanceList, lesson, page, pageSize]);
+  }, [lesson, students, classId, page, pageSize, attendanceList]);
 
   return (
     <PaperProvider>

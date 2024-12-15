@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/core';
+import { ParamListBase, RouteProp, useNavigation } from '@react-navigation/core';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Appbar, TouchableRipple } from 'react-native-paper';
@@ -6,7 +6,16 @@ import FontAwesome6Icon from 'react-native-vector-icons/FontAwesome6';
 import { AbsenceRequestTab } from './components/AbsenceRequestTab';
 import { AttendanceTab } from './components/AttendanceTab';
 
-export const AttendanceScreen = () => {
+interface Props {
+  route: RouteProp<ParamListBase, 'Attendance'> & {
+    params: {
+      classId: string;
+    };
+  };
+}
+
+export const AttendanceScreen = ({route}: Props) => {
+  const {classId} = route.params;
   const navigation = useNavigation();
   const [tab, setTab] = useState('absence');
 
@@ -53,7 +62,7 @@ export const AttendanceScreen = () => {
             </View>
           </TouchableRipple>
         </View>
-        {tab === 'attendance' ? <AttendanceTab /> : <AbsenceRequestTab />}
+        {tab === 'attendance' ? <AttendanceTab classId={classId} /> : <AbsenceRequestTab />}
       </View>
     </View>
   );
