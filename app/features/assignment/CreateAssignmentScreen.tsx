@@ -1,116 +1,190 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
+  Alert,
+  Image,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Checkbox, TextInput } from 'react-native-paper';
-
+import {TextInput} from 'react-native-paper';
+import DateTimePicker from '@react-native-community/datetimepicker'; // Thêm import
 import Icon from 'react-native-vector-icons/FontAwesome';
-
-// interface TaskDetailData {
-//   title: string;
-//   date: string;
-//   deadline: string;
-//   content: string;
-// }
+import DocumentPicker, {
+  DocumentPickerResponse,
+} from 'react-native-document-picker';
+import axiosInstance from '../../apis/apiConfig';
 
 const CreateAssignmentScreen = () => {
-  // const [text, onChangeText] = React.useState('');
+  const [uploadedFile, setUploadedFile] =
+    useState<DocumentPickerResponse | null>(null);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [deadline, setDeadline] = useState(new Date()); // Hợp nhất ngày giờ
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
 
-  const [isFocused, setIsFocused] = useState(false);
+  const handleDateChange = (event: any, selectedDate?: Date): void => {
+    setShowDatePicker(false);
+    if (selectedDate) {
+      const updatedDeadline = new Date(deadline);
+      updatedDeadline.setFullYear(selectedDate.getFullYear());
+      updatedDeadline.setMonth(selectedDate.getMonth());
+      updatedDeadline.setDate(selectedDate.getDate());
+      setDeadline(updatedDeadline);
+    }
+  };
 
-  const [isChecked, setIsChecked] = useState(false);
+  const handleTimeChange = (event: any, selectedTime?: Date): void => {
+    setShowTimePicker(false);
+    if (selectedTime) {
+      const updatedDeadline = new Date(deadline);
+      updatedDeadline.setHours(selectedTime.getHours());
+      updatedDeadline.setMinutes(selectedTime.getMinutes());
+      updatedDeadline.setSeconds(selectedTime.getSeconds());
+      setDeadline(updatedDeadline);
+    }
+  };
+
+  const handleUploadMaterial = async () => {
+    if (!title || !description) {
+      Alert.alert('Thông báo', 'Vui lòng điền đầy đủ thông tin.');
+      return;
+    }
+
+    if (!uploadedFile) {
+      Alert.alert('Thông báo', 'Vui lòng chọn tài liệu.');
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('file', {
+        uri: uploadedFile.uri,
+        name: uploadedFile.name,
+        type: uploadedFile.type,
+      });
+      formData.append('title', title);
+      formData.append('description', description);
+      const formattedDeadline = deadline.toISOString().split('.')[0];
+      formData.append('deadline', formattedDeadline);
+      formData.append('classId', '000254');
+
+      const response = await axiosInstance.post(
+        '/it5023e/create_survey',
+        formData,
+      );
+
+      Alert.alert('Thành công', 'Bài tập đã được đăng.');
+      console.log('Upload response:', response.data);
+
+      setUploadedFile(null);
+      setTitle('');
+      setDescription('');
+      setDeadline(new Date());
+    } catch (error) {
+      console.error('Upload error:', error);
+      Alert.alert('Lỗi', 'Không thể tải lên tài liệu.');
+    }
+  };
+
+  const uploadDocument = async () => {
+    try {
+      const res = await DocumentPicker.pickSingle({
+        type: [DocumentPicker.types.allFiles],
+      });
+      setUploadedFile(res);
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        console.log('User cancelled the upload');
+      } else {
+        console.error('Unknown error: ', err);
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
-      {/* Header */}
-      {/* <View style={styles.header}></View> */}
-
-      {/* Task Title */}
-
-      {/* Content */}
       <ScrollView style={styles.contentContainer}>
         <View style={styles.taskTitleContainer}>
           <View>
-            <View style={styles.title}>
-              <TextInput
-                placeholder={isFocused ? '' : 'Tên bài tập'}
-                style={styles.textInput}
-                underlineColor="transparent"
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-                placeholderTextColor="rgba(7, 16, 19, 0.5)"
-              />
-            </View>
+            <Text style={styles.text}>Tên bài tập</Text>
+            <TextInput
+              style={styles.inputAssignment}
+              underlineColor="transparent"
+              placeholderTextColor="rgba(7, 16, 19, 0.5)"
+              value={title}
+              onChangeText={setTitle}
+            />
 
-            <View style={styles.line} />
             <Text style={styles.text}>Nội dung</Text>
-
             <TextInput
               style={styles.input}
               underlineColor="transparent"
               multiline
+              value={description}
+              onChangeText={setDescription}
             />
 
             <Text style={styles.text}>Tài liệu liên quan</Text>
-
             <View style={styles.button3}>
-              <TouchableOpacity style={styles.button4}>
-                <Icon name="upload" size={10} />
+              <TouchableOpacity style={styles.button4} onPress={uploadDocument}>
+                <Icon name="upload" size={20} />
                 <Text style={styles.buttonText}>Tải lên tài liệu</Text>
               </TouchableOpacity>
             </View>
+            {uploadedFile && (
+              <View style={styles.previewContainer}>
+                {uploadedFile.type?.includes('image') && (
+                  <Image
+                    source={{uri: uploadedFile.uri}}
+                    style={styles.previewImage}
+                  />
+                )}
+                {!uploadedFile.type?.includes('image') && (
+                  <Text style={styles.previewText}>{}</Text>
+                )}
+              </View>
+            )}
 
             <Text style={styles.text}>Thời hạn nộp bài</Text>
-
-            <View style={styles.timeOfDeadline}>
-              <View style={styles.day}>
-                <Text style={styles.text1}>Ngày</Text>
-                <TextInput style={styles.input} underlineColor="transparent" />
-              </View>
-              <View style={styles.day}>
-                <Text style={styles.text1}>Giờ</Text>
-                <TextInput style={styles.input} underlineColor="transparent" />
-              </View>
-            </View>
-
-            <View style={styles.checkBox}>
-              <Text style={styles.text}>Cho phép nộp bài muộn</Text>
-              <Checkbox
-                status={isChecked ? 'checked' : 'unchecked'}
-                onPress={() => setIsChecked(!isChecked)}
+            <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+              <Text style={styles.input1}>
+                Ngày: {deadline.toLocaleDateString('vi-VN')}
+              </Text>
+            </TouchableOpacity>
+            {showDatePicker && (
+              <DateTimePicker
+                value={deadline}
+                mode="date"
+                display="default"
+                onChange={handleDateChange}
               />
-            </View>
+            )}
 
-            <View style={styles.button1}>
-              <TouchableOpacity style={styles.button2}>
-                <Text style={styles.buttonText}>Đăng bài tập</Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity onPress={() => setShowTimePicker(true)}>
+              <Text style={styles.input1}>
+                Giờ: {deadline.toLocaleTimeString('vi-VN')}
+              </Text>
+            </TouchableOpacity>
+            {showTimePicker && (
+              <DateTimePicker
+                value={deadline}
+                mode="time"
+                display="default"
+                onChange={handleTimeChange}
+              />
+            )}
+
+            <TouchableOpacity
+              style={styles.button2}
+              onPress={handleUploadMaterial}>
+              <Text style={styles.buttonText}>Đăng bài tập</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
-
-      {/* Footer */}
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text>Thông báo</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text>Tin nhắn</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text>Lớp học</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text>Đăng ký lớp</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text>Xem thêm</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };
@@ -260,7 +334,7 @@ const styles = StyleSheet.create({
 
   text1: {
     color: '#071013',
-    fontFamily: 'Inter', // Make sure the font is installed or linked properly
+    fontFamily: 'Inter',
     fontSize: 14,
     fontStyle: 'normal',
     fontWeight: '600', // React Native expects a string for fontWeight (not a number)
@@ -281,20 +355,23 @@ const styles = StyleSheet.create({
   },
 
   button1: {
-    paddingVertical: 2,
+    paddingVertical: 20,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 10,
   },
   button2: {
+    marginTop: 100,
+    marginBottom: 40,
     backgroundColor: '#FF7F11',
     paddingHorizontal: 20,
     borderRadius: 10, // bo tròn các góc cho giống nút trong ảnh\
-    width: 240,
-    height: 30,
+    height: 40,
     justifyContent: 'center',
+    alignSelf: 'center',
     alignItems: 'center',
+    width: 300,
   },
   button3: {
     paddingVertical: 2,
@@ -332,8 +409,41 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginTop: 8,
     paddingHorizontal: 4,
-    height: 35,
-    marginBottom: 20,
+    height: 90,
+    fontSize: 18,
+    padding: 5,
+    marginBottom: 30,
+  },
+  inputAssignment: {
+    margin: 0,
+    flexShrink: 1,
+    marginRight: 15,
+    backgroundColor: '#EFF2EF',
+    borderWidth: 1,
+    borderColor: '#D9D9D9',
+    borderRadius: 4,
+    marginTop: 8,
+    paddingHorizontal: 4,
+    height: 40,
+    fontSize: 18,
+    padding: 5,
+    marginBottom: 30,
+  },
+  input1: {
+    margin: 0,
+    flexShrink: 1,
+    marginRight: 15,
+    backgroundColor: '#EFF2EF',
+    borderWidth: 1,
+    borderColor: '#D9D9D9',
+    borderRadius: 4,
+    marginTop: 8,
+    paddingHorizontal: 4,
+    height: 40,
+    fontSize: 18,
+    padding: 6,
+    marginBottom: 10,
+    paddingLeft: 15,
   },
   textInput: {
     borderRadius: 10,
@@ -357,6 +467,30 @@ const styles = StyleSheet.create({
   },
   day: {
     width: '50%',
+  },
+  previewContainer: {
+    flexDirection: 'row',
+    borderRadius: 8,
+    alignContent: 'center',
+    alignSelf: 'center',
+    width: 400,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  previewImage: {
+    width: '20%',
+    height: 60,
+    resizeMode: 'contain',
+    marginTop: 8,
+  },
+  previewText: {
+    marginTop: 8,
+    color: '#555',
+  },
+  preText: {
+    marginTop: -10,
+    color: '#555',
+    alignSelf: 'center',
   },
 });
 

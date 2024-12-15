@@ -16,6 +16,7 @@ import StatusButtonGroup from './components/StatusButtonGroup';
 import {Survey} from './type';
 import {Text} from 'react-native-paper';
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useNavigation} from '@react-navigation/core';
 import {deleteAssignment, getAllSurveys, getStudentAssignments} from './api';
 import NoTasks from './components/NoTask';
 
@@ -24,6 +25,7 @@ const AssignmentScreen = () => {
   const [dataServey, setDataSurvey] = useState<Survey[]>([]);
 
   const [labelStatus, setLabelStatus] = useState('All');
+  const navigation = useNavigation();
   const [isDataEmpty, setIsDataEmpty] = useState(true);
 
   useEffect(() => {
@@ -176,10 +178,33 @@ const AssignmentScreen = () => {
     fetchData();
   }, [labelStatus, role]);
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (role !== 'LECTURER') {
+        return;
+      }
+
+      const fetchData = async () => {
+        const data = await getAllSurveys();
+        setDataSurvey(data);
+        setIsDataEmpty(data.length === 0);
+      };
+
+      fetchData(); // Gọi API khi màn hình focus
+      setRole(role); // Cập nhật role nếu cần (nếu không cần, có thể bỏ dòng này)
+    });
+
+    return unsubscribe; // Dọn dẹp listener khi component bị unmount
+  }, [navigation, role]);
+
   const [showFooter, setShowFooter] = useState(false);
 
   const handleEdit = () => {
     setShowFooter(false);
+  };
+
+  const handleCreateAssignment = () => {
+    navigation.navigate('CreateAssignmentScreen');
   };
 
   const [deleteDone, setDeleteDone] = useState(
@@ -246,9 +271,7 @@ const AssignmentScreen = () => {
       setShowFooter(false);
       console.log('check: ', checkedStates);
 
-      const updatedSurveys = dataServey.filter(
-        (_) => true,
-      );
+      const updatedSurveys = dataServey.filter(_ => true);
 
       // Cập nhật lại trạng thái dataServey
       setDataSurvey(updatedSurveys);
@@ -257,6 +280,19 @@ const AssignmentScreen = () => {
       setCheckedStates(Array(updatedSurveys.length).fill(false));
     } else {
     }
+
+    if (role !== 'LECTURER') {
+      return;
+    }
+
+    const fetchData = async () => {
+      const data = await getAllSurveys();
+      setDataSurvey(data);
+      setIsDataEmpty(data.length === 0);
+    };
+
+    fetchData(); // Gọi API khi màn hình focus
+    setRole(role); // Cập nhật role nếu cần (nếu không cần, có thể bỏ dòng này)
   };
 
   useEffect(() => {
@@ -324,6 +360,15 @@ const AssignmentScreen = () => {
           )}
 
           {isDataEmpty && <NoTasks />}
+
+          {/* Button Create Assignment */}
+          {role === 'LECTURER' && !showFooter && (
+            <TouchableOpacity
+              style={styles.createButton}
+              onPress={() => handleCreateAssignment()}>
+              <Text style={styles.createButtonText}>Create Assignment</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
       {/* Footer */}
@@ -410,6 +455,19 @@ const styles = StyleSheet.create({
   footerText: {
     color: 'white',
     opacity: 0.6,
+  },
+  createButton: {
+    backgroundColor: '#C02135',
+    padding: 15,
+    marginVertical: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    margin: 10,
+  },
+  createButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

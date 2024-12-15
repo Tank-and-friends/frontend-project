@@ -24,20 +24,21 @@ export const AssignmentStacks = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="CreateAssignmentScreen"
-        component={CreateAssignmentScreen}
-      />
-      <Stack.Screen
         name="AssignmentScreen"
         component={AssignmentScreen}
         options={{headerShown: false}}
       />
       <Stack.Screen
+        name="CreateAssignmentScreen"
+        component={CreateAssignmentScreen}
+      />
+      <Stack.Screen
         name="TaskDetailScreen"
         component={TaskDetailScreen}
         options={({route}) => ({
-          title: route.params.title,
-          headerShown: false, // Ẩn top navigator
+          headerShown: false, // Ẩn header
+          // Các tùy chọn khác nếu cần
+          title: route.params?.title || '', // (nếu vẫn muốn sử dụng tiêu đề trong tương lai)
         })}
       />
     </Stack.Navigator>
