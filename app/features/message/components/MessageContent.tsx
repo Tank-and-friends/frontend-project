@@ -1,21 +1,26 @@
-import React, { PropsWithChildren } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import React, {PropsWithChildren} from 'react';
+import {Pressable, StyleSheet, Text, View} from 'react-native';
+import DeletedMessage from './DeletedMessage';
 
 type Props = PropsWithChildren<{
   yours: boolean;
   content: string;
-  onLongPress: () => void;
+  onLongPress?: () => void;
 }>;
 
 const MessageContent = ({yours, content, onLongPress}: Props) => {
   const styles = createStyles(yours);
   return (
     <View style={styles.contentFrame}>
-      <Pressable onLongPress={onLongPress}>
-        <View style={styles.contentWrapper}>
-          <Text style={styles.content}>{content}</Text>
-        </View>
-      </Pressable>
+      {content ? (
+        <Pressable onLongPress={onLongPress}>
+          <View style={styles.contentWrapper}>
+            <Text style={styles.content}>{content}</Text>
+          </View>
+        </Pressable>
+      ) : (
+        <DeletedMessage />
+      )}
     </View>
   );
 };

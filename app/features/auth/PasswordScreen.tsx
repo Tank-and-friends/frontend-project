@@ -10,7 +10,6 @@ import {validateEmail, validatePassword} from '../../utils/validation';
 import {ParamsList} from './navigation';
 import {login} from '../../apis/UserApi'; // Import API login function
 
-
 type PasswordScreenNavigationProp = StackNavigationProp<
   ParamsList,
   'PasswordScreen'
@@ -41,7 +40,7 @@ const PasswordScreen = () => {
       const response = await login(email, password);
       if (response) {
         // Navigate to home screen or another appropriate screen
-        navigation.navigate('ClassList');
+        navigation.navigate('Home');
       } else {
         setLoginError('Đăng nhập thất bại. Vui lòng thử lại.');
       }

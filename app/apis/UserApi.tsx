@@ -154,6 +154,7 @@ export const login = async (
     });
 
     const data: LoginResponse = response.data;
+    console.log(data.token);
     AsyncStorage.setItem('token', data.token);
     AsyncStorage.setItem('id', data.id);
     AsyncStorage.setItem('name', data.name);
@@ -161,7 +162,6 @@ export const login = async (
     AsyncStorage.setItem('email', data.email);
     AsyncStorage.setItem('avatar', getDirectImageLink(data.avatar) || '');
 
-    console.log('Login successful:', data);
     return data;
   } catch (error) {
     console.error('Login API error:', error);

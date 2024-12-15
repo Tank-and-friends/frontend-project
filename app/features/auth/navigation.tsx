@@ -8,6 +8,7 @@ import SignupCreateScreen from './SignupCreateScreen';
 import SignupScreen from './SignupScreen';
 import VerifyEmailScreen from './VerifyEmailScreen';
 import ClassList from '../class/ClassListScreen';
+import {TabNavigation} from '../../navigation';
 
 export type ParamsList = {
   LoginAccountScreen: undefined;
@@ -16,7 +17,7 @@ export type ParamsList = {
   SignupScreen: {email: null | string};
   SignupCreateScreen: {email: string};
   VerifyEmailScreen: {email: string};
-  ClassList: undefined;
+  Home: undefined;
 };
 
 const Stack = createStackNavigator<ParamsList>();
@@ -54,8 +55,8 @@ export const AuthStacks = () => (
       options={{headerShown: false}}
     />
     <Stack.Screen
-      name="ClassList"
-      component={ClassList}
+      name="Home"
+      component={TabNavigation}
       options={{headerShown: false}}
     />
   </Stack.Navigator>

@@ -38,7 +38,7 @@ const Tab = createBottomTabNavigator();
 
 const renderBottomNavBar = (props: any) => <BottomNavBar {...props} />;
 
-const TabNavigation = () => {
+export const TabNavigation = () => {
   return (
     <Tab.Navigator
       screenOptions={{headerShown: false}}
