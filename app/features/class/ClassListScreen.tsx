@@ -1,5 +1,5 @@
-import {NavigationProp, useNavigation} from '@react-navigation/core';
-import React, {useEffect, useState} from 'react';
+import {NavigationProp, useFocusEffect, useNavigation} from '@react-navigation/core';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   ImageBackground,
   ScrollView,
@@ -20,44 +20,48 @@ export type ParamList = {
     params: {
       classId: string;
       className: string;
-      classTime: string;
-      classPlace: string;
-      grade: {midTerm?: number; endTerm?: number};
+      startTime: string;
+      endTime: string;
+      lecturerName: string;
+      classType: string;
     };
   };
 };
 
 const ClassListScreen = () => {
-  // const navigation = useNavigation<NavigationProp<ParamList>>();
-
+  const navigation = useNavigation<NavigationProp<ParamList>>();
   const [classes, setClasses] = useState<ClassInfo[]>([]);
 
-  // const handleNavigateToClass = (
-  //   classId: string,
-  //   className: string,
-  //   classTime: string,
-  //   classPlace: string,
-  //   grade: {midTerm?: number; endTerm?: number},
-  // ) => {
-  //   navigation.navigate('ClassStacks', {
-  //     screen: 'ClassDetails',
-  //     params: {
-  //       classId,
-  //       className,
-  //       classTime,
-  //       classPlace,
-  //       grade,
-  //     },
-  //   });
-  // };
-
-  useEffect(() => {
-    getListClasses().then(res => {
-      if (res) {
-        setClasses(res);
-      }
+  const handleNavigateToClass = (
+    classId: string,
+    className: string,
+    startTime: string,
+    endTime: string,
+    lecturerName: string,
+    classType: string
+  ) => {
+    navigation.navigate('ClassStacks', {
+      screen: 'ClassDetails',
+      params: {
+        classId,
+        className,
+        startTime,
+        endTime,
+        lecturerName,
+        classType,
+      },
     });
-  }, []);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      getListClasses().then(res => {
+        if (res) {
+          setClasses(res);
+        }
+      });
+    }, [])
+  )
 
   return (
     <View style={styles.container}>
@@ -80,6 +84,16 @@ const ClassListScreen = () => {
               endTime={classItem.end_date}
               lecturerName={classItem.lecturer_name}
               classType={classItem.class_type}
+              onPress={() =>
+                handleNavigateToClass(
+                  classItem.class_id,
+                  classItem.class_name,
+                  classItem.start_date,
+                  classItem.end_date,
+                  classItem.lecturer_name, 
+                  classItem.class_type
+                )
+              }
             ></ClassRect>
           ))}
         </ScrollView>
