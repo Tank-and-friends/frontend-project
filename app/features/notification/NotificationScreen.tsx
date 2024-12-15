@@ -12,115 +12,24 @@ import {
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import TaskNotification from './components/TaskNotification';
 import TopNavWithoutAvatar from '../../components/TopComponent/TopNavWithoutAvatar';
-// import axios from 'axios';
+
 import {Notification} from './types';
-// import axiosInstance from '../../apis/apiConfig';
-import axios from 'axios';
-import {getUnreadNotificationsCount} from './api';
-// import axiosInstance from '../../apis/apiConfig';
+import {
+  getNotifications,
+  getUnreadNotificationsCount,
+  markNotificationAsRead,
+} from './api';
+
 const NotificationScreen = () => {
-  // const notificationdata = [
-  //   {
-  //     subject: 'TKXDPM.20241',
-  //     time: '15:15',
-  //     notificationName: 'Bài tập',
-  //     notificationText: 'Nguyen Thi Thu Trang đã tạo một bài tập mới',
-  //     onMarkRead: false,
-  //   },
-  //   {
-  //     subject: 'CTDLGT.20241',
-  //     time: '09:30',
-  //     notificationName: 'Thông báo',
-  //     notificationText: 'Lịch kiểm tra giữa kỳ đã được cập nhật.',
-  //     onMarkRead: true,
-  //   },
-  //   {
-  //     subject: 'HTTTQL.20241',
-  //     time: '11:00',
-  //     notificationName: 'Tài liệu',
-  //     notificationText: 'Thầy Nguyễn Văn A đã đăng tài liệu ôn tập cuối kỳ.',
-  //     onMarkRead: false,
-  //   },
-  //   {
-  //     subject: 'LTHDT.20241',
-  //     time: '14:45',
-  //     notificationName: 'Câu hỏi',
-  //     notificationText:
-  //       'Sinh viên cần hoàn thành bài thảo luận trước ngày 25/11.',
-  //     onMarkRead: false,
-  //   },
-  //   {
-  //     subject: 'PTTKHT.20241',
-  //     time: '08:20',
-  //     notificationName: 'Hướng dẫn',
-  //     notificationText: 'Video hướng dẫn đồ án cuối kỳ đã được tải lên.',
-  //     onMarkRead: true,
-  //   },
-  //   {
-  //     subject: 'MKT.20241',
-  //     time: '16:30',
-  //     notificationName: 'Đánh giá',
-  //     notificationText: 'Đánh giá bài tập nhóm đã được đăng.',
-  //     onMarkRead: false,
-  //   },
-  //   {
-  //     subject: 'THVP.20241',
-  //     time: '10:15',
-  //     notificationName: 'Bài học',
-  //     notificationText: 'Bài giảng mới đã có trên hệ thống LMS.',
-  //     onMarkRead: true,
-  //   },
-  // ];
-
-  // const [unRead, setUnRead] = useState(false);
-  // const textColor = unRead ? '#B6B6B6' : '#020202';
-
-  // const [notifications, setNotifications] = useState(notificationdata);
-
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const response = await axios.post(
-          'http://157.66.24.126:8080/it5023e/get_notifications',
-          {
-            token: 'Mq9YoW',
-            index: 0,
-            count: 20,
-          },
-        );
-
-        // Log meta và data từ API
-        // console.log('Data:', response.data.data);
-
-        if (response.data && response.data.data) {
-          const apiNotifications = response.data.data.map(
-            (item: Notification) => ({
-              id: item.id,
-              message: item.message,
-              status: item.status,
-              fromUser: item.from_user,
-              toUser: item.to_user,
-              type: item.type,
-              time: new Date(item.sent_time).toLocaleTimeString(), // Định dạng lại thời gian nếu cần
-              notificationName: item.type,
-              notificationText: item.message,
-              onMarkRead: item.status === 'READ', // Đánh dấu đã đọc nếu trạng thái là READ
-              iconName: 'bell',
-            }),
-          );
-          setNotifications(apiNotifications); // Lưu thông báo vào state
-          // console.log('Notifi:', apiNotifications);
-        }
-      } catch (error) {
-        console.error('Lỗi khi gọi API:', error);
-      } finally {
-        // setLoading(false); // Tắt trạng thái loading
-      }
+    const fetchNotificationsData = async () => {
+      const notifications2 = await getNotifications();
+      setNotifications(notifications2);
     };
 
-    fetchNotifications();
+    fetchNotificationsData();
   }, []);
 
   useEffect(() => {
@@ -227,41 +136,25 @@ const NotificationScreen = () => {
     }
   }, [showFooter, notifications.length]);
 
-  const markNotificationAsRead = async (notificationId: string) => {
-    try {
-      const response = await axios.post(
-        'http://157.66.24.126:8080/it5023e/mark_notification_as_read',
-        {
-          token: 'Mq9YoW',
-          notification_id: notificationId,
-        },
-      );
-
-      console.log(response.data);
-    } catch (error) {
-      console.error('Error marking notification as read:', error);
-    }
-  };
-
   const handleMarkRead = () => {
     const selectedIndexes = checkedStates
       .map((checked, index) => (checked ? index : null)) // Lấy index nếu checked là true
       .filter(index => index !== null); // Loại bỏ các giá trị null
-    // console.log('Danh sách các index được chọn:', selectedIndexes);
+
     const updatedNotifications = notifications.map((notification, index) => {
       if (checkedStates[index]) {
+        // Gọi hàm từ api.ts để đánh dấu thông báo là đã đọc
         markNotificationAsRead(String(notification.id));
 
         return {...notification, onMarkRead: true}; // Đánh dấu đã đọc
       }
       return notification; // Không thay đổi nếu không được chọn
     });
+
     setNotifications(updatedNotifications); // Cập nhật trạng thái thông báo
-    // const markedReadNotifications = updatedNotifications.filter((_, index) => checkedStates[index]);
-    // console.log('Các thông báo đã đánh dấu là đã đọc:', markedReadNotifications);
+
     if (selectedIndexes.length > 0) {
       setShowFooter(false);
-    } else {
     }
   };
 

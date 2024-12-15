@@ -16,6 +16,7 @@ import StatusButtonGroup from './components/StatusButtonGroup';
 import {Survey} from './type';
 import {Text} from 'react-native-paper';
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useNavigation} from '@react-navigation/core';
 import {deleteAssignment, getAllSurveys, getStudentAssignments} from './api';
 import NoTasks from './components/NoTask';
 
@@ -24,45 +25,8 @@ const AssignmentScreen = () => {
   const [dataServey, setDataSurvey] = useState<Survey[]>([]);
 
   const [labelStatus, setLabelStatus] = useState('All');
+  const navigation = useNavigation();
   const [isDataEmpty, setIsDataEmpty] = useState(true);
-
-  // useEffect(() => {
-  //   const getAllServeys = async () => {
-  //     try {
-  //       const response = await axios.post(
-  //         'http://157.66.24.126:8080/it5023e/get_all_surveys',
-  //         {
-  //           token: 'Mq9YoW',
-  //           class_id: '000254',
-  //         },
-  //       );
-
-  //       // Log meta và data từ API
-  //       // console.log('Data:', response.data.data);
-
-  //       if (response.data && response.data.data) {
-  //         const apiDataServey = response.data.data.map((item: Survey) => ({
-  //           id: item.id,
-  //           title: item.title,
-  //           description: item.description,
-  //           lecturer_id: item.lecturer_id,
-  //           deadline: item.deadline,
-  //           file_url: item.file_url,
-  //           class_id: item.class_id,
-  //         }));
-  //         setDataSurvey(apiDataServey);
-  //
-  //       }
-  //       // console.log(response.data.data);
-  //     } catch (error) {
-  //       console.error('Lỗi khi gọi API2:', error);
-  //     } finally {
-  //       // setLoading(false); // Tắt trạng thái loading
-  //     }
-  //   };
-
-  //   getAllServeys();
-  // }, [role]);
 
   useEffect(() => {
     if (role !== 'LECTURER') {
@@ -214,24 +178,38 @@ const AssignmentScreen = () => {
     fetchData();
   }, [labelStatus, role]);
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (role !== 'LECTURER') {
+        return;
+      }
+
+      const fetchData = async () => {
+        const data = await getAllSurveys();
+        setDataSurvey(data);
+        setIsDataEmpty(data.length === 0);
+      };
+
+      fetchData(); // Gọi API khi màn hình focus
+      setRole(role); // Cập nhật role nếu cần (nếu không cần, có thể bỏ dòng này)
+    });
+
+    return unsubscribe; // Dọn dẹp listener khi component bị unmount
+  }, [navigation, role]);
+
   const [showFooter, setShowFooter] = useState(false);
 
   const handleEdit = () => {
     setShowFooter(false);
   };
 
-  const deleteSurvey = async (survey_id: number) => {
-    if (role !== 'LECTURER') {
-      console.warn('Hành động này chỉ dành cho giảng viên (LECTURER).');
-      return;
-    }
-
-    const fetchData = async () => {
-      await deleteAssignment('rKXjuw', survey_id.toString());
-    };
-
-    fetchData();
+  const handleCreateAssignment = () => {
+    navigation.navigate('CreateAssignmentScreen');
   };
+
+  const [deleteDone, setDeleteDone] = useState(
+    Array(dataServey.length).fill(false), // Khởi tạo mảng với tất cả giá trị `false`
+  );
 
   const [checkedStates, setCheckedStates] = useState(
     Array(dataServey.length).fill(false), // Khởi tạo mảng với tất cả giá trị `false`
@@ -241,10 +219,41 @@ const AssignmentScreen = () => {
     if (showFooter) {
       // Reset all checked states to false when showFooter is true
       setCheckedStates(Array(dataServey.length).fill(false));
+      setDeleteDone(Array(dataServey.length).fill(false));
     }
   }, [showFooter, dataServey.length]);
 
-  const handleDeleteSelected = () => {
+  const deleteSurvey = async (survey_id: number, index: number) => {
+    if (role !== 'LECTURER') {
+      console.warn('Hành động này chỉ dành cho giảng viên (LECTURER).');
+      return;
+    }
+
+    const fetchData = async () => {
+      await deleteAssignment('rKXjuw', survey_id.toString()).then(res => {
+        if (!res) {
+          setDeleteDone(prevState => {
+            const updatedDeleteDone = [...prevState];
+            updatedDeleteDone[index] = true;
+
+            return updatedDeleteDone;
+          });
+        }
+      });
+    };
+
+    fetchData();
+  };
+
+  useEffect(() => {
+    if (showFooter) {
+      // Reset all checked states to false when showFooter is true
+      setCheckedStates(Array(dataServey.length).fill(false));
+      setDeleteDone(Array(dataServey.length).fill(false));
+    }
+  }, [showFooter, dataServey.length]);
+
+  const handleDeleteSelected = async () => {
     const selectedIndexes = checkedStates
       .map((checked, index) => (checked ? index : null)) // Lấy index nếu checked là true
       .filter(index => index !== null); // Loại bỏ các giá trị null
@@ -252,28 +261,17 @@ const AssignmentScreen = () => {
     const updatedNotifications = dataServey.map((notification, index) => {
       if (checkedStates[index]) {
         // markNotificationAsRead(String(notification.id));
-
-        return {...notification, onMarkRead: true}; // Đánh dấu đã đọc
+        deleteSurvey(notification.id, index);
+        return {...notification}; // Đánh dấu đã đọc
       }
       return notification; // Không thay đổi nếu không được chọn
     });
-    // setNotifications(updatedNotifications); // Cập nhật trạng thái thông báo
-    const markedReadNotifications = updatedNotifications.filter(
-      (_, index) => checkedStates[index],
-    );
-
-    markedReadNotifications.forEach(notification => {
-      // console.log(notification.id);
-      deleteSurvey(notification.id);
-    });
-
+    setDataSurvey(updatedNotifications);
     if (selectedIndexes.length > 0) {
       setShowFooter(false);
-      // chạy lại ở đây
+      console.log('check: ', checkedStates);
 
-      const updatedSurveys = dataServey.filter(
-        (_, index) => !checkedStates[index],
-      );
+      const updatedSurveys = dataServey.filter(_ => true);
 
       // Cập nhật lại trạng thái dataServey
       setDataSurvey(updatedSurveys);
@@ -282,7 +280,24 @@ const AssignmentScreen = () => {
       setCheckedStates(Array(updatedSurveys.length).fill(false));
     } else {
     }
+
+    if (role !== 'LECTURER') {
+      return;
+    }
+
+    const fetchData = async () => {
+      const data = await getAllSurveys();
+      setDataSurvey(data);
+      setIsDataEmpty(data.length === 0);
+    };
+
+    fetchData(); // Gọi API khi màn hình focus
+    setRole(role); // Cập nhật role nếu cần (nếu không cần, có thể bỏ dòng này)
   };
+
+  useEffect(() => {
+    console.log('deleteDone has changed:', deleteDone);
+  }, [deleteDone]);
 
   useEffect(() => {
     const handleBackPress = () => {
@@ -313,34 +328,47 @@ const AssignmentScreen = () => {
           placeholder="Bạn muốn tìm gì ..."
         />
 
-        {role === 'STUDENT' && <View style={styles.statusGroup}>
-          <StatusButtonGroup setLabelStatus={setLabelStatus} />
-        </View>}
+        {role === 'STUDENT' && (
+          <View style={styles.statusGroup}>
+            <StatusButtonGroup setLabelStatus={setLabelStatus} />
+          </View>
+        )}
         {false && <Text>{typeStatus}</Text>}
         <View style={styles.listAssgnment}>
-          {!isDataEmpty && <ScrollView contentContainerStyle={{}}>
-            {dataServey.map((item, index) => (
-              <Pressable key={index}>
-                <Assignment
-                  key={index}
-                  date={assignments[0].date}
-                  day={assignments[0].date}
-                  tasks={assignments[0].tasks}
-                  serveyData={item}
-                  checked={checkedStates[index]}
-                  setChecked={value => {
-                    const updatedStates = [...checkedStates];
-                    updatedStates[index] = value;
-                    setCheckedStates(updatedStates);
-                  }}
-                  showFooter={showFooter}
-                  setShowFooter={setShowFooter}
-                />
-              </Pressable>
-            ))}
-          </ScrollView>}
+          {!isDataEmpty && (
+            <ScrollView contentContainerStyle={{}}>
+              {dataServey.map((item, index) => (
+                <Pressable key={index}>
+                  <Assignment
+                    key={index}
+                    date={assignments[0].date}
+                    day={assignments[0].date}
+                    tasks={assignments[0].tasks}
+                    serveyData={item}
+                    checked={checkedStates[index]}
+                    setChecked={value => {
+                      const updatedStates = [...checkedStates];
+                      updatedStates[index] = value;
+                      setCheckedStates(updatedStates);
+                    }}
+                    showFooter={showFooter}
+                    setShowFooter={setShowFooter}
+                  />
+                </Pressable>
+              ))}
+            </ScrollView>
+          )}
 
           {isDataEmpty && <NoTasks />}
+
+          {/* Button Create Assignment */}
+          {role === 'LECTURER' && !showFooter && (
+            <TouchableOpacity
+              style={styles.createButton}
+              onPress={() => handleCreateAssignment()}>
+              <Text style={styles.createButtonText}>Create Assignment</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
       {/* Footer */}
@@ -427,6 +455,19 @@ const styles = StyleSheet.create({
   footerText: {
     color: 'white',
     opacity: 0.6,
+  },
+  createButton: {
+    backgroundColor: '#C02135',
+    padding: 15,
+    marginVertical: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    margin: 10,
+  },
+  createButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
