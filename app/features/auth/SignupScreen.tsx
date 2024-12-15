@@ -1,12 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import React, {useEffect, useState} from 'react';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LabeledInput from '../../components/LabeledInput';
-import { validateEmail } from '../../utils/validation';
-import { ParamsList } from './navigation';
+import {validateEmail} from '../../utils/validation';
+import {ParamsList} from './navigation';
 
 type SignupScreenNavigationProp = StackNavigationProp<
   ParamsList,
@@ -83,9 +83,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   image: {
-    width: 240,
-    height: 240,
-    marginBottom: 32,
+    width: 150,
+    height: 150,
   },
   title: {
     fontSize: 24,

@@ -1,5 +1,5 @@
 // AppNavigator.tsx
-import { createStackNavigator } from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
 import LoginAccountScreen from './LoginAccountScreen';
 import LoginScreen from './LoginScreen';
@@ -7,6 +7,7 @@ import PasswordScreen from './PasswordScreen';
 import SignupCreateScreen from './SignupCreateScreen';
 import SignupScreen from './SignupScreen';
 import VerifyEmailScreen from './VerifyEmailScreen';
+import ClassList from '../class/ClassListScreen';
 
 export type ParamsList = {
   LoginAccountScreen: undefined;
@@ -15,6 +16,7 @@ export type ParamsList = {
   SignupScreen: {email: null | string};
   SignupCreateScreen: {email: string};
   VerifyEmailScreen: {email: string};
+  ClassList: undefined;
 };
 
 const Stack = createStackNavigator<ParamsList>();
@@ -49,6 +51,11 @@ export const AuthStacks = () => (
     <Stack.Screen
       name="VerifyEmailScreen"
       component={VerifyEmailScreen}
+      options={{headerShown: false}}
+    />
+    <Stack.Screen
+      name="ClassList"
+      component={ClassList}
       options={{headerShown: false}}
     />
   </Stack.Navigator>

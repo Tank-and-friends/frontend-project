@@ -12,6 +12,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from './navigation';
 import {StackNavigationProp} from '@react-navigation/stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as ImagePicker from 'react-native-image-picker';
 import {UserInfo} from '../../models/User';
 import {getUserInfo} from '../../apis/UserApi';
 
@@ -21,25 +23,51 @@ type AccountInfoScreenNavigationProp = StackNavigationProp<
 >;
 
 const AccountInfoScreen: React.FC = () => {
-  const [accountData, setAccountData] = useState<UserInfo | null>(null);
   const navigation = useNavigation<AccountInfoScreenNavigationProp>();
 
-  useEffect(() => {
-    getUserInfo().then(res => {
-      setAccountData(res);
-    });
-  }, []);
+  const [email, setEmail] = useState<string | null>(null);
+  const [role, setRole] = useState<string | null>(null);
+  const [name, setName] = useState<string | null>(null);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
 
-  if (!accountData) {
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Text>Không có dữ liệu tài khoản.</Text>
-      </View>
-    );
-  }
-  const handleEditInfo = () => {
-    navigation.navigate('AccountUpdateScreen');
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const storedEmail = await AsyncStorage.getItem('email');
+        const storedRole = await AsyncStorage.getItem('role');
+        const storedName = await AsyncStorage.getItem('name');
+        const storedImage = await AsyncStorage.getItem('profileImage');
+
+        setEmail(storedEmail);
+        setRole(storedRole);
+        setName(storedName);
+        setProfileImage(storedImage);
+      } catch (error) {
+        console.error('Failed to load data from AsyncStorage:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  const handleImageUpload = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibrary({
+        mediaType: 'photo',
+        quality: 0.8,
+      });
+
+      if (result.assets && result.assets.length > 0) {
+        const imageUri = result.assets[0].uri ?? null; // Chuyển undefined thành null
+        setProfileImage(imageUri);
+
+        // Lưu ảnh vào AsyncStorage
+        await AsyncStorage.setItem('profileImage', imageUri || '');
+      }
+    } catch (error) {
+      console.error('Failed to pick image:', error);
+    }
   };
+
   const handlePasswordChange = () => {
     navigation.navigate('PasswordChangeScreen');
   };
@@ -64,16 +92,19 @@ const AccountInfoScreen: React.FC = () => {
           />
         </View>
 
-        {/* Profile Section */}
         <View style={styles.profileContainer}>
-          <Image
-            source={{uri: accountData.avatar}}
-            style={styles.profileImage}
-          />
+          <TouchableOpacity onPress={handleImageUpload}>
+            <Image
+              source={
+                profileImage
+                  ? {uri: profileImage}
+                  : require('../../assets/avt.jpg')
+              }
+              style={styles.profileImage}
+            />
+          </TouchableOpacity>
           <View style={styles.onlineStatusIndicator} />
-          <Text style={styles.userName}>{accountData.name}</Text>
-          <Text style={styles.friendCount}>{accountData.role}</Text>
-          <Text style={styles.statusText}>{accountData.id}</Text>
+          <Text style={styles.userName}>{name}</Text>
         </View>
 
         {/* Divider */}
@@ -82,12 +113,18 @@ const AccountInfoScreen: React.FC = () => {
         {/* Details Section */}
         <View style={styles.detailsContainer}>
           <View style={styles.detailItem}>
-            <Icon name="calendar" size={20} color="#f57c00" />
-            <Text style={styles.detailText}>{accountData.email}</Text>
+            <Icon name="mail" size={24} color="#C02135" />
+            <Text style={styles.detailText}>
+              Email{' : '}
+              <Text style={styles.detailTextBold}>{email}</Text>
+            </Text>
           </View>
           <View style={styles.detailItem}>
-            <Icon name="calendar" size={20} color="#f57c00" />
-            <Text style={styles.detailText}>{accountData.status}</Text>
+            <Icon name="person-circle" size={24} color="#C02135" />
+            <Text style={styles.detailText}>
+              Role{' : '}
+              <Text style={styles.detailTextBold}>{role}</Text>
+            </Text>
           </View>
         </View>
 
@@ -95,10 +132,6 @@ const AccountInfoScreen: React.FC = () => {
         <TouchableOpacity style={styles.button} onPress={handlePasswordChange}>
           <Icon name="lock-closed-outline" size={20} color="#fff" />
           <Text style={styles.buttonText}>Đổi mật khẩu</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleEditInfo}>
-          <Icon name="create-outline" size={20} color="#fff" />
-          <Text style={styles.buttonText}>Chỉnh sửa thông tin</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>
@@ -159,9 +192,9 @@ const styles = StyleSheet.create({
     borderColor: '#fff',
   },
   userName: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
-    marginTop: 10,
+    marginTop: 15,
   },
   friendCount: {
     fontSize: 16,
@@ -173,7 +206,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   divider: {
-    height: 1,
+    height: 2,
     backgroundColor: '#e0e0e0',
     marginVertical: 2,
     marginHorizontal: 20,
@@ -195,18 +228,13 @@ const styles = StyleSheet.create({
   },
   detailText: {
     marginLeft: 10,
-    fontSize: 16,
+    fontSize: 18,
   },
   detailTextBold: {
     fontWeight: 'bold',
   },
-  linkText: {
-    marginLeft: 10,
-    fontSize: 16,
-    color: '#1e88e5',
-    textDecorationLine: 'underline',
-  },
   button: {
+    marginTop: 250,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#C02135',
@@ -214,7 +242,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 5,
     marginHorizontal: 20,
-    marginVertical: 10,
+    marginVertical: 13,
     justifyContent: 'center',
   },
   buttonText: {

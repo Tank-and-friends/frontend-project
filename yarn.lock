@@ -2072,6 +2072,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-async-storage/async-storage@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@react-native-async-storage/async-storage@npm:2.1.0"
+  dependencies:
+    merge-options: ^3.0.4
+  peerDependencies:
+    react-native: ^0.0.0-0 || >=0.65 <1.0
+  checksum: bc6cdf3554fdd09f3e7916b105d966e56dbaca48475f33da378dd40c3823f7a6978057ca8207bc161c8e0b8c2b08161797dab48955bce1f3e3e457aeaa4ffaf9
+  languageName: node
+  linkType: hard
+
 "@react-native-community/cli-clean@npm:14.1.0":
   version: 14.1.0
   resolution: "@react-native-community/cli-clean@npm:14.1.0"
@@ -2254,6 +2265,16 @@ __metadata:
     react-native-windows:
       optional: true
   checksum: 3adc9346f8948abed246da3bfa3a223e44c2c5903070178a82e583ce6f8273607fe5a542af834b3a27aff81980c555e5f72bf0e87c85e3f00856a0de21525374
+  languageName: node
+  linkType: hard
+
+"@react-native-picker/picker@npm:^2.10.2":
+  version: 2.10.2
+  resolution: "@react-native-picker/picker@npm:2.10.2"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: b0da314c10fd35db920f891f0e5d45807a8e2c4e5693512308af5685ba2abfb08a0af7d39c8249da6fc7a935f1974e513fc7f4522a278caa48b0fc3c16f31038
   languageName: node
   linkType: hard
 
@@ -5224,6 +5245,7 @@ __metadata:
     "@babel/runtime": ^7.20.0
     "@react-native-async-storage/async-storage": latest
     "@react-native-community/datetimepicker": ^8.2.0
+    "@react-native-picker/picker": ^2.10.2
     "@react-native/babel-preset": 0.75.4
     "@react-native/eslint-config": 0.75.4
     "@react-native/metro-config": 0.75.4
@@ -5253,8 +5275,10 @@ __metadata:
     react-hook-form: ^7.53.2
     react-native: 0.75.4
     react-native-country-picker-modal: ^2.0.0
+    react-native-device-info: ^14.0.1
     react-native-document-picker: ^9.3.1
     react-native-gesture-handler: ^2.20.0
+    react-native-image-picker: ^7.2.3
     react-native-modal-datetime-picker: ^18.0.0
     react-native-pager-view: ^6.5.0
     react-native-paper: latest
@@ -8380,6 +8404,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-device-info@npm:^14.0.1":
+  version: 14.0.1
+  resolution: "react-native-device-info@npm:14.0.1"
+  peerDependencies:
+    react-native: "*"
+  checksum: d381cc0d21da1d86fe8f9bfdd36ffd1c37a78cefbf89d3716b72a58ee4ebdfa44af47f51aeda5e613c15bd54d78ff0e43048a369eda86f391356351f0ed78462
+  languageName: node
+  linkType: hard
+
 "react-native-document-picker@npm:^9.3.1":
   version: 9.3.1
   resolution: "react-native-document-picker@npm:9.3.1"
@@ -8422,6 +8455,16 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 8d9e7496615dad4e6bb6dd1c750c2d3b2e57c6173a1d466b4503b28b159b1dbbb1e7527c3d4bda12324422200c07835f34d81c9bd3cd1b7f594b22949bef274a
+  languageName: node
+  linkType: hard
+
+"react-native-image-picker@npm:^7.2.3":
+  version: 7.2.3
+  resolution: "react-native-image-picker@npm:7.2.3"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 96d67516e8e1c1768c593ca1b0a507d5212d8ac5df2610ad9d6f38c188b8d0720966559867849f74b6c19d2500664ce17c907e5fa37ab72487abd363cf493e7d
   languageName: node
   linkType: hard
 
