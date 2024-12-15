@@ -6,10 +6,10 @@ import {
   useRoute,
 } from '@react-navigation/core';
 import React from 'react';
-import { ImageBackground, StyleSheet, Text, View } from 'react-native';
-import { Appbar, IconButton } from 'react-native-paper';
+import {ImageBackground, StyleSheet, Text, View} from 'react-native';
+import {Appbar, IconButton} from 'react-native-paper';
 import IonIcons from 'react-native-vector-icons/Ionicons';
-import { TextField } from '../../components/TextField/TextField';
+import {TextField} from '../../components/TextField/TextField';
 import ClassRectTab from './components/ClassRectTab';
 
 export type ParamList = {
@@ -24,9 +24,17 @@ export type ParamList = {
   };
   AssignmentStacks: {
     screen: string;
+    params: {
+      classId: string;
+    };
   };
   ClassDetailsScreen: {classId: string; className: string};
-  AbsenceRequestsList: undefined;
+  AbsenceRequestsList: {
+    screen: string;
+    params: {
+      classId: string;
+    };
+  };
 };
 
 const ClassDetailsScreen = () => {
@@ -74,20 +82,25 @@ const ClassDetailsScreen = () => {
               navigation.navigate('MaterialStacks', {
                 screen: 'ListMaterial',
                 params: {
-                  classId: '000808',
+                  classId: classId,
                 },
               })
             }
           />
-
 
           <ClassRectTab
             title="Xin nghỉ phép"
             subtitle="Gửi đơn xin vắng mặt cho buổi học sắp tới"
             imageSource={require('../../assets/images/XinNghiPhep.png')}
             reverse={true}
-            onPress={() => navigation.navigate('AbsenceRequestsList')}
-            onPress={() => navigation.navigate('AbsenceRequestsList')}
+            onPress={() =>
+              navigation.navigate('AbsenceRequestsList', {
+                screen: 'AbsenceRequestsList',
+                params: {
+                  classId: classId,
+                },
+              })
+            }
           />
 
           <ClassRectTab
@@ -98,6 +111,9 @@ const ClassDetailsScreen = () => {
             onPress={() =>
               navigation.navigate('AssignmentStacks', {
                 screen: 'AssignmentScreen',
+                params: {
+                  classId: classId,
+                },
               })
             }
           />
@@ -121,7 +137,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-start',
     gap: 2,
-    gap: 2,
   },
   headerTitle: {
     color: 'white',
@@ -129,7 +144,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter',
     fontWeight: 'semibold',
     paddingLeft: 10,
-    width: '90%'
+    width: '90%',
   },
   headerSubtitle: {
     fontSize: 14,
