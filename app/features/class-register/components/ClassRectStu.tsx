@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   classSquareContainer: {
     justifyContent: 'flex-start',
     flexDirection: 'column',
-    width: '90%',
+    width: 350,
     height: 170,
     borderRadius: 10,
     padding: 20,

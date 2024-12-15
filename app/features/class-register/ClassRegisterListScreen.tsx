@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
 import {
+  Alert,
   Button,
   Image,
   ImageBackground,
@@ -19,6 +20,7 @@ import {
 import ClassRectLec from './components/ClassRectLec';
 import {format} from 'date-fns';
 import ClassRectStu from './components/ClassRectStu';
+import { registerClass } from '../../apis/RegisterApi';
 
 interface ClassItem {
   class_id: string;
@@ -119,11 +121,30 @@ export default function ClassRegisterListScreen({
     setSelectedClass(null);
   };
 
-  const handleRegister = () => {
-    // Perform registration logic here
-    console.log(`Registering for class: ${selectedClass?.class_name}`);
-    handleDialogDismiss();
+  const handleRegister = async () => {
+    if (!selectedClass) {
+      Alert.alert('Bạn chưa chọn lớp học.');
+      return;
+    }
+    const today = new Date();
+    const startDate = new Date(selectedClass.start_date);
+    const endDate = new Date(selectedClass.end_date);
+    const isOutdated = today < startDate || today > endDate;
+
+    if (isOutdated) {
+      Alert.alert('Lớp hết hạn', 'Lớp hết hạn mất rồi! Không đăng ký được đâu nhé');
+      return;
+    }
+    try {
+      await registerClass([selectedClass.class_id]);
+    } catch (error) {
+      console.error('Error during registration:', error);
+      Alert.alert('An unexpected error occurred. Please try again later.');
+    } finally {
+      handleDialogDismiss();
+    }
   };
+  
 
   return (
     <PaperProvider>
@@ -226,7 +247,7 @@ export default function ClassRegisterListScreen({
               <Dialog.Content>
                 <Text>
                   Are you sure you want to register for{' '}
-                  {selectedClass?.class_name}?
+                  {selectedClass?.class_id}?
                 </Text>
               </Dialog.Content>
               <Dialog.Actions>

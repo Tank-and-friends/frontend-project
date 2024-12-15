@@ -173,14 +173,22 @@ export const getOpenClasses = async (
 
 export const registerClass = async (classIds: string[]): Promise<boolean> => {
   try {
+    console.log(classIds);
+    
     const token = await AsyncStorage.getItem('token');
     const response = await axiosInstance.post(`${DOMAIN}/register_class`, {
       token: token,
       class_ids: classIds,
     });
-    if (response.data.status === 'SUCCESS') {
-      Alert.alert('Đăng ký lớp thành công!');
+    console.log(response);
+    
+    if (response.data[0].status === 'SUCCESS') {
+      Alert.alert('Đăng ký lớp thành công!', 'Chuẩn bị thật kỹ càng trước khi đi học nhé!');
       return true;
+    }
+    if (response.data[0].status === 'FAILED') {
+      Alert.alert('Đăng ký lớp thất bại!', 'Lớp đã đầy mất rồi');
+      return false;
     }
     Alert.alert('Có lỗi khi đăng ký lớp!');
     return false;
