@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {PropsWithChildren, useEffect, useState} from 'react';
+import React, {PropsWithChildren, useCallback, useState} from 'react';
 import {FlatList, ImageBackground, StyleSheet, View} from 'react-native';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import {TextField} from '../../components/TextField/TextField';
@@ -7,6 +7,7 @@ import TopComponent from '../../components/TopComponent/TopComponent';
 import MessageListItem from './components/MessageListItem';
 import {ConversationInfo} from '../../models/Message';
 import {getListConversations} from '../../apis/MessageApi';
+import {useFocusEffect} from '@react-navigation/core';
 type SectionProps = PropsWithChildren<{}>;
 
 const MessageScreen = ({}: SectionProps) => {
@@ -18,9 +19,11 @@ const MessageScreen = ({}: SectionProps) => {
       setListConversation(res);
     });
   };
-  useEffect(() => {
-    fetchListConversation();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchListConversation();
+    }, []),
+  );
   return (
     <View style={{flex: 1}}>
       <ImageBackground

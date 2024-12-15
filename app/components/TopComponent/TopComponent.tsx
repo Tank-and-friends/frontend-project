@@ -1,9 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {NavigationProp, useNavigation} from '@react-navigation/core';
-import React, {PropsWithChildren, useEffect, useState} from 'react';
+import {
+  NavigationProp,
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/core';
+import React, {PropsWithChildren, useCallback, useState} from 'react';
 import {Image, Pressable, StyleSheet, View} from 'react-native';
 import {IconButton, Text} from 'react-native-paper';
+import {getUserInfo} from '../../apis/UserApi';
 type Props = PropsWithChildren<{
   title: string;
 }>;
@@ -16,13 +20,16 @@ type ParamsList = {
 export default function TopComponent({title}: Props) {
   const navigation = useNavigation<NavigationProp<ParamsList>>();
   const [avatarUrl, setAvatarUrl] = useState<string>();
-  useEffect(() => {
-    const fetchAvatar = async () => {
-      var avatar = (await AsyncStorage.getItem('avatar')) || avatarUrl;
-      setAvatarUrl(avatar);
-    };
-    fetchAvatar();
-  }, [avatarUrl]);
+
+  useFocusEffect(
+    useCallback(() => {
+      getUserInfo().then(res => {
+        if (res) {
+          setAvatarUrl(res.avatar);
+        }
+      });
+    }, []),
+  );
   return (
     <View style={{width: '100%'}}>
       <View style={styles.topContainer}>
