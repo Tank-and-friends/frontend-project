@@ -56,7 +56,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 export const RootStacks = () => {
   return (
-    <Stack.Navigator initialRouteName="ClassFeaturesStacks">
+    <Stack.Navigator>
       <Stack.Screen
         name="Home"
         component={TabNavigation}

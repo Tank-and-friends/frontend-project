@@ -14,11 +14,7 @@ type ParamsList = {
   };
 };
 
-export const AbsenceRequestCard = ({
-  title,
-  date,
-  status,
-}: AbsenceRequestInfo) => {
+export const AbsenceRequestCard = ({title, status}: AbsenceRequestInfo) => {
   const navigation = useNavigation<NavigationProp<ParamsList>>();
 
   const statusMarkup =
@@ -42,12 +38,7 @@ export const AbsenceRequestCard = ({
           },
         })
       }>
-      <Card.Title
-        title={<Text style={styles.cardTitle}>{title}</Text>}
-        subtitle={
-          <Text style={styles.cardSubtitle}>{`Ngày tạo: ${date}`}</Text>
-        }
-      />
+      <Card.Title title={<Text style={styles.cardTitle}>{title}</Text>} />
       {statusMarkup}
     </Card>
   );

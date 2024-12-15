@@ -1,9 +1,15 @@
-import { NavigationProp, useNavigation } from '@react-navigation/core';
-import React from 'react';
-import { ImageBackground, ScrollView, StyleSheet, View } from 'react-native';
-import { Appbar, IconButton } from 'react-native-paper';
-import { AbsenceRequestsList } from './components/AbsenceRequestsList';
-import { Chip } from './components/Chip';
+import {
+  NavigationProp,
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/core';
+import React, {useCallback, useMemo, useState} from 'react';
+import {ImageBackground, ScrollView, StyleSheet, View} from 'react-native';
+import {Appbar, IconButton} from 'react-native-paper';
+import {AbsenceRequestsList} from './components/AbsenceRequestsList';
+import {Chip} from './components/Chip';
+import {AbsenceRequestReponse, AbsenceRequestStatus} from './type';
+import {getAbsenceRequestsForStudent} from './api';
 
 type ParamsList = {
   ClassFeaturesStacks: {
@@ -16,7 +22,34 @@ type ParamsList = {
 
 export const AbsenceRequestsListScreen = () => {
   const navigation = useNavigation<NavigationProp<ParamsList>>();
-  const [tab, setTab] = React.useState('all');
+  const [tab, setTab] = React.useState<AbsenceRequestStatus | null>(null);
+
+  const [absenceRequests, setAbsenceRequests] = useState<
+    AbsenceRequestReponse[]
+  >([]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        const data = await getAbsenceRequestsForStudent('000268', tab);
+        setAbsenceRequests(data);
+      };
+
+      fetchData();
+    }, [tab]),
+  );
+
+  const list = useMemo(() => {
+    return absenceRequests.map(item => ({
+      title: item.date,
+      items: [
+        {
+          title: item.title,
+          status: item.status,
+        },
+      ],
+    }));
+  }, [absenceRequests]);
 
   return (
     <View style={styles.container}>
@@ -43,81 +76,30 @@ export const AbsenceRequestsListScreen = () => {
           <View style={styles.tabBar}>
             <Chip
               content="Tất cả"
-              selected={tab === 'all'}
-              onPress={() => setTab('all')}
+              selected={tab === null}
+              onPress={() => setTab(null)}
             />
             <Chip
               content="Chấp nhận"
-              selected={tab === 'accepted'}
-              onPress={() => setTab('accepted')}
+              selected={tab === 'ACCEPTED'}
+              onPress={() => setTab('ACCEPTED')}
             />
             <Chip
               content="Từ chối"
-              selected={tab === 'rejected'}
-              onPress={() => setTab('rejected')}
+              selected={tab === 'REJECTED'}
+              onPress={() => setTab('REJECTED')}
             />
             <Chip
               content="Chưa duyệt"
-              selected={tab === 'pending'}
-              onPress={() => setTab('pending')}
+              selected={tab === 'PENDING'}
+              onPress={() => setTab('PENDING')}
             />
           </View>
           <ScrollView
             style={styles.content}
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled">
-            <AbsenceRequestsList
-              groups={[
-                {
-                  title: 'Hôm nay',
-                  items: [
-                    {title: 'Nghỉ ốm', date: '27/10/2024', status: 'ACCEPTED'},
-                    {
-                      title: 'Nghỉ về quê',
-                      date: '27/10/2024',
-                      status: 'PENDING',
-                    },
-                    {
-                      title: 'Nghỉ đi tiêm Covid',
-                      date: '27/10/2024',
-                      status: 'REJECTED',
-                    },
-                  ],
-                },
-                {
-                  title: 'Hôm qua',
-                  items: [
-                    {title: 'Nghỉ ốm', date: '27/10/2024', status: 'ACCEPTED'},
-                    {
-                      title: 'Nghỉ về quê',
-                      date: '27/10/2024',
-                      status: 'PENDING',
-                    },
-                    {
-                      title: 'Nghỉ đi tiêm Covid',
-                      date: '27/10/2024',
-                      status: 'REJECTED',
-                    },
-                  ],
-                },
-                {
-                  title: 'Hôm kia',
-                  items: [
-                    {title: 'Nghỉ ốm', date: '27/10/2024', status: 'ACCEPTED'},
-                    {
-                      title: 'Nghỉ về quê',
-                      date: '27/10/2024',
-                      status: 'PENDING',
-                    },
-                    {
-                      title: 'Nghỉ đi tiêm Covid',
-                      date: '27/10/2024',
-                      status: 'REJECTED',
-                    },
-                  ],
-                },
-              ]}
-            />
+            <AbsenceRequestsList groups={list} />
           </ScrollView>
           <IconButton
             mode="contained"

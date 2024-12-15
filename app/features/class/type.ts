@@ -6,8 +6,7 @@ export type AttendanceStatus = 'PRESENT' | 'EXCUSED_ABSENCE' | 'UNEXCUSED_ABSENC
 
 export type AbsenceRequestInfo = {
   title: string;
-  date: string;
-  status: AbsenceRequestStatus;
+  status?: AbsenceRequestStatus;
 };
 
 export type AbsenceRequestsGroup = {
@@ -49,3 +48,20 @@ export type AttendanceDetails = {
   attendance_time: string;
   class_detail_id: string;
 };
+
+export type PageInfo = {
+  total_records: number;
+  total_page: number;
+  page_size: number;
+  page: number;
+  next_page: number | null;
+  previous_page: number | null;
+}
+
+export type Student = {
+  attendance_id?: string;
+  account_id: number;
+  student_id: string;
+  name: string;
+  status: AttendanceStatus;
+}
