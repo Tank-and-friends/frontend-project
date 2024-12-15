@@ -129,6 +129,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter',
     fontWeight: 'semibold',
     paddingLeft: 10,
+    width: '90%'
   },
   headerSubtitle: {
     fontSize: 14,

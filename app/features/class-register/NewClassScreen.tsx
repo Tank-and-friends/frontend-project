@@ -1,12 +1,46 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
-import { Image, ImageBackground, ScrollView, StyleSheet, View } from 'react-native';
-import { Appbar, Button, IconButton, Text } from 'react-native-paper';
-import ClassRect from './components/ClassRect';
-import { TextField } from '../../components/TextField/TextField';
-import navigation from '../auth/navigation';
+import React, {PropsWithChildren, useState} from 'react';
+import {ImageBackground, StyleSheet, View} from 'react-native';
+import {Appbar, Button, IconButton, Text} from 'react-native-paper';
+import {TextField} from '../../components/TextField/TextField';
+import DatePickerInput from '../../components/DatePicker';
+import {CreateClassReq} from '../../models/Register';
+import {createClass} from '../../apis/RegisterApi';
+import {RouteProp, useNavigation} from '@react-navigation/native';
 
-export default function NewClassScreen({route, navigation}: any) {
+type RouteProps = {
+  NewClassScreen: {
+    onUpdate: () => void;
+  };
+};
+
+type Props = PropsWithChildren<{route: RouteProp<RouteProps>}>;
+
+export default function NewClassScreen({route}: Props) {
+  const {onUpdate} = route.params;
+  const navigation = useNavigation();
+  const [classInfo, setClassInfo] = useState<CreateClassReq>({
+    class_id: '',
+    class_name: '',
+    class_type: '',
+    max_student_amount: '',
+    start_date: '',
+    end_date: '',
+  });
+
+  const handleDataChange = (field: string, value: string) => {
+    setClassInfo({...classInfo, [field]: value});
+  };
+
+  const handleSubmit = () => {
+    createClass(classInfo).then(res => {
+      if (res) {
+        onUpdate();
+        navigation.goBack();
+      }
+    });
+  };
+
   return (
     <View style={{flex: 1}}>
       <ImageBackground
@@ -21,7 +55,7 @@ export default function NewClassScreen({route, navigation}: any) {
             onPress={() => navigation.goBack()}
           />
           <View style={styles.headerContent}>
-            <Text style={styles.headerTitle}>Danh sách lớp</Text>
+            <Text style={styles.headerTitle}>Đăng ký lớp</Text>
             <Text style={styles.headerSubtitle}>Đăng ký mở lớp</Text>
           </View>
           <View style={styles.actionBtn}>
@@ -32,56 +66,81 @@ export default function NewClassScreen({route, navigation}: any) {
         <View style={styles.container}>
           <View style={styles.formContainer}>
             <View style={styles.formTitle}>
-              <Text style={[styles.headerTitle, {color: '#071013', fontWeight: '500'}]}>Đăng ký mở lớp</Text>
-              <Text style={[styles.headerSubtitle, {color: '#41484A', fontWeight: '500'}]}>Vui lòng điền những thông tin cần thiết</Text>
+              <Text
+                style={[
+                  styles.headerTitle,
+                  {color: '#071013', fontWeight: '700'},
+                ]}>
+                Thông tin lớp
+              </Text>
             </View>
-            <View style={styles.line}></View>
             <View style={styles.formTextField}>
               <View style={styles.formClassName}>
                 <TextField
-                  id='className'
-                  name='className'
-                  customLabel='Môn học'/>
+                  id="class_name"
+                  name="class_name"
+                  customLabel="Học phần"
+                  onChange={value => handleDataChange('class_name', value)}
+                />
               </View>
               <View style={styles.formTimePlace}>
-                <Text style={{color: '#071013', fontWeight: 'bold', fontSize: 16, paddingLeft: 18, paddingTop: 14}}>Thời gian</Text>
                 <View style={styles.formTime}>
                   <View style={{width: '50%'}}>
                     <TextField
-                      id='Day'
-                      name='Day'
-                      customLabel='Thứ'/>
+                      id="class_id"
+                      name="class_id"
+                      onChange={value => handleDataChange('class_id', value)}
+                      customLabel="Mã học phần"
+                    />
                   </View>
                   <View style={{width: '50%'}}>
                     <TextField
-                      id='Period'
-                      name='Period'
-                      customLabel='Tiết'/>
+                      id="class_type"
+                      name="class_type"
+                      customLabel="Loại lớp "
+                      onChange={value => handleDataChange('class_type', value)}
+                    />
                   </View>
                 </View>
-                <Text style={{color: '#071013', fontWeight: 'bold', fontSize: 16, paddingLeft: 18, paddingTop: 14}}>Địa điểm</Text>
                 <View style={styles.formTime}>
-                  <View style={{width: '50%'}}>
+                  <View style={{width: '100%'}}>
                     <TextField
-                      id='Building'
-                      name='Building'
-                      customLabel='Tòa'/>
+                      id="max_student_amount"
+                      name="max_student_amount"
+                      customLabel="Số lượng sinh viên tối đa "
+                      type="integer"
+                      onChange={value =>
+                        handleDataChange('max_student_amount', value)
+                      }
+                    />
                   </View>
-                  <View style={{width: '50%'}}>
-                    <TextField
-                      id='Room'
-                      name='Room'
-                      customLabel='Phòng'/>
+                </View>
+                <View style={[styles.formTime, {justifyContent: 'center', paddingTop: 10}]}>
+                  <View style={{width: '94%'}}>
+                    <DatePickerInput
+                      label="Thời gian bắt đầu"
+                      value={classInfo.start_date}
+                      onChange={value => handleDataChange('start_date', value)}
+                    />
+                  </View>
+                </View>
+                <View style={[styles.formTime, {justifyContent: 'center'}]}>
+                  <View style={{width: '94%'}}>
+                    <DatePickerInput
+                      label="Thời gian kết thúc"
+                      value={classInfo.end_date}
+                      onChange={value => handleDataChange('end_date', value)}
+                    />
                   </View>
                 </View>
               </View>
             </View>
             <Button
               mode="contained"
-              style={{ margin: 20 }}
+              style={{margin: 10, borderRadius: 6, marginBottom: 20}}
               buttonColor="#FF7F11"
               textColor="white"
-              onPress={() => console.log('Đã gửi yêu cầu!')}>
+              onPress={handleSubmit}>
               Gửi yêu cầu
             </Button>
           </View>
@@ -107,7 +166,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'relative',
     width: '100%',
-    paddingTop: 20,
+    paddingTop: 30,
   },
   header: {
     backgroundColor: 'transparent',
@@ -116,7 +175,7 @@ const styles = StyleSheet.create({
   headerContent: {
     justifyContent: 'center',
     alignItems: 'flex-start',
-    gap: 2
+    gap: 2,
   },
   headerTitle: {
     color: 'white',
@@ -139,30 +198,31 @@ const styles = StyleSheet.create({
     backgroundColor: '#EFF2EF',
     width: '90%',
     borderRadius: 10,
+    paddingHorizontal: 10
   },
-  formTitle:{
+  formTitle: {
     gap: 4,
-    padding: 20
+    paddingTop: 20,
+    paddingBottom: 10,
+    paddingHorizontal: 10,
   },
-  line:{
+  line: {
     backgroundColor: '#D9D9D9',
     width: '100%',
-    height: 2
+    height: 2,
   },
-  formTextField:{
-    padding: 10,
-    width:'100%'
-  },
-  formClassName:{
-
-  },
-  formTimePlace:{
+  formTextField: {
+    padding: 0,
     width: '100%',
   },
-  formTime:{
+  formClassName: {},
+  formTimePlace: {
+    width: '100%',
+  },
+  formTime: {
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'flex-start',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 });

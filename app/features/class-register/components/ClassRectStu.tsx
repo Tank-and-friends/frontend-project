@@ -1,19 +1,26 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 type ClassRectProps = {
   classTitle: string;
   classTime: string;
   classCode: string;
   status: string;
+  lecturerName: string;
+  studentNumber: number;
+  onPress: () => void;
 };
 
-export default function ClassRect({
+export default function ClassRectStu({
   classTitle,
   classTime,
   classCode,
   status,
+  lecturerName,
+  studentNumber,
+  onPress
 }: ClassRectProps) {
   const getStatusColor = (_status: string) => {
     switch (_status) {
@@ -27,11 +34,11 @@ export default function ClassRect({
       case 'Hủy lớp':
         return '#C02135';
 
-      case 'Còn chỗ':
+      case 'Mở đăng ký':
         return '#21A366';
       case 'Trùng lịch':
         return '#BF5A67';
-      case 'Hết chỗ':
+      case 'Hết hạn':
         return '#C02135';
 
       default:
@@ -42,23 +49,33 @@ export default function ClassRect({
   const statusColor = getStatusColor(status);
 
   return (
-    <View style={styles.classSquareContainer}>
-      <View style={styles.classTitle}>
-        <Text style={[styles.text, styles.mainTitle]}>{classTitle}</Text>
-        <Text style={[styles.text, styles.subTitle]}>{classTime}</Text>
-        <Text style={[styles.text, styles.subTitle]}>
-          Mã lớp:{' '}
-          <Text style={{fontWeight: 'bold', fontStyle: 'italic'}}>
-            {classCode}
+    <TouchableOpacity onPress={onPress} activeOpacity={0.9} style={{width: '100%', alignItems: 'center'}}>
+      <View style={styles.classSquareContainer}>
+        <View style={styles.classTitle}>
+          <Text style={[styles.text, styles.mainTitle]}>{classTitle}</Text>
+          <Text style={[styles.text, styles.subTitle]}>
+            Giảng viên: {lecturerName}
           </Text>
-        </Text>
-      </View>
-      <View style={styles.boxContainer}>
-        <View style={[styles.Box, {backgroundColor: statusColor}]}>
-          <Text style={styles.BoxText}>{status}</Text>
+          <Text style={[styles.text, styles.subTitle]}>
+            Thời gian: {classTime}
+          </Text>
+          <Text style={[styles.text, styles.subTitle]}>
+            Mã lớp:{' '}
+            <Text style={{fontWeight: 'bold', fontStyle: 'italic'}}>
+              {classCode}
+            </Text>
+          </Text>
+          <Text style={[styles.text, styles.subTitle, {fontStyle: 'italic'}]}>
+            Đã có {studentNumber} sinh viên đăng ký
+          </Text>
+        </View>
+        <View style={styles.boxContainer}>
+          <View style={[styles.Box, {backgroundColor: statusColor}]}>
+            <Text style={styles.BoxText}>{status}</Text>
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -66,8 +83,8 @@ const styles = StyleSheet.create({
   classSquareContainer: {
     justifyContent: 'flex-start',
     flexDirection: 'column',
-    width: '90%',
-    height: 120,
+    width: 350,
+    height: 170,
     borderRadius: 10,
     padding: 20,
     backgroundColor: '#e9e9e9',
