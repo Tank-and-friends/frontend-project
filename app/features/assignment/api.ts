@@ -2,12 +2,10 @@ import axiosInstance from '../../apis/apiConfig';
 import {Survey} from './type';
 
 export const getAllSurveys = async (
-  token = 'Mq9YoW',
   classId = '000254',
 ): Promise<Survey[]> => {
   try {
     const response = await axiosInstance.post('/it5023e/get_all_surveys', {
-      token,
       class_id: classId,
     });
     // console.log('haha', response);
@@ -34,13 +32,11 @@ export const getAllSurveys = async (
 export const getStudentAssignments = async (
   classId = '000254',
   type: string | null = null,
-  token = 'Mq9YoW',
 ): Promise<Survey[]> => {
   try {
     const response = await axiosInstance.post(
       '/it5023e/get_student_assignments',
       {
-        token,
         type,
         class_id: classId,
       },
@@ -67,12 +63,10 @@ export const getStudentAssignments = async (
 };
 
 export const deleteAssignment = async (
-  token = 'Mq9YoW',
   survey_id: string,
 ): Promise<boolean> => {
   try {
     const response = await axiosInstance.post('/it5023e/delete_survey', {
-      token,
       survey_id,
     });
     console.log('abcd: ', response);

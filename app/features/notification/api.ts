@@ -1,16 +1,11 @@
-import axios from 'axios';
 import {Notification} from './types';
 import axiosInstance from '../../apis/apiConfig';
 
-const API_URL = 'http://157.66.24.126:8080/it5023e';
-
 export const getUnreadNotificationsCount = async () => {
   try {
-    const response = await axios.post(
-      `${API_URL}/get_unread_notification_count`,
-      {
-        token: 'Mq9YoW',
-      },
+    const response = await axiosInstance.post(
+      '/get_unread_notification_count',
+      {},
     );
     // Xử lý dữ liệu trả về từ API
     return response.data;
@@ -21,13 +16,11 @@ export const getUnreadNotificationsCount = async () => {
 };
 
 export const getNotifications = async (
-  token = 'Mq9YoW',
   index = 0,
   count = 20,
 ): Promise<Notification[]> => {
   try {
     const response = await axiosInstance.post('/it5023e/get_notifications', {
-      token,
       index,
       count,
     });
@@ -57,13 +50,11 @@ export const getNotifications = async (
 
 export const markNotificationAsRead = async (
   notificationId: string,
-  token = 'Mq9YoW',
 ): Promise<void> => {
   try {
     const response = await axiosInstance.post(
       '/it5023e/mark_notification_as_read',
       {
-        token,
         notification_id: notificationId,
       },
     );
