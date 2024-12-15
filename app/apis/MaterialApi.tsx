@@ -9,7 +9,6 @@ export const getMaterialList = async (
 ): Promise<MaterialInfo[] | []> => {
   try {
     const response = await axiosInstance.post(`${DOMAIN}/get_material_list`, {
-
       class_id: classId,
     });
     const data = response.data;
@@ -24,7 +23,6 @@ export const getMaterialInfo = async (
 ): Promise<MaterialInfo | null> => {
   try {
     const response = await axiosInstance.post(`${DOMAIN}/get_material_info`, {
-
       material_id: materialId,
     });
     const data = response.data;
@@ -37,7 +35,6 @@ export const getMaterialInfo = async (
 export const deleteMaterial = async (materialId: string): Promise<boolean> => {
   try {
     await axiosInstance.post(`${DOMAIN}/delete_material`, {
-
       material_id: materialId,
     });
     Alert.alert('Xoá tài liệu thành công!');
@@ -62,7 +59,7 @@ export const uploadMaterial = async (
 
     const response = await axiosInstance.post(
       `${DOMAIN}/upload_material`,
-      formData
+      formData,
     );
     const data = response.data;
     Alert.alert('Up tài liệu thành công!');
@@ -84,15 +81,10 @@ export const editMaterial = async (
     formData.append('materialType', exportFileType(material.file.name || ''));
     formData.append('materialId', materialId);
     formData.append('description', material.description);
-
+    console.log(formData);
     const response = await axiosInstance.post(
       `${DOMAIN}/edit_material`,
       formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      },
     );
     const data = response.data;
     Alert.alert('Up tài liệu thành công!');
