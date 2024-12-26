@@ -27,6 +27,7 @@ export interface IMessage {
   sender: {
     id: number;
   };
+  id: string;
   content: string;
   receiver: {
     id: number;
@@ -41,4 +42,11 @@ export type ReceivedMessage = {
   message_status: 1;
   receiver: SenderInfo;
   sender: SenderInfo;
+};
+
+export type SearchAccountResult = {
+  account_id: string;
+  last_name: string;
+  first_name: string;
+  email: string;
 };

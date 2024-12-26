@@ -1,12 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import React, {PropsWithChildren} from 'react';
+import React, {PropsWithChildren, useEffect} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {Pressable} from 'react-native-gesture-handler';
 import {Text} from 'react-native-paper';
 import {ConversationInfo, SenderInfo} from '../../../models/Message';
 import {formatMessageDate} from '../../../utils/datetime/date';
 import {getDirectImageLink} from '../../../utils/image';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type SectionProps = PropsWithChildren<{
   item: ConversationInfo;
@@ -16,7 +17,6 @@ type ParamList = {
   MessageFeaturesStacks: {
     screen: string;
     params: {
-      conversationId: string;
       partner: SenderInfo;
     };
   };
@@ -24,6 +24,16 @@ type ParamList = {
 
 const MessageListItem = ({item}: SectionProps) => {
   const navigation = useNavigation<NavigationProp<ParamList>>();
+  const [userId, setUserId] = React.useState<string>('');
+  useEffect(() => {
+    const fetchData = async () => {
+      const userId = await AsyncStorage.getItem('id');
+      if (userId) {
+        setUserId(userId);
+      }
+    };
+    fetchData();
+  }, []);
   return (
     <Pressable
       onPress={() => {
@@ -31,7 +41,6 @@ const MessageListItem = ({item}: SectionProps) => {
           screen: 'MessageDetail',
           params: {
             partner: item.partner,
-            conversationId: item.id.toString(),
           },
         });
       }}>
@@ -54,9 +63,12 @@ const MessageListItem = ({item}: SectionProps) => {
             <Text
               style={[
                 {fontSize: 10, marginTop: 3},
-                item.last_message.unread ? {fontWeight: '500'} : {},
+                item.last_message.unread &&
+                item.last_message.sender.id.toString() !== userId
+                  ? {fontWeight: 'bold'}
+                  : {fontWeight: 'normal'},
               ]}>
-              {item.last_message.sender.id.toString() === '277' ? 'Bạn: ' : ''}
+              {item.last_message.sender.id.toString() === userId ? 'Bạn: ' : ''}
               {item.last_message.message || (
                 <Text style={{fontStyle: 'italic'}}>Tin nhắn đã bị xóa</Text>
               )}

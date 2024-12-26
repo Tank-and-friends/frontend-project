@@ -11,22 +11,31 @@ import SockJS from 'sockjs-client';
 import {Client} from '@stomp/stompjs';
 import {
   ConversationDetailInfo,
-  IMessage,
+  ReceivedMessage,
   SenderInfo,
 } from '../../models/Message';
 import {RouteProp} from '@react-navigation/native';
-import {Pressable, ScrollView} from 'react-native-gesture-handler';
+import {GestureHandlerRootView, ScrollView} from 'react-native-gesture-handler';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import TopNavBar from './components/TopNavBar';
-import {Icon, IconButton, TextInput} from 'react-native-paper';
+import {
+  Icon,
+  IconButton,
+  Modal,
+  PaperProvider,
+  Portal,
+  TextInput,
+} from 'react-native-paper';
 // import EmptyBodyMessage from './components/EmptyBodyMessage';
 import {deleteMessage, getDetailConversation} from '../../apis/MessageApi';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import TransparentBackground from '../../components/TransparentBackground';
+import EmptyBodyMessage from './components/EmptyBodyMessage';
 
 type Props = PropsWithChildren<{route: RouteProp<RouteProps>}>;
 
 type RouteProps = {
   MessageDetail: {
-    conversationId: string;
     partner: SenderInfo;
   };
 };
@@ -34,61 +43,79 @@ type RouteProps = {
 const MessageDetail = ({route}: Props) => {
   const [isOpenUtilities, setIsOpenUtilities] = useState(false);
   const scrollView = useRef<ScrollView | null>(null);
-  const {partner, conversationId} = route.params;
-  const [messages, setMessages] = useState<IMessage[]>([]);
+  const {partner} = route.params;
+  const [token, setToken] = useState<String>('');
+  const [email, setEmail] = useState<String>('');
+  const [userId, setUserId] = useState<String>('');
+  const [messages, setMessages] = useState<ReceivedMessage[]>([]);
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(
     null,
   );
   const [existedMessages, setExistedMessages] = useState<
-    ConversationDetailInfo[] | null
-  >(null);
+    ConversationDetailInfo[] | []
+  >([]);
   const [content, setContent] = useState<string>('');
   const stompClientRef = useRef<Client | null>(null);
   const [isConnected, setIsConnected] = useState<boolean>(false);
-  const userId = '277';
-  const token = 'BdZsuO';
-  const email = 'PKL@hust.edu.vn';
 
-  const handleLongPress = () => {
-    setIsOpenUtilities(!isOpenUtilities);
+  const showUtilities = (messageId: string) => {
+    setSelectedMessageId(messageId);
+    setIsOpenUtilities(true);
+  };
+
+  const hideUtilities = () => {
+    setIsOpenUtilities(false);
   };
 
   const handleDeleteMessage = (messageId: string) => {
-    deleteMessage(messageId, partner.id.toString(), conversationId).then(
-      res => {
-        if (res) {
-          getDetailConversation(conversationId).then(response => {
-            setExistedMessages(response);
-          });
-          setMessages([]);
-        }
-      },
-    );
-    setIsOpenUtilities(!isOpenUtilities);
-  };
-
-  useEffect(() => {
-    const fetchCredentials = async () => {
-      try {
-        if (userId && token && email) {
-          connectWebSocket();
-        } else {
-          console.error('User credentials not found');
-        }
-      } catch (error) {
-        console.error('Error fetching credentials:', error);
+    deleteMessage(messageId, partner.id.toString()).then(res => {
+      if (res) {
+        getDetailConversation(partner.id.toString()).then(response => {
+          setExistedMessages(response);
+        });
+        setMessages([]);
       }
-    };
-
-    fetchCredentials();
-
-    getDetailConversation(conversationId).then(res => {
+    });
+    hideUtilities();
+    fetchListMessages();
+  };
+  const fetchListMessages = () => {
+    getDetailConversation(partner.id.toString()).then(res => {
       if (res != null) {
         setExistedMessages(res.reverse());
       }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [conversationId]);
+    setMessages([]);
+  };
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const storedUserId = await AsyncStorage.getItem('id');
+      const storedToken = await AsyncStorage.getItem('token');
+      const storedEmail = await AsyncStorage.getItem('email');
+      if (storedUserId) {
+        setUserId(storedUserId);
+      }
+      if (storedEmail) {
+        setEmail(storedEmail);
+      }
+      if (storedToken) {
+        setToken(storedToken);
+      }
+      return storedUserId;
+    };
+    fetchUserInfo();
+  }, []);
+
+  useEffect(() => {
+    const fetchCredentials = async () => {
+      connectWebSocket();
+      fetchListMessages();
+    };
+
+    if (userId) {
+      fetchCredentials();
+    }
+  }, [userId]);
 
   // Connect to WebSocket
 
@@ -131,7 +158,6 @@ const MessageDetail = ({route}: Props) => {
         sender: email,
         token: token,
       };
-      console.log(message);
 
       stompClientRef.current.publish({
         destination: '/chat/message',
@@ -143,79 +169,61 @@ const MessageDetail = ({route}: Props) => {
       console.error('Message or receiver is missing.');
     }
   };
-
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: 'white',
-        position: 'relative',
-      }}>
-      <TopNavBar partner={partner} />
-      <View style={styles.messageDetail}>
-        <ScrollView
-          ref={scrollView}
-          onContentSizeChange={() =>
-            scrollView.current?.scrollToEnd({animated: false})
-          }
-          showsVerticalScrollIndicator={false}
-          style={{
-            position: 'relative',
-            paddingHorizontal: 20,
-            display: 'flex',
-            flexDirection: 'column-reverse',
-          }}>
-          {existedMessages?.map(message => (
-            <MessageContent
-              key={message.message_id}
-              content={message.message}
-              yours={message.sender.id === Number(userId)}
-              onLongPress={handleLongPress}
-            />
-          ))}
-          <View>
-            <FlatList
-              data={messages}
-              renderItem={({item}) => (
-                <MessageContent
-                  content={item.content}
-                  yours={item.sender.id === Number(userId)}
-                  onLongPress={handleLongPress}
-                />
-              )}
-              style={{backgroundColor: 'red'}}
-              keyExtractor={(_, index) => index.toString()}
-              scrollEnabled={false}
-              nestedScrollEnabled={true}
-            />
+    <PaperProvider>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: 'white',
+          position: 'relative',
+        }}>
+        <TopNavBar partner={partner} />
+        {existedMessages.length > 0 || messages.length > 0 ? (
+          <View style={styles.messageDetail}>
+            <GestureHandlerRootView>
+              <ScrollView
+                ref={scrollView}
+                onContentSizeChange={() =>
+                  scrollView.current?.scrollToEnd({animated: false})
+                }
+                showsVerticalScrollIndicator={false}
+                style={{
+                  paddingHorizontal: 20,
+                }}>
+                {existedMessages?.map(message => (
+                  <MessageContent
+                    key={message.message_id}
+                    content={message.message}
+                    yours={message.sender.id === Number(userId)}
+                    id={message.message_id}
+                    onLongPress={() => showUtilities(message.message_id)}
+                  />
+                ))}
+                {messages.length > 0 && (
+                  <View>
+                    <FlatList
+                      data={messages}
+                      renderItem={({item}) => (
+                        <MessageContent
+                          content={item.content}
+                          yours={item.sender.id === Number(userId)}
+                          id={item.conversation_id.toString()}
+                          onLongPress={showUtilities}
+                        />
+                      )}
+                      keyExtractor={(_, index) => index.toString()}
+                      scrollEnabled={false}
+                      nestedScrollEnabled={true}
+                    />
+                  </View>
+                )}
+              </ScrollView>
+            </GestureHandlerRootView>
           </View>
-        </ScrollView>
-      </View>
+        ) : (
+          <EmptyBodyMessage />
+        )}
 
-      {/* {!newMessage ? (
-        <View style={styles.messageDetail}>
-          <ScrollView
-            ref={scrollView}
-            onContentSizeChange={() =>
-              scrollView.current?.scrollToEnd({animated: false})
-            }
-            showsVerticalScrollIndicator={false}
-            style={{
-              position: 'relative',
-              paddingHorizontal: 20,
-            }}>
-            <View style={styles.status}>
-              <Icon source="eye-outline" size={15} color="#C02135" />
-            </View>
-          </ScrollView>
-        </View>
-      ) : (
-        <EmptyBodyMessage />
-      )} */}
-      {isOpenUtilities && (
-        <Pressable style={styles.overlay} onPress={handleLongPress} />
-      )}
-      {!isOpenUtilities ? (
         <View style={styles.messageInput}>
           <View style={styles.inputWrapper}>
             <TextInput
@@ -232,8 +240,6 @@ const MessageDetail = ({route}: Props) => {
               }}
               value={content}
               onChangeText={text => setContent(text)}
-
-              // multiline
             />
           </View>
           <IconButton
@@ -244,23 +250,26 @@ const MessageDetail = ({route}: Props) => {
             style={{marginHorizontal: 0}}
           />
         </View>
-      ) : (
-        <View style={styles.utilities}>
-          <TouchableOpacity
-            style={styles.utility}
-            onPress={() => handleDeleteMessage}>
-            <Icon source="text-box-multiple" size={27} color="white" />
-            <Text style={styles.utilityText}>Sao chép</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.utility}
-            onPress={() => handleDeleteMessage}>
-            <Icon source="trash-can-outline" size={30} color="white" />
-            <Text style={styles.utilityText}>Xóa</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </View>
+        <Portal>
+          <Modal
+            visible={isOpenUtilities}
+            onDismiss={hideUtilities}
+            contentContainerStyle={styles.utilities}
+            theme={TransparentBackground}>
+            <TouchableOpacity style={styles.utility}>
+              <Icon source="text-box-multiple" size={27} color="white" />
+              <Text style={styles.utilityText}>Sao chép</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.utility}
+              onPress={() => handleDeleteMessage(selectedMessageId || '')}>
+              <Icon source="trash-can-outline" size={30} color="white" />
+              <Text style={styles.utilityText}>Xóa</Text>
+            </TouchableOpacity>
+          </Modal>
+        </Portal>
+      </View>
+    </PaperProvider>
   );
 };
 
@@ -311,6 +320,8 @@ const styles = StyleSheet.create({
     borderRadius: 0,
   },
   utilities: {
+    position: 'absolute',
+    bottom: 0,
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',

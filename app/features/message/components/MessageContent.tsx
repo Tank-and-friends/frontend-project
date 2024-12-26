@@ -5,15 +5,16 @@ import DeletedMessage from './DeletedMessage';
 type Props = PropsWithChildren<{
   yours: boolean;
   content: string;
-  onLongPress?: () => void;
+  id: string;
+  onLongPress: (messageId: string) => void;
 }>;
 
-const MessageContent = ({yours, content, onLongPress}: Props) => {
+const MessageContent = ({yours, content, id, onLongPress}: Props) => {
   const styles = createStyles(yours);
   return (
     <View style={styles.contentFrame}>
       {content ? (
-        <Pressable onLongPress={onLongPress}>
+        <Pressable onLongPress={() => onLongPress(id)}>
           <View style={styles.contentWrapper}>
             <Text style={styles.content}>{content}</Text>
           </View>

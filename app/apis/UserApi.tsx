@@ -181,6 +181,19 @@ export const getUserInfo = async (): Promise<UserInfo | null> => {
     return null;
   }
 };
+export const getPartnerInfo = async (
+  userId: string,
+): Promise<UserInfo | null> => {
+  try {
+    const response = await axiosInstance.post('/it4788/get_user_info', {
+      user_id: userId,
+    });
+    const data = response.data;
+    return data;
+  } catch (error) {
+    return null;
+  }
+};
 export const changePassword = async (
   oldPassword: string,
   newPassword: string,

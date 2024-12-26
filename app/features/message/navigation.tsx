@@ -8,7 +8,6 @@ import {SenderInfo} from '../../models/Message';
 type ParamList = {
   MessageScreen: undefined;
   MessageDetail: {
-    conversationId: string;
     partner: SenderInfo;
   };
   FriendPersonalInfo: undefined;

@@ -2,7 +2,7 @@ export type UserInfo = {
   id: string;
   ho: string;
   ten: string;
-  name: number;
+  name: string;
   role: string;
   status: string;
   avatar: string;

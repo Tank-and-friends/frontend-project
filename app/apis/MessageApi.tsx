@@ -1,6 +1,8 @@
-import {Alert} from 'react-native';
-import {ConversationDetailInfo, ConversationInfo} from '../models/Message';
-// import {getDirectImageLink} from '../utils/image';
+import {
+  ConversationDetailInfo,
+  ConversationInfo,
+  SearchAccountResult,
+} from '../models/Message';
 import axiosInstance from './apiConfig';
 
 const DOMAIN = '/it5023e';
@@ -18,9 +20,6 @@ export const getListConversations = async (): Promise<
         count: INFINITE,
       },
     );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-
-    // data.avatar = getDirectImageLink(data.avatar);
     return response.data.conversations;
   } catch (error) {
     return null;
@@ -28,38 +27,52 @@ export const getListConversations = async (): Promise<
 };
 
 export const getDetailConversation = async (
-  conversationId: string,
-): Promise<ConversationDetailInfo[] | null> => {
+  partnerId: string,
+): Promise<ConversationDetailInfo[] | []> => {
   try {
     const response = await axiosInstance.post(`${DOMAIN}/get_conversation`, {
       index: '0',
       count: '15',
-      conversation_id: conversationId,
+      partner_id: partnerId,
       mark_as_read: true,
     });
     return response.data.conversation;
   } catch (error) {
-    return null;
+    return [];
   }
 };
 
 export const deleteMessage = async (
   messageId: string,
   partnerId: string,
-  conversationId: string,
 ): Promise<boolean> => {
   try {
     const response = await axiosInstance.post(`${DOMAIN}/delete_message`, {
       message_id: messageId,
       partner_id: partnerId,
-      conversation_id: conversationId,
     });
     if (response.status === 200) {
       return true;
     }
-    Alert.alert('dfds');
     return false;
   } catch (error) {
     return false;
+  }
+};
+
+export const searchAccount = async (
+  queryString: string,
+): Promise<SearchAccountResult[] | null> => {
+  try {
+    const response = await axiosInstance.post(`${DOMAIN}/search_account`, {
+      search: queryString,
+      pageable_request: {
+        page: '0',
+        page_size: INFINITE,
+      },
+    });
+    return response.data.page_content;
+  } catch (error) {
+    return null;
   }
 };
