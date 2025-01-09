@@ -186,6 +186,7 @@ const NotificationScreen = () => {
     try {
       const notifications2 = await getNotifications(); // Gọi lại API lấy thông báo
       setNotifications(notifications2);
+      getUnreadNotificationsCount();
     } catch (error) {
       console.error('Error refreshing notifications:', error);
     } finally {

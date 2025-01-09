@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Icon} from 'react-native-paper';
 
 import IonIcons from 'react-native-vector-icons/Ionicons';
+import { getUnreadNotificationsCount } from '../../features/notification/api';
 const BottomNavBar = ({state, navigation}: any) => {
   const icons = [
     {name: 'notifications-outline', label: 'Thông báo', route: 'Notifications'},
@@ -11,6 +12,27 @@ const BottomNavBar = ({state, navigation}: any) => {
     {name: 'plus', label: 'Đăng ký lớp', route: 'Register'},
     {name: 'calendar', label: 'Lịch', route: 'Calendar'},
   ];
+
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    // Fetch unread notification count when component mounts
+    const fetchUnreadNotifications = async () => {
+      try {
+        const count = await getUnreadNotificationsCount();
+        setUnreadCount(count);
+      } catch (error) {
+        console.error('Error fetching unread notifications count:', error);
+      }
+    };
+
+    fetchUnreadNotifications();
+    const unsubscribeFocus = navigation.addListener('focus', () => {
+      fetchUnreadNotifications(); // Cập nhật mỗi khi BottomNavBar được focus
+    });
+
+    return unsubscribeFocus;
+  }, [navigation, unreadCount]);
 
   return (
     <View style={styles.bottomBar}>
@@ -36,6 +58,11 @@ const BottomNavBar = ({state, navigation}: any) => {
                 size={28}
                 color={isFocused ? '#C02135' : 'white'}
               />
+            )}
+            {icon.name === 'notifications-outline' && (
+              <View style={styles.notificationBadge}>
+                <Text style={styles.badgeText}>{unreadCount}</Text>
+              </View>
             )}
             <Text
               style={isFocused ? styles.utilityTextClick : styles.utilityText}>
@@ -98,6 +125,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  notificationBadge: {
+    position: 'absolute',
+    top: 5,
+    right: 5,
+    backgroundColor: 'white',
+    borderRadius: 50,
+    padding: 2,
+  },
+  badgeText: {
+    fontSize: 12,
+    color: '#C02135',
   },
 });
 
