@@ -77,9 +77,9 @@ const TaskNotification: React.FC<NotificationProps> = ({
           <Text style={styles.text}>{notificationText}</Text>
           {!unRead && unConflic && (
             <TouchableOpacity
-              onPress={() => {
+              onPress={async () => {
                 setUnRead(!unRead);
-                markNotificationAsRead(String(id));
+                await markNotificationAsRead(String(id));
               }}
               onLongPress={() => setShowFooter(true)}>
               <View style={styles.mark}>

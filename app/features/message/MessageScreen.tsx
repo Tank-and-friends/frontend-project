@@ -1,84 +1,167 @@
-/* eslint-disable react-native/no-inline-styles */
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import React, {PropsWithChildren} from 'react';
-import {FlatList, Image, ImageBackground, StyleSheet, View} from 'react-native';
-import {IconButton} from 'react-native-paper';
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
+import {
+  FlatList,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  View,
+  Keyboard,
+  TouchableWithoutFeedback,
+  Pressable,
+} from 'react-native';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import {TextField} from '../../components/TextField/TextField';
 import TopComponent from '../../components/TopComponent/TopComponent';
 import MessageListItem from './components/MessageListItem';
+import {
+  ConversationInfo,
+  SearchAccountResult,
+  SenderInfo,
+} from '../../models/Message';
+import {getListConversations, searchAccount} from '../../apis/MessageApi';
+import {
+  NavigationProp,
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/core';
+import {debounce} from 'lodash';
+import {getPartnerInfo} from '../../apis/UserApi';
+
 type SectionProps = PropsWithChildren<{}>;
 
 type ParamList = {
   MessageFeaturesStacks: {
     screen: string;
+    params: {
+      partner: SenderInfo;
+    };
   };
 };
-
-const DATA = [
-  {
-    name: 'Nguyen Viet Hoang 20210000',
-    time: '15:00',
-    lastestMessage: 'First Item',
-  },
-  {
-    name: 'Nguyen Thi Ngan 20210000',
-    time: '15:00',
-    lastestMessage: 'Second Item',
-  },
-  {
-    name: 'Quach Huu Tung Anh 20210000',
-    time: '15:00',
-    lastestMessage: 'Third Item',
-  },
-  {
-    name: 'Nguyen Trong Duc 20210000',
-    time: '15:00',
-    lastestMessage: 'Fourth Item',
-  },
-];
-
-const NoteIcon = () => (
-  <Image
-    source={require('../../assets/images/pensquare.png')}
-    style={styles.noteIcon}
-  />
-);
-
 const MessageScreen = ({}: SectionProps) => {
+  const [listConversation, setListConversation] = useState<
+    ConversationInfo[] | null
+  >();
   const navigation = useNavigation<NavigationProp<ParamList>>();
-  return (
-    <View style={{flex: 1}}>
-      <ImageBackground
-        source={require('../../assets/images/background.png')}
-        style={styles.backgroundImage}
-        resizeMode="cover">
-        <TopComponent title="Tin nhắn" />
-        <TextField
-          prefix={<IonIcons name="search" size={20} />}
-          placeholder="Bạn muốn tìm gì ..."
-        />
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<SearchAccountResult[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
 
-        <FlatList
-          data={DATA}
-          style={styles.listMessage}
-          renderItem={({item}) => <MessageListItem item={item} />}
-          keyExtractor={item => item.name}
-        />
-        <IconButton
-          icon={NoteIcon}
-          mode="contained"
-          containerColor="#C02135"
-          size={30}
-          style={styles.newMessageButton}
-          onPress={() =>
-            navigation.navigate('MessageFeaturesStacks', {
-              screen: 'NewMessageScreen',
-            })
-          }
-        />
-      </ImageBackground>
-    </View>
+  const fetchListConversation = () => {
+    getListConversations().then(res => {
+      setListConversation(res);
+    });
+  };
+
+  const handleSearch = async (query: string) => {
+    if (!query.trim()) {
+      setSearchResults([]);
+      setIsSearching(false);
+      return;
+    }
+    setIsSearching(true);
+    searchAccount(query).then(res => {
+      if (res) {
+        setSearchResults(res);
+      }
+    });
+  };
+
+  const debouncedSearch = useCallback(debounce(handleSearch, 500), []);
+
+  useEffect(() => {
+    const interval = setInterval(fetchListConversation, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchListConversation();
+    }, []),
+  );
+
+  const onSearchChange = (text: string) => {
+    setSearchQuery(text);
+    debouncedSearch(text);
+  };
+
+  const clearSearch = () => {
+    setSearchQuery('');
+    setSearchResults([]);
+    setIsSearching(false);
+    Keyboard.dismiss();
+  };
+
+  const dismissSearch = () => {
+    if (isSearching) {
+      clearSearch();
+    }
+  };
+
+  const handleChooseSearchResult = (parterId: string) => {
+    getPartnerInfo(parterId).then(res => {
+      if (res) {
+        navigation.navigate('MessageFeaturesStacks', {
+          screen: 'MessageDetail',
+          params: {
+            partner: {
+              id: parseInt(res.id),
+              name: res.name,
+              avatar: res.avatar,
+            },
+          },
+        });
+        dismissSearch();
+      }
+    });
+  };
+
+  return (
+    <TouchableWithoutFeedback onPress={dismissSearch}>
+      <View style={{flex: 1}}>
+        <ImageBackground
+          source={require('../../assets/images/background.png')}
+          style={styles.backgroundImage}
+          resizeMode="cover">
+          <TopComponent title="Tin nhắn" />
+          <TextField
+            value={searchQuery}
+            onChange={onSearchChange}
+            prefix={<IonIcons name="search" size={20} />}
+            placeholder="Bạn muốn tìm gì ..."
+          />
+
+          {isSearching && searchResults.length > 0 && (
+            <View style={styles.searchResultsContainer}>
+              <FlatList
+                data={searchResults}
+                renderItem={({item}) => (
+                  <Pressable
+                    onPress={() => handleChooseSearchResult(item.account_id)}>
+                    <View style={{height: 50}}>
+                      <Text>{item.first_name + item.last_name}</Text>
+                    </View>
+                  </Pressable>
+                )}
+                keyExtractor={({account_id}) => account_id.toString()}
+                maxToRenderPerBatch={5}
+              />
+            </View>
+          )}
+
+          <FlatList
+            data={listConversation}
+            style={styles.listMessage}
+            renderItem={({item}) => <MessageListItem item={item} />}
+            keyExtractor={({id}) => id.toString()}
+          />
+        </ImageBackground>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -87,21 +170,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  messageContainer: {
-    position: 'relative',
-  },
   listMessage: {
     marginTop: 30,
     paddingHorizontal: 25,
   },
-  newMessageButton: {
+  searchResultsContainer: {
     position: 'absolute',
-    bottom: 150,
+    top: 190,
+    left: 20,
     right: 20,
-  },
-  noteIcon: {
-    width: 30,
-    height: 30,
+    height: 250,
+    zIndex: 1000,
+    backgroundColor: 'white',
   },
 });
 

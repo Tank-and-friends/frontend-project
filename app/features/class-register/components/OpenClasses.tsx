@@ -1,40 +1,84 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import ClassSquare from './ClassSquare';
+import axios from 'axios';
+import {NavigationProp, useNavigation} from '@react-navigation/core';
+import { ParamListBase } from '@react-navigation/core';
+import { getOpenClasses } from '../api';
+import { ClassResponse } from '../types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const classGroups = [
-  {
-    title: 'Lớp đại cương',
-    classes: [
-      {className: 'Giải tích I'},
-      {className: 'Giải tích II'},
-      {className: 'Giải tích III'},
-    ],
-  },
-  {
-    title: 'Lớp không đại cương',
-    classes: [
-      {className: 'Giải không tích I'},
-      {className: 'Giải không tích II'},
-      {className: 'Giải không tích III'},
-    ],
-  },
-  {
-    title: 'Lớp xém đại cương',
-    classes: [
-      {className: 'Giải xém tích I'},
-      {className: 'Giải xém tích II'},
-      {className: 'Giải xém tích III'},
-    ],
-  },
-];
+
+
+// const classGroups = [
+//   {
+//     title: 'Lớp đại cương',
+//     classes: [
+//       {className: 'Giải tích I'},
+//       {className: 'Giải tích II'},
+//       {className: 'Giải tích III'},
+//     ],
+//   },
+//   {
+//     title: 'Lớp không đại cương',
+//     classes: [
+//       {className: 'Giải không tích I'},
+//       {className: 'Giải không tích II'},
+//       {className: 'Giải không tích III'},
+//     ],
+//   },
+//   {
+//     title: 'Lớp xém đại cương',
+//     classes: [
+//       {className: 'Giải xém tích I'},
+//       {className: 'Giải xém tích II'},
+//       {className: 'Giải xém tích III'},
+//     ],
+//   },
+// ];
 
 export default function OpenClasses() {
+  const [classData, setClassData] = useState<ClassResponse[]>([]);
+
+  const navigation = useNavigation<NavigationProp<ParamListBase>>();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getOpenClasses();
+
+      setClassData(data);
+    }
+    
+    fetchData();
+
+    getOpenClasses();
+  }, []);
+  
+
+  const groupedClasses = classData.reduce((groups: Record<string, any[]>, cls: any) => {
+    const { class_type } = cls;
+    if (!groups[class_type]) {
+      groups[class_type] = [];
+    }
+    groups[class_type].push(cls);
+    return groups;
+  }, {});
+
+  const handleClassPress = (className: string, classType: string) => {
+    const filteredClasses = classData.filter(
+      (cls: any) => cls.class_name === className && cls.class_type === classType
+    );
+    navigation.navigate('ClassRegisterStacks', {
+      screen: 'ClassRegisterList',
+      params: { filteredClasses, className, classType },
+    });
+  };
+
   return (
     <View>
-      {classGroups.map((group, index) => (
+      {Object.entries(groupedClasses).map(([classType, classes]: [string, any[]], index) => (
         <View style={styles.classGroupContainer} key={index}>
           <View style={styles.classGroupTitle}>
             <Text
@@ -47,7 +91,7 @@ export default function OpenClasses() {
                 textShadowOffset: {width: 0, height: 0},
                 textShadowRadius: 4,
               }}>
-              {group.title}
+              Lớp {classType}
             </Text>
             <Text
               style={{
@@ -68,9 +112,19 @@ export default function OpenClasses() {
               contentContainerStyle={styles.scrollableContent}
               showsHorizontalScrollIndicator={false}
               style={{alignSelf: 'flex-start'}}>
-              {group.classes.map((cls, idx) => (
+              {/* {group.classes.map((cls, idx) => (
                 <ClassSquare key={idx} className={cls.className} />
+              ))} */}
+              {Array.from(new Set(classes.map((cls: any) => cls.class_name))).map((className, idx) => (
+                <ClassSquare
+                  key={idx}
+                  className={className}
+                  onPress={() => handleClassPress(className, classType)}
+                  filteredClasses={classes.filter((cls: any) => cls.class_name === className)}
+                  classType={classType}
+                />
               ))}
+
             </ScrollView>
           </View>
         </View>

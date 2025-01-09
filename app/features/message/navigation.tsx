@@ -3,13 +3,12 @@ import React from 'react';
 import FriendPersonalInfo from './FriendPersonalInfo';
 import MessageDetail from './MessageDetail';
 import MessageScreen from './MessageScreen';
-import NewMessageScreen from './NewMessageScreen';
+import {SenderInfo} from '../../models/Message';
 
 type ParamList = {
   MessageScreen: undefined;
-  NewMessageScreen: undefined;
   MessageDetail: {
-    newMessage: boolean;
+    partner: SenderInfo;
   };
   FriendPersonalInfo: undefined;
 };
@@ -22,11 +21,6 @@ export const MessageFeaturesStacks = () => {
       <Stack.Screen
         name="MessageScreen"
         component={MessageScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="NewMessageScreen"
-        component={NewMessageScreen}
         options={{headerShown: false}}
       />
       <Stack.Screen

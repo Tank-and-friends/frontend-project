@@ -38,11 +38,13 @@ const Tab = createBottomTabNavigator();
 
 const renderBottomNavBar = (props: any) => <BottomNavBar {...props} />;
 
-const TabNavigation = () => {
+export const TabNavigation = () => {
+
   return (
     <Tab.Navigator
       screenOptions={{headerShown: false}}
-      tabBar={renderBottomNavBar}>
+      tabBar={renderBottomNavBar}
+      initialRouteName="Classes">
       <Tab.Screen name="Notifications" component={NotificationScreen} />
       <Tab.Screen name="Messages" component={MessageScreen} />
       <Tab.Screen name="Classes" component={ClassListScreen} />
@@ -56,7 +58,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 export const RootStacks = () => {
   return (
-    <Stack.Navigator initialRouteName="AssignmentStacks">
+    <Stack.Navigator initialRouteName="AuthStacks">
       <Stack.Screen
         name="Home"
         component={TabNavigation}

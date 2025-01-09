@@ -1,220 +1,230 @@
-/* eslint-disable react-native/no-inline-styles */
-import {
-  NavigationProp,
-  RouteProp,
-  useNavigation,
-} from '@react-navigation/native';
-import React, {PropsWithChildren, useRef, useState} from 'react';
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {Button, Icon, IconButton, TextInput} from 'react-native-paper';
-import DeletedMessage from './components/DeletedMessage';
-import EmptyBodyMessage from './components/EmptyBodyMessage';
-import ImageMessage from './components/ImageMessage';
-import MessageContent from './components/MessageContent';
-import MessageTime from './components/MessageTime';
-import TopNavBar from './components/TopNavBar';
-type Props = PropsWithChildren<{route: RouteProp<RouteProps>}>;
+// /* eslint-disable react-native/no-inline-styles */
+import {WebSocket} from 'react-native-websocket';
+global.WebSocket = WebSocket;
+import 'text-encoding';
+import React, {PropsWithChildren, useEffect, useRef, useState} from 'react';
 
-type ParamList = {
-  MessageStacks: {
-    screen: string;
-  };
-};
+import MessageContent from './components/MessageContent';
+
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+import SockJS from 'sockjs-client';
+import {Client} from '@stomp/stompjs';
+import {
+  ConversationDetailInfo,
+  ReceivedMessage,
+  SenderInfo,
+} from '../../models/Message';
+import {RouteProp} from '@react-navigation/native';
+import {GestureHandlerRootView, ScrollView} from 'react-native-gesture-handler';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import TopNavBar from './components/TopNavBar';
+import {
+  Icon,
+  IconButton,
+  Modal,
+  PaperProvider,
+  Portal,
+  TextInput,
+} from 'react-native-paper';
+// import EmptyBodyMessage from './components/EmptyBodyMessage';
+import {deleteMessage, getDetailConversation} from '../../apis/MessageApi';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import TransparentBackground from '../../components/TransparentBackground';
+import EmptyBodyMessage from './components/EmptyBodyMessage';
+
+type Props = PropsWithChildren<{route: RouteProp<RouteProps>}>;
 
 type RouteProps = {
   MessageDetail: {
-    newMessage: boolean;
+    partner: SenderInfo;
   };
 };
 
 const MessageDetail = ({route}: Props) => {
-  const [isBlock, setIsBlock] = useState(false);
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [isTextFocus, setIsTextFocus] = useState(false);
   const [isOpenUtilities, setIsOpenUtilities] = useState(false);
-  const navigation = useNavigation<NavigationProp<ParamList>>();
   const scrollView = useRef<ScrollView | null>(null);
-  const {newMessage} = route.params;
-  const togglePopup = () => {
-    setIsPopupOpen(!isPopupOpen);
-  };
-  const toggleBlock = () => {
-    setIsBlock(!isBlock);
-  };
-  const handleLongPress = () => {
-    setIsOpenUtilities(!isOpenUtilities);
+  const {partner} = route.params;
+  const [token, setToken] = useState<String>('');
+  const [email, setEmail] = useState<String>('');
+  const [userId, setUserId] = useState<String>('');
+  const [messages, setMessages] = useState<ReceivedMessage[]>([]);
+  const [selectedMessageId, setSelectedMessageId] = useState<string | null>(
+    null,
+  );
+  const [existedMessages, setExistedMessages] = useState<
+    ConversationDetailInfo[] | []
+  >([]);
+  const [content, setContent] = useState<string>('');
+  const stompClientRef = useRef<Client | null>(null);
+  const [isConnected, setIsConnected] = useState<boolean>(false);
+
+  const showUtilities = (messageId: string) => {
+    setSelectedMessageId(messageId);
+    setIsOpenUtilities(true);
   };
 
+  const hideUtilities = () => {
+    setIsOpenUtilities(false);
+  };
+
+  const handleDeleteMessage = (messageId: string) => {
+    deleteMessage(messageId, partner.id.toString()).then(res => {
+      if (res) {
+        getDetailConversation(partner.id.toString()).then(response => {
+          setExistedMessages(response);
+        });
+        setMessages([]);
+      }
+    });
+    hideUtilities();
+    fetchListMessages();
+  };
+  const fetchListMessages = () => {
+    getDetailConversation(partner.id.toString()).then(res => {
+      if (res != null) {
+        setExistedMessages(res.reverse());
+      }
+    });
+    setMessages([]);
+  };
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const storedUserId = await AsyncStorage.getItem('id');
+      const storedToken = await AsyncStorage.getItem('token');
+      const storedEmail = await AsyncStorage.getItem('email');
+      if (storedUserId) {
+        setUserId(storedUserId);
+      }
+      if (storedEmail) {
+        setEmail(storedEmail);
+      }
+      if (storedToken) {
+        setToken(storedToken);
+      }
+      return storedUserId;
+    };
+    fetchUserInfo();
+  }, []);
+
+  useEffect(() => {
+    const fetchCredentials = async () => {
+      connectWebSocket();
+      fetchListMessages();
+    };
+
+    if (userId) {
+      fetchCredentials();
+    }
+  }, [userId]);
+
+  // Connect to WebSocket
+
+  const connectWebSocket = () => {
+    const socket = new SockJS('http://157.66.24.126:8080/ws'); // SockJS URL
+
+    const stompClient = new Client({
+      webSocketFactory: () => socket,
+      debug: str => console.log(str),
+      onConnect: () => {
+        console.log('WebSocket Connected');
+        setIsConnected(true);
+        stompClient.subscribe(`/user/${userId}/inbox`, message => {
+          const msg = JSON.parse(message.body);
+          setMessages(prevMessages => [...prevMessages, msg]);
+        });
+      },
+      onStompError: frame => {
+        console.error('Broker Error:', frame.headers.message);
+      },
+      onWebSocketClose: () => {
+        console.warn('WebSocket closed');
+        setIsConnected(false);
+      },
+    });
+
+    stompClient.activate();
+    stompClientRef.current = stompClient;
+  };
+
+  const sendMessage = () => {
+    if (!isConnected) {
+      console.error('STOMP client is not connected.');
+      return;
+    }
+    if (stompClientRef.current && content && partner.id) {
+      const message = {
+        receiver: {id: Number(partner.id)},
+        content: content,
+        sender: email,
+        token: token,
+      };
+
+      stompClientRef.current.publish({
+        destination: '/chat/message',
+        body: JSON.stringify(message),
+      });
+
+      setContent('');
+    } else {
+      console.error('Message or receiver is missing.');
+    }
+  };
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: 'white',
-        position: 'relative',
-      }}>
-      <TopNavBar
-        title="Nguyen Viet Hoang 20210000"
-        // avatarSource={'../../assets/images/pensquare.png'}
-        onOpenPopup={togglePopup}
-      />
-      {isPopupOpen && (
-        <Pressable style={styles.overlay} onPress={togglePopup}>
-          <View>
-            <View style={styles.moreInfoPopup}>
-              <Button
-                contentStyle={{
-                  justifyContent: 'flex-start',
-                  overflow: 'visible',
-                }}
-                style={styles.moreInfoItem}
-                textColor="black"
-                icon="account"
-                onPress={() =>
-                  navigation.navigate('MessageStacks', {
-                    screen: 'FriendPersonalInfo',
-                  })
-                }>
-                Thông tin tài khoản
-              </Button>
-              {!isBlock ? (
-                <Button
-                  contentStyle={{justifyContent: 'flex-start'}}
-                  style={styles.moreInfoItem}
-                  textColor="black"
-                  icon="minus-circle"
-                  onPress={toggleBlock}>
-                  Chặn
-                </Button>
-              ) : (
-                <Button
-                  contentStyle={{justifyContent: 'flex-start'}}
-                  style={styles.moreInfoItem}
-                  textColor="black"
-                  icon="minus-circle-off"
-                  onPress={toggleBlock}>
-                  Bỏ chặn
-                </Button>
-              )}
-            </View>
+    <PaperProvider>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: 'white',
+          position: 'relative',
+        }}>
+        <TopNavBar partner={partner} />
+        {existedMessages.length > 0 || messages.length > 0 ? (
+          <View style={styles.messageDetail}>
+            <GestureHandlerRootView>
+              <ScrollView
+                ref={scrollView}
+                onContentSizeChange={() =>
+                  scrollView.current?.scrollToEnd({animated: false})
+                }
+                showsVerticalScrollIndicator={false}
+                style={{
+                  paddingHorizontal: 20,
+                }}>
+                {existedMessages?.map(message => (
+                  <MessageContent
+                    key={message.message_id}
+                    content={message.message}
+                    yours={message.sender.id === Number(userId)}
+                    id={message.message_id}
+                    onLongPress={() => showUtilities(message.message_id)}
+                  />
+                ))}
+                {messages.length > 0 && (
+                  <View>
+                    <FlatList
+                      data={messages}
+                      renderItem={({item}) => (
+                        <MessageContent
+                          content={item.content}
+                          yours={item.sender.id === Number(userId)}
+                          id={item.conversation_id.toString()}
+                          onLongPress={showUtilities}
+                        />
+                      )}
+                      keyExtractor={(_, index) => index.toString()}
+                      scrollEnabled={false}
+                      nestedScrollEnabled={true}
+                    />
+                  </View>
+                )}
+              </ScrollView>
+            </GestureHandlerRootView>
           </View>
-        </Pressable>
-      )}
+        ) : (
+          <EmptyBodyMessage />
+        )}
 
-      {!newMessage ? (
-        <View style={styles.messageDetail}>
-          <ScrollView
-            ref={scrollView}
-            onContentSizeChange={() =>
-              scrollView.current?.scrollToEnd({animated: false})
-            }
-            showsVerticalScrollIndicator={false}
-            style={{
-              position: 'relative',
-              paddingHorizontal: 20,
-            }}>
-            <MessageTime time="10 tháng 9, 9:00" />
-            <MessageContent
-              yours={false}
-              content="alooo"
-              onLongPress={handleLongPress}
-            />
-            <MessageContent
-              yours={false}
-              content="alooo"
-              onLongPress={handleLongPress}
-            />
-            <MessageContent
-              yours={true}
-              content="alooo"
-              onLongPress={handleLongPress}
-            />
-            <MessageContent
-              yours={true}
-              content="alooo"
-              onLongPress={handleLongPress}
-            />
-
-            <MessageContent
-              yours={true}
-              content="alooo"
-              onLongPress={handleLongPress}
-            />
-            <MessageContent
-              yours={true}
-              content="alooo"
-              onLongPress={handleLongPress}
-            />
-            <MessageContent
-              yours={true}
-              content="alooo"
-              onLongPress={handleLongPress}
-            />
-            <MessageTime time="10 tháng 9, 9:00" />
-            <MessageContent
-              yours={false}
-              content="alooo"
-              onLongPress={handleLongPress}
-            />
-            <ImageMessage />
-
-            <MessageContent
-              yours={true}
-              content="alooo"
-              onLongPress={handleLongPress}
-            />
-
-            <MessageContent
-              yours={true}
-              content="alooo"
-              onLongPress={handleLongPress}
-            />
-
-            <DeletedMessage />
-            <View style={styles.status}>
-              <Icon source="eye-outline" size={15} color="#C02135" />
-            </View>
-          </ScrollView>
-        </View>
-      ) : (
-        <EmptyBodyMessage />
-      )}
-      {isOpenUtilities && (
-        <Pressable style={styles.overlay} onPress={handleLongPress} />
-      )}
-      {isBlock ? (
-        <View style={styles.blockWrapper}>
-          <Text style={styles.blockNotification}>Bạn đã chặn Hoang</Text>
-          <Text style={styles.blockNotification2}>
-            Các bạn sẽ không thể nhắn tin cho nhau trong đoạn chat này
-          </Text>
-          <Button
-            style={styles.unBlockButton}
-            textColor="white"
-            onPress={toggleBlock}>
-            Bỏ chặn
-          </Button>
-        </View>
-      ) : !isOpenUtilities ? (
         <View style={styles.messageInput}>
-          <IconButton
-            icon="image"
-            size={24}
-            iconColor="#C02135"
-            style={{marginHorizontal: 0}}
-          />
-          <IconButton
-            icon="camera"
-            size={24}
-            iconColor="#C02135"
-            style={{marginHorizontal: 0}}
-          />
           <View style={styles.inputWrapper}>
             <TextInput
               mode="outlined"
@@ -223,81 +233,49 @@ const MessageDetail = ({route}: Props) => {
                 borderColor: '#C02135',
                 height: 'auto',
               }}
-              contentStyle={{}}
               style={styles.textInput}
               placeholder="Nhập tin nhắn"
               onFocus={() => {
-                setIsTextFocus(true);
                 scrollView.current?.scrollToEnd();
               }}
-              onBlur={() => {
-                setIsTextFocus(false);
-              }}
-              right={
-                <TextInput.Icon
-                  icon={'emoticon-happy-outline'}
-                  color={'#C02135'}
-                />
-              }
-              // multiline
+              value={content}
+              onChangeText={text => setContent(text)}
             />
           </View>
           <IconButton
-            icon={!isTextFocus ? 'heart' : 'send'}
+            onPress={sendMessage}
+            icon="send"
             size={24}
             iconColor="#C02135"
             style={{marginHorizontal: 0}}
           />
         </View>
-      ) : (
-        <View style={styles.utilities}>
-          <TouchableOpacity style={styles.utility} onPress={handleLongPress}>
-            <Icon
-              source="reply"
-              size={30}
-              color="white"
-              // style={styles.utilityIcon}
-            />
-            <Text style={styles.utilityText}>Phản hồi</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.utility} onPress={handleLongPress}>
-            <Icon
-              source="text-box-multiple"
-              size={27}
-              color="white"
-              // style={styles.utilityIcon}
-            />
-            <Text style={styles.utilityText}>Sap chép</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.utility} onPress={handleLongPress}>
-            <Icon
-              source="trash-can-outline"
-              size={30}
-              color="white"
-              // style={styles.utilityIcon}
-            />
-            <Text style={styles.utilityText}>Xóa</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.utility} onPress={handleLongPress}>
-            <Icon
-              source="dots-horizontal"
-              size={30}
-              color="white"
-              // style={styles.utilityIcon}
-            />
-            <Text style={styles.utilityText}>Xem thêm</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </View>
+        <Portal>
+          <Modal
+            visible={isOpenUtilities}
+            onDismiss={hideUtilities}
+            contentContainerStyle={styles.utilities}
+            theme={TransparentBackground}>
+            <TouchableOpacity style={styles.utility}>
+              <Icon source="text-box-multiple" size={27} color="white" />
+              <Text style={styles.utilityText}>Sao chép</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.utility}
+              onPress={() => handleDeleteMessage(selectedMessageId || '')}>
+              <Icon source="trash-can-outline" size={30} color="white" />
+              <Text style={styles.utilityText}>Xóa</Text>
+            </TouchableOpacity>
+          </Modal>
+        </Portal>
+      </View>
+    </PaperProvider>
   );
 };
 
 const styles = StyleSheet.create({
   messageDetail: {
     flex: 1,
-    display: 'flex',
-    flexDirection: 'column-reverse',
     paddingVertical: 6,
     rowGap: 6,
   },
@@ -307,6 +285,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     flexDirection: 'row',
     alignItems: 'center',
+    paddingLeft: 8,
   },
   inputWrapper: {
     width: '100%',
@@ -338,39 +317,11 @@ const styles = StyleSheet.create({
   },
   moreInfoItem: {
     fontSize: 13,
-    // backgroundColor: 'black',
     borderRadius: 0,
   },
-  blockWrapper: {
-    minHeight: 146,
-    borderTopColor: '#C02135',
-    borderTopWidth: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  blockNotification: {
-    fontSize: 16,
-    color: '#C02135',
-    fontWeight: '800',
-    marginTop: 15,
-  },
-  blockNotification2: {
-    fontSize: 13,
-    color: '#b6b6b6',
-    width: 252,
-    textAlign: 'center',
-    marginTop: 7,
-  },
-  unBlockButton: {
-    width: 300,
-    borderRadius: 20,
-    fontSize: 16,
-    fontWeight: '600',
-    height: 45,
-    marginTop: 13,
-    backgroundColor: '#C02135',
-  },
   utilities: {
+    position: 'absolute',
+    bottom: 0,
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
@@ -379,7 +330,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   utility: {
-    width: '25%',
+    width: '50%',
     flexDirection: 'column',
     alignItems: 'center',
   },

@@ -1,9 +1,15 @@
-import {NavigationProp, useNavigation} from '@react-navigation/core';
-import React from 'react';
+import {
+  NavigationProp,
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/core';
+import React, {useCallback, useState} from 'react';
 import {ImageBackground, ScrollView, StyleSheet, View} from 'react-native';
 import IonIcons from 'react-native-vector-icons/Ionicons';
+import {getListClasses} from '../../apis/RegisterApi';
 import {TextField} from '../../components/TextField/TextField';
 import TopComponent from '../../components/TopComponent/TopComponent';
+import {ClassInfo} from '../../models/Register';
 import ClassRect from './components/ClassRect';
 
 export type ParamList = {
@@ -12,65 +18,48 @@ export type ParamList = {
     params: {
       classId: string;
       className: string;
-      classTime: string;
-      classPlace: string;
-      grade: {midTerm?: number; endTerm?: number};
+      startTime: string;
+      endTime: string;
+      lecturerName: string;
+      classType: string;
     };
   };
 };
 
 const ClassListScreen = () => {
   const navigation = useNavigation<NavigationProp<ParamList>>();
-
-  const classes = [
-    {
-      classId: '000254',
-      className: 'Giải tích I',
-      classTime: 'Sáng thứ 3, 6:45 - 10:05',
-      classPlace: 'TC-207',
-      grade: {midTerm: 4.0, endTerm: 3.2},
-    },
-    {
-      classId: '234567',
-      className: 'Giải tích II',
-      classTime: 'Chiều thứ 5, 14:00 - 16:30',
-      classPlace: 'TC-208',
-      grade: {},
-    },
-    {
-      classId: '345678',
-      className: 'Giải tích III',
-      classTime: 'Tối thứ 7, 18:00 - 20:30',
-      classPlace: 'TC-209',
-      grade: {midTerm: 4.0, endTerm: 3.2},
-    },
-    {
-      classId: '456789',
-      className: 'Giải tích IV',
-      classTime: 'Tối thứ 7, 18:00 - 20:30',
-      classPlace: 'TC-209',
-      grade: {endTerm: 3.2},
-    },
-  ];
+  const [classes, setClasses] = useState<ClassInfo[]>([]);
 
   const handleNavigateToClass = (
     classId: string,
     className: string,
-    classTime: string,
-    classPlace: string,
-    grade: {midTerm?: number; endTerm?: number},
+    startTime: string,
+    endTime: string,
+    lecturerName: string,
+    classType: string,
   ) => {
     navigation.navigate('ClassStacks', {
       screen: 'ClassDetails',
       params: {
         classId,
         className,
-        classTime,
-        classPlace,
-        grade,
+        startTime,
+        endTime,
+        lecturerName,
+        classType,
       },
     });
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      getListClasses().then(res => {
+        if (res) {
+          setClasses(res);
+        }
+      });
+    }, []),
+  );
 
   return (
     <View style={styles.container}>
@@ -78,30 +67,29 @@ const ClassListScreen = () => {
         source={require('../../assets/images/background.png')}
         style={styles.backgroundImage}
         resizeMode="cover">
-        <TopComponent title="Đăng ký lớp" />
+        <TopComponent title="Lớp học" />
         <TextField
           prefix={<IonIcons name="search" size={20} />}
           placeholder="Bạn muốn tìm gì ..."
         />
         <ScrollView contentContainerStyle={styles.classGroupContainer}>
-          {classes.map(classItem => (
+          {classes.map((classItem, index) => (
             <ClassRect
-              key={classItem.classId}
-              classId={classItem.classId}
-              className={classItem.className}
-              classTime={classItem.classTime}
-              classPlace={classItem.classPlace}
-              grade={{
-                midTerm: classItem.grade.midTerm ?? 0,
-                endTerm: classItem.grade.endTerm ?? 0,
-              }}
+              key={index}
+              className={classItem.class_name}
+              classId={classItem.class_id}
+              startTime={classItem.start_date}
+              endTime={classItem.end_date}
+              lecturerName={classItem.lecturer_name}
+              classType={classItem.class_type}
               onPress={() =>
                 handleNavigateToClass(
-                  classItem.classId,
-                  classItem.className,
-                  classItem.classTime,
-                  classItem.classPlace,
-                  classItem.grade,
+                  classItem.class_id,
+                  classItem.class_name,
+                  classItem.start_date,
+                  classItem.end_date,
+                  classItem.lecturer_name,
+                  classItem.class_type,
                 )
               }
             />

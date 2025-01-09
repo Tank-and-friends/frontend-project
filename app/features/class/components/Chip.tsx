@@ -1,6 +1,6 @@
 import React from 'react';
-import {Pressable, StyleSheet} from 'react-native';
-import {Text} from 'react-native-paper';
+import { Pressable, StyleSheet } from 'react-native';
+import { Text } from 'react-native-paper';
 
 interface Props {
   content: string;

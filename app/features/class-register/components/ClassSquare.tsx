@@ -1,32 +1,40 @@
 /* eslint-disable react-native/no-inline-styles */
 import {NavigationProp, useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Image, StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
 import {Text} from 'react-native-paper';
 
 interface ClassSquareProps {
   className: string;
+  onPress: () => void;
+  filteredClasses: any[];
+  classType: string;
 }
 
 type ParamList = {
   ClassRegisterStacks: {
     screen: string;
     params: {
-      className: string;
+      filteredClasses: any[];
     };
   };
 };
 
-export default function ClassSquare({className}: ClassSquareProps) {
+export default function ClassSquare({ className, onPress, filteredClasses, classType }: ClassSquareProps) {
   const navigation = useNavigation<NavigationProp<ParamList>>();
+  const classTypeColors: Record<string, string> = {
+    'LT': '#174fb2', // Blue
+    'BT': '#ba1b30', // Red
+    'LT_BT': '#ff7f11', // Orange
+  };
+  const boxColor = classTypeColors[classType] || '#cccccc';
+
+  const classCount = Array.isArray(filteredClasses) ? filteredClasses.length : 0;
+
   return (
-    <TouchableWithoutFeedback
-      onPress={() =>
-        navigation.navigate('ClassRegisterStacks', {
-          screen: 'ClassRegisterList',
-          params: {className: className},
-        })
-      }>
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.9}>
       <View style={styles.classSquareContainer}>
         <Image
           source={require('../../../assets/images/class-background.jpg')}
@@ -39,11 +47,11 @@ export default function ClassSquare({className}: ClassSquareProps) {
             justifyContent: 'space-between',
             alignItems: 'center',
           }}>
-          <View style={styles.Box}>
-            <Text style={styles.Text}>Đại cương</Text>
+          <View style={[styles.Box, { backgroundColor: boxColor }]}>
+            <Text style={styles.Text}>Lớp {classType}</Text>
           </View>
-          <Text style={{fontSize: 10, textDecorationLine: 'underline'}}>
-            234 lớp →
+          <Text style={{fontSize: 10, textDecorationLine: 'underline', color: boxColor}}>
+            {classCount} lớp →
           </Text>
         </View>
         <View style={styles.classTitle}>
@@ -57,7 +65,7 @@ export default function ClassSquare({className}: ClassSquareProps) {
               textShadowOffset: {width: 0, height: 0},
               textShadowRadius: 4,
             }}>
-            Calculus I
+            {className}
           </Text>
           <Text
             style={{
@@ -73,7 +81,7 @@ export default function ClassSquare({className}: ClassSquareProps) {
           </Text>
         </View>
       </View>
-    </TouchableWithoutFeedback>
+    </TouchableOpacity>
   );
 }
 

@@ -1,3 +1,4 @@
+import React from 'react';
 import {Image} from 'react-native';
 import DocumentPicker, {types} from 'react-native-document-picker';
 export const pickFile = async () => {

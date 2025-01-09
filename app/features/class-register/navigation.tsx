@@ -4,7 +4,14 @@ import ClassRegisterListScreen from './ClassRegisterListScreen';
 import ClassRegisterScreen from './ClassRegisterScreen';
 import NewClassScreen from './NewClassScreen';
 
-const Stack = createStackNavigator();
+type ParamList = {
+  ClassRegisterScreen: undefined;
+  ClassRegisterList: undefined;
+  NewClassScreen: {
+    onUpdate: () => void;
+  };
+};
+const Stack = createStackNavigator<ParamList>();
 
 export const ClassRegisterStacks = () => {
   return (
@@ -13,10 +20,17 @@ export const ClassRegisterStacks = () => {
         name="ClassRegisterScreen"
         component={ClassRegisterScreen}
         options={{headerShown: false}}
-        initialParams={{userRole: 'teacher'}}
       />
-      <Stack.Screen name="ClassRegisterList" options={{headerShown: false}} component={ClassRegisterListScreen} />
-      <Stack.Screen name="NewClassForm" options={{headerShown: false}} component={NewClassScreen} />
+      <Stack.Screen
+        name="ClassRegisterList"
+        options={{headerShown: false}}
+        component={ClassRegisterListScreen}
+      />
+      <Stack.Screen
+        name="NewClassScreen"
+        options={{headerShown: false}}
+        component={NewClassScreen}
+      />
     </Stack.Navigator>
   );
 };

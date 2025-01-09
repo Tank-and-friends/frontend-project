@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import {BadgeProps, Badge as PaperBadge} from 'react-native-paper';
+import { BadgeProps, Badge as PaperBadge } from 'react-native-paper';
 
 interface Props {
   mode?: 'success' | 'warning' | 'critical' | 'default';

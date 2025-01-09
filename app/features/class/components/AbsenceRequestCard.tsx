@@ -1,37 +1,57 @@
+import { NavigationProp, useNavigation } from '@react-navigation/core';
 import React from 'react';
-import {Card, Text} from 'react-native-paper';
-import {Badge} from './Badge';
-import {StyleSheet} from 'react-native';
-import {AbsenceRequestInfo} from '../type';
+import { StyleSheet } from 'react-native';
+import { Card, Text } from 'react-native-paper';
+import { AbsenceRequestReponse } from '../type';
+import { Badge } from './Badge';
+
+type ParamsList = {
+  ClassFeaturesStacks: {
+    screen: string;
+    params: {
+      screen: string;
+      params: {
+        absenceRequest: AbsenceRequestReponse;
+      }
+    };
+  };
+};
 
 export const AbsenceRequestCard = ({
-  title,
-  date,
-  status,
-}: AbsenceRequestInfo) => {
+  absenceRequest,
+}: {
+  absenceRequest: AbsenceRequestReponse;
+}) => {
+  const navigation = useNavigation<NavigationProp<ParamsList>>();
+
+  const statusMarkup =
+    absenceRequest.status === 'ACCEPTED' ? (
+      <Badge mode="success">Chấp nhận</Badge>
+    ) : absenceRequest.status === 'PENDING' ? (
+      <Badge mode="warning">Chưa duyệt</Badge>
+    ) : (
+      <Badge mode="critical">Từ chối</Badge>
+    );
+
   return (
-    <Card elevation={4} style={styles.card}>
+    <Card
+      elevation={4}
+      style={styles.card}
+      onPress={() =>
+        navigation.navigate('ClassFeaturesStacks', {
+          screen: 'AbsenceRequest',
+          params: {
+            screen: 'AbsenceRequestManage',
+            params: {
+              absenceRequest,
+            },
+          },
+        })
+      }>
       <Card.Title
-        title={<Text style={styles.cardTitle}>{title}</Text>}
-        subtitle={
-          <Text style={styles.cardSubtitle}>{`Ngày tạo: ${date}`}</Text>
-        }
+        title={<Text style={styles.cardTitle}>{absenceRequest.title}</Text>}
       />
-      <Badge
-        mode={
-          status === 'accepted'
-            ? 'success'
-            : status === 'pending'
-            ? 'warning'
-            : 'critical'
-        }
-        style={styles.badge}>
-        {status === 'accepted'
-          ? 'Chấp nhận'
-          : status === 'pending'
-          ? 'Chưa duyệt'
-          : 'Từ chối'}
-      </Badge>
+      {statusMarkup}
     </Card>
   );
 };

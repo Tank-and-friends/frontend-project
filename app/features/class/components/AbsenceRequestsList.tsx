@@ -1,9 +1,9 @@
 import React from 'react';
-import {AbsenceRequestsGroup} from '../type';
-import {StyleSheet, View} from 'react-native';
-import {Text} from 'react-native-paper';
-import {AbsenceRequestCard} from './AbsenceRequestCard';
-import {getDayOfWeek} from '../utils/date-time-util';
+import { StyleSheet, View } from 'react-native';
+import { Text } from 'react-native-paper';
+import { AbsenceRequestsGroup } from '../type';
+import { getDayOfWeek } from '../utils/date-time-util';
+import { AbsenceRequestCard } from './AbsenceRequestCard';
 
 interface Props {
   groups: AbsenceRequestsGroup[];
@@ -17,16 +17,14 @@ export const AbsenceRequestsList = ({groups}: Props) => {
           <View key={group.title} style={styles.groupContainer}>
             <View style={styles.titleContainer}>
               <Text style={styles.title}>{group.title}</Text>
-              <Text style={styles.subtitle}>{getDayOfWeek('2024-10-27')}</Text>
+              <Text style={styles.subtitle}>{getDayOfWeek(group.title)}</Text>
             </View>
             <View style={styles.listContainer}>
               {group.items.map(item => {
                 return (
                   <AbsenceRequestCard
-                    key={item.title}
-                    title={item.title}
-                    date={item.date}
-                    status={item.status}
+                    key={item.id}
+                    absenceRequest={item}
                   />
                 );
               })}

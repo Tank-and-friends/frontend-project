@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/core';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/core';
 import React from 'react';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import DocumentPicker, {
@@ -7,12 +7,23 @@ import DocumentPicker, {
 import { Appbar, Button } from 'react-native-paper';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome6';
 import { TextField } from '../../../components/TextField/TextField';
+import { createAbsenceRequest } from '../api';
+import { AbsenceRequestForm } from '../type';
+
+type ParamsList = {
+  CreateAbsenceRequest: {
+    classId: string;
+  };
+};
 
 export const CreateAbsenceRequest = () => {
   const navigation = useNavigation();
-  const [requestForm, setRequestForm] = React.useState({
+  const route = useRoute<RouteProp<ParamsList, 'CreateAbsenceRequest'>>();
+  const {classId} = route.params;
+  const [requestForm, setRequestForm] = React.useState<AbsenceRequestForm>({
     title: '',
     date: '',
+    file: null,
     reason: '',
   });
   const [file, setFile] = React.useState<DocumentPickerResponse | null>(null);
@@ -39,7 +50,11 @@ export const CreateAbsenceRequest = () => {
       }
     }
   };
-  console.log('File', file);
+
+  const handleSubmit = async () => {
+    await createAbsenceRequest(classId, {...requestForm, file});
+    navigation.goBack();
+  };
 
   return (
     <View style={styles.container}>
@@ -95,7 +110,8 @@ export const CreateAbsenceRequest = () => {
             textColor="white"
             buttonColor="#c02135"
             style={styles.btnSubmit}
-            labelStyle={styles.btnContent}>
+            labelStyle={styles.btnContent}
+            onPress={handleSubmit}>
             Xác nhận
           </Button>
         </View>
@@ -107,6 +123,7 @@ export const CreateAbsenceRequest = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
   },
   header: {
     backgroundColor: '#c02135',

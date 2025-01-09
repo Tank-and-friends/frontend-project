@@ -2,6 +2,8 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import React, {PropsWithChildren} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {IconButton} from 'react-native-paper';
+import {getDirectImageLink} from '../../../utils/image';
+import {SenderInfo} from '../../../models/Message';
 
 type ParamList = {
   MessageFeaturesStacks: {
@@ -10,12 +12,10 @@ type ParamList = {
 };
 
 type Props = PropsWithChildren<{
-  title: string;
-  //   avatarSource: string;
-  onOpenPopup: () => void;
+  partner: SenderInfo;
 }>;
 
-const TopNavBar = ({title, onOpenPopup}: Props) => {
+const TopNavBar = ({partner}: Props) => {
   const navigation = useNavigation<NavigationProp<ParamList>>();
   return (
     <View style={styles.customHeaderWrapper}>
@@ -25,10 +25,16 @@ const TopNavBar = ({title, onOpenPopup}: Props) => {
         onPress={() => navigation.goBack()}
         // containerColor="black"
       />
-      <Image
-        source={require('../../../assets/images/pensquare.png')}
-        style={styles.avatar}
-      />
+      {partner.avatar ? (
+        <Image
+          source={{uri: getDirectImageLink(partner.avatar)}}
+          style={styles.avatar}
+        />
+      ) : (
+        <View style={styles.avatar}>
+          <Text>{partner.name.substring(0, 1)}</Text>
+        </View>
+      )}
       <Text
         style={styles.name}
         numberOfLines={1}
@@ -38,13 +44,8 @@ const TopNavBar = ({title, onOpenPopup}: Props) => {
             screen: 'FriendPersonalInfo',
           })
         }>
-        {title}
+        {partner.name}
       </Text>
-      <IconButton
-        icon="information-outline"
-        iconColor="white"
-        onPress={onOpenPopup}
-      />
     </View>
   );
 };
@@ -60,10 +61,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   avatar: {
-    width: 35,
-    height: 35,
-    borderRadius: 17.5,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    padding: 5,
+    borderWidth: 2,
+    borderColor: 'white',
     backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   name: {
     fontSize: 16,

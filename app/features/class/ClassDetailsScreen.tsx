@@ -1,15 +1,16 @@
 /* eslint-disable react-native/no-inline-styles */
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   NavigationProp,
   RouteProp,
   useNavigation,
   useRoute,
 } from '@react-navigation/core';
-import React from 'react';
-import {ImageBackground, StyleSheet, Text, View} from 'react-native';
-import {Appbar, IconButton} from 'react-native-paper';
-import {TextField} from '../../components/TextField/TextField';
+import React, { useEffect, useState } from 'react';
+import { ImageBackground, StyleSheet, Text, View } from 'react-native';
+import { Appbar, IconButton } from 'react-native-paper';
 import IonIcons from 'react-native-vector-icons/Ionicons';
+import { TextField } from '../../components/TextField/TextField';
 import ClassRectTab from './components/ClassRectTab';
 
 export type ParamList = {
@@ -24,9 +25,20 @@ export type ParamList = {
   };
   AssignmentStacks: {
     screen: string;
+    params: {
+      classId: string;
+    };
   };
   ClassDetailsScreen: {classId: string; className: string};
-  AbsenceRequestsList: undefined;
+  AbsenceRequestsList: {
+    classId: string;
+  };
+  ClassFeaturesStacks: {
+    screen: string;
+    params: {
+      classId: string;
+    };
+  };
 };
 
 const ClassDetailsScreen = () => {
@@ -34,6 +46,17 @@ const ClassDetailsScreen = () => {
 
   const route = useRoute<RouteProp<ParamList, 'ClassDetailsScreen'>>();
   const {classId, className} = route.params;
+  const [role, setRole] = useState('');
+
+  useEffect(() => {
+    const fetchRole = async () => {
+      const _role = await AsyncStorage.getItem('role');
+      console.log(_role);
+
+      setRole(_role || '');
+    };
+    fetchRole();
+  }, []);
 
   return (
     <View style={{flex: 1}}>
@@ -74,19 +97,37 @@ const ClassDetailsScreen = () => {
               navigation.navigate('MaterialStacks', {
                 screen: 'ListMaterial',
                 params: {
-                  classId: '000808',
+                  classId: classId,
                 },
               })
             }
           />
-
-          <ClassRectTab
-            title="Xin nghỉ phép"
-            subtitle="Gửi đơn xin vắng mặt cho buổi học sắp tới"
-            imageSource={require('../../assets/images/XinNghiPhep.png')}
-            reverse={true}
-            onPress={() => navigation.navigate('AbsenceRequestsList')}
-          />
+          {role === 'LECTURER' ? (
+            <ClassRectTab
+              title="Điểm danh"
+              subtitle="Điểm danh cho buổi học"
+              imageSource={require('../../assets/images/XinNghiPhep.png')}
+              reverse={true}
+              onPress={() =>
+                navigation.navigate('ClassFeaturesStacks', {
+                  screen: 'Attendance',
+                  params: {
+                    classId: classId,
+                  },
+                })
+              }
+            />
+          ) : (
+            <ClassRectTab
+              title="Xin nghỉ phép"
+              subtitle="Gửi đơn xin vắng mặt cho buổi học sắp tới"
+              imageSource={require('../../assets/images/XinNghiPhep.png')}
+              reverse={true}
+              onPress={() =>
+                navigation.navigate('AbsenceRequestsList', {classId})
+              }
+            />
+          )}
 
           <ClassRectTab
             title="Bài tập"
@@ -96,6 +137,9 @@ const ClassDetailsScreen = () => {
             onPress={() =>
               navigation.navigate('AssignmentStacks', {
                 screen: 'AssignmentScreen',
+                params: {
+                  classId: classId,
+                },
               })
             }
           />
@@ -126,6 +170,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter',
     fontWeight: 'semibold',
     paddingLeft: 10,
+    width: '90%',
   },
   headerSubtitle: {
     fontSize: 14,
