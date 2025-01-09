@@ -15,13 +15,11 @@ export const getUnreadNotificationsCount = async () => {
 };
 
 export const getNotifications = async (
-  token = 'Mq9YoW',
   index = 0,
   count = 20,
 ): Promise<Notification[]> => {
   try {
     const response = await axiosInstance.post('/it5023e/get_notifications', {
-      token,
       index,
       count,
     });
@@ -51,13 +49,11 @@ export const getNotifications = async (
 
 export const markNotificationAsRead = async (
   notificationId: string,
-  token = 'Mq9YoW',
 ): Promise<void> => {
   try {
     const response = await axiosInstance.post(
       '/it5023e/mark_notification_as_read',
       {
-        token,
         notification_id: notificationId,
       },
     );
