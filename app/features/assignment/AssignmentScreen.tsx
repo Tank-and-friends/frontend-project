@@ -3,6 +3,7 @@ import {
   BackHandler,
   ImageBackground,
   Pressable,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -19,9 +20,49 @@ import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/core';
 import {deleteAssignment, getAllSurveys, getStudentAssignments} from './api';
 import NoTasks from './components/NoTask';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const getToken = async () => {
+  try {
+    const token = await AsyncStorage.getItem('user_token');
+    return token || 'default_token'; // Giá trị mặc định nếu token không có
+  } catch (error) {
+    console.error('Error retrieving token:', error);
+    return 'default_token'; // Giá trị mặc định khi lỗi xảy ra
+  }
+};
 
 const AssignmentScreen = () => {
-  const [role, setRole] = useState('LECTURER');
+  const [role, setRole] = useState(''); // Giá trị mặc định
+
+  // Lấy giá trị role từ AsyncStorage khi khởi chạy
+  useEffect(() => {
+    const fetchRole = async () => {
+      try {
+        const storedRole = await AsyncStorage.getItem('role');
+        if (storedRole) {
+          setRole(storedRole);
+        }
+      } catch (error) {
+        console.error('Error fetching role from AsyncStorage:', error);
+      }
+    };
+
+    fetchRole();
+  }, []);
+
+  // Lưu giá trị role vào AsyncStorage khi role thay đổi
+  useEffect(() => {
+    const saveRole = async () => {
+      try {
+        await AsyncStorage.setItem('role', role);
+      } catch (error) {
+        console.error('Error saving role to AsyncStorage:', error);
+      }
+    };
+
+    saveRole();
+  }, [role]);
   const [dataServey, setDataSurvey] = useState<Survey[]>([]);
 
   const [labelStatus, setLabelStatus] = useState('All');
@@ -228,9 +269,11 @@ const AssignmentScreen = () => {
       console.warn('Hành động này chỉ dành cho giảng viên (LECTURER).');
       return;
     }
+    const token = await getToken();
+    console.log('token: ', token);
 
     const fetchData = async () => {
-      await deleteAssignment('rKXjuw', survey_id.toString()).then(res => {
+      await deleteAssignment(token, survey_id.toString()).then(res => {
         if (!res) {
           setDeleteDone(prevState => {
             const updatedDeleteDone = [...prevState];
@@ -269,7 +312,7 @@ const AssignmentScreen = () => {
     setDataSurvey(updatedNotifications);
     if (selectedIndexes.length > 0) {
       setShowFooter(false);
-      console.log('check: ', checkedStates);
+      //console.log('check: ', checkedStates);
 
       const updatedSurveys = dataServey.filter(_ => true);
 
@@ -296,7 +339,7 @@ const AssignmentScreen = () => {
   };
 
   useEffect(() => {
-    console.log('deleteDone has changed:', deleteDone);
+    //console.log('deleteDone has changed:', deleteDone);
   }, [deleteDone]);
 
   useEffect(() => {
@@ -315,6 +358,54 @@ const AssignmentScreen = () => {
 
     return () => backHandler.remove(); // Dọn dẹp listener khi component unmount
   }, [showFooter]);
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    try {
+      if (role === 'LECTURER') {
+        const fetchData = async () => {
+          const data = await getAllSurveys(); // Gọi API để lấy dữ liệu
+
+          setDataSurvey(data); // Cập nhật dữ liệu
+          setIsDataEmpty(data.length === 0); // Kiểm tra xem dữ liệu có rỗng hay không
+        };
+
+        await fetchData(); // Đợi hàm fetchData hoàn thành
+      } else {
+        const mapLabelToTypeStatus = (label: string): string | null => {
+          switch (label) {
+            case 'Sắp tới':
+              return 'UPCOMING';
+            case 'Quá hạn':
+              return 'PASS_DUE';
+            case 'Đã hoàn thành':
+              return 'COMPLETED';
+            default:
+              return null;
+          }
+        };
+
+        const newTypeStatus = mapLabelToTypeStatus(labelStatus);
+        setTypeStatus(newTypeStatus);
+        // console.log('niu leey bồ: ', newTypeStatus);
+
+        const fetchData = async () => {
+          const data = await getStudentAssignments('000254', newTypeStatus);
+
+          setDataSurvey(data);
+          setIsDataEmpty(data.length === 0);
+        };
+
+        fetchData();
+      }
+    } catch (error) {
+      console.error('Error refreshing notifications:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   return (
     <ImageBackground
@@ -336,7 +427,14 @@ const AssignmentScreen = () => {
         {false && <Text>{typeStatus}</Text>}
         <View style={styles.listAssgnment}>
           {!isDataEmpty && (
-            <ScrollView contentContainerStyle={{}}>
+            <ScrollView
+              contentContainerStyle={{}}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={handleRefresh}
+                />
+              }>
               {dataServey.map((item, index) => (
                 <Pressable key={index}>
                   <Assignment

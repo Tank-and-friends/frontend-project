@@ -1,11 +1,13 @@
 import axiosInstance from '../../apis/apiConfig';
-import { Notification } from './types';
+import {Notification} from './types';
 
 export const getUnreadNotificationsCount = async () => {
   try {
     const response = await axiosInstance.post(
       '/it5023e/get_unread_notification_count',
     );
+    console.log(response.data);
+
     // Xử lý dữ liệu trả về từ API
     return response.data;
   } catch (error) {
@@ -16,7 +18,7 @@ export const getUnreadNotificationsCount = async () => {
 
 export const getNotifications = async (
   index = 0,
-  count = 20,
+  count = 100,
 ): Promise<Notification[]> => {
   try {
     const response = await axiosInstance.post('/it5023e/get_notifications', {

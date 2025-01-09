@@ -24,6 +24,9 @@ import {TextField} from '../../components/TextField/TextField';
 //   content: string;
 // }
 
+import { submitSurvey } from './api';
+
+
 const TaskDetailScreen: React.FC = ({route}: any) => {
   const {title, date, deadline, content, formattedDate, serveyData} =
     route.params;
@@ -97,7 +100,7 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
       const res = await DocumentPicker.pick({
         type: [DocumentPicker.types.allFiles], // Chọn tất cả các loại file
       });
-      console.log('File picked:', res);
+      //console.log('File picked:', res);
       setFile(res); // Đặt giá trị state là danh sách file được chọn
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -123,36 +126,13 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
 
     setIsSubmitting(true);
 
-    const formData = new FormData();
-    formData.append('file', {
-      uri: file[0].uri, // URI của file
-      type: file[0].type, // Loại file (MIME type)
-      name: file[0].name, // Tên file
-    });
-    console.log('responeText', textResponse);
-
-    formData.append('token', 'Mq9YoW');
-    formData.append('assignmentId', serveyData.id);
-    formData.append('textResponse', textResponse);
-    console.log(formData);
-
-    console.log('Submit button clicked');
-
     try {
-      const response = await axios.post(
-        'http://157.66.24.126:8080/it5023e/submit_survey',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        },
-      );
-      console.log(response.data);
+      const response = await submitSurvey(file[0], textResponse, serveyData.id);
+      console.log('Survey submitted successfully:', response);
     } catch (error) {
       console.error('Error during survey submission:', error);
     } finally {
-      setIsSubmitting(false); // Hoàn tất, đảm bảo trạng thái được đặt lại
+      setIsSubmitting(false);
     }
   };
 
@@ -206,14 +186,6 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
                 </View>
               )}
             </View>
-            <View>
-              <Text style={styles.url}>{serveyData.file_url}</Text>
-            </View>
-            {serveyData.file_url && (
-              <FileItem
-                file={{title: 'Bài tập', file_url: serveyData.file_url}}
-              />
-            )}
           </View>
 
           {/* Tài liệu liên quan */}
@@ -278,8 +250,8 @@ const TaskDetailScreen: React.FC = ({route}: any) => {
             </>
           ) : (
             <View>
-              <View style={styles.line} />
-              <Text style={styles.text}>Không có thông tin bài nộp.</Text>
+              {/* <View style={styles.line} />
+              <Text style={styles.text}>Không có thông tin bài nộp.</Text> */}
             </View>
           )}
 

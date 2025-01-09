@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {
   BackHandler,
   ImageBackground,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -178,6 +179,20 @@ const NotificationScreen = () => {
     }
   };
 
+  const [refreshing, setRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    try {
+      const notifications2 = await getNotifications(); // Gọi lại API lấy thông báo
+      setNotifications(notifications2);
+    } catch (error) {
+      console.error('Error refreshing notifications:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -191,7 +206,13 @@ const NotificationScreen = () => {
             style={styles.contentContainer}
             contentContainerStyle={{
               paddingBottom: 10,
-            }}>
+            }}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={handleRefresh}
+              />
+            }>
             {notifications.map((item, index) => (
               <TaskNotification
                 id={item.id}
@@ -277,7 +298,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     paddingHorizontal: 16,
-    marginBottom: 110,
+    marginBottom: 10,
     paddingVertical: 10,
     // paddingVertical: 10,
   },
