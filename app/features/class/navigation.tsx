@@ -30,17 +30,19 @@ export const ClassStacks = () => {
   );
 };
 
+const AttendanceScreenWrapper = (props: any) => <AttendanceScreen {...props} />;
+
 export const ClassFeaturesStacks = () => {
   return (
     <Stack.Navigator initialRouteName="Attendance">
       <Stack.Screen
-        name="AbsenceRequest"
-        component={AbsenceRequestStacks}
+        name="Attendance"
+        component={AttendanceScreenWrapper}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="Attendance"
-        component={AttendanceScreen}
+        name="AbsenceRequest"
+        component={AbsenceRequestStacks}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

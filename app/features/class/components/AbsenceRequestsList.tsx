@@ -23,9 +23,8 @@ export const AbsenceRequestsList = ({groups}: Props) => {
               {group.items.map(item => {
                 return (
                   <AbsenceRequestCard
-                    key={item.title}
-                    title={item.title}
-                    status={item.status}
+                    key={item.id}
+                    absenceRequest={item}
                   />
                 );
               })}

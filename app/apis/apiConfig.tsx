@@ -79,6 +79,7 @@ axiosInstance.interceptors.request.use(
           }
         }
       }
+
       return config;
     } catch (error) {
       console.error('Error retrieving token:', error);

@@ -1,17 +1,17 @@
 /* eslint-disable react-native/no-inline-styles */
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   NavigationProp,
   RouteProp,
   useNavigation,
   useRoute,
 } from '@react-navigation/core';
-import React, {useEffect, useState} from 'react';
-import {ImageBackground, StyleSheet, Text, View} from 'react-native';
-import {Appbar, IconButton} from 'react-native-paper';
+import React, { useEffect, useState } from 'react';
+import { ImageBackground, StyleSheet, Text, View } from 'react-native';
+import { Appbar, IconButton } from 'react-native-paper';
 import IonIcons from 'react-native-vector-icons/Ionicons';
-import {TextField} from '../../components/TextField/TextField';
+import { TextField } from '../../components/TextField/TextField';
 import ClassRectTab from './components/ClassRectTab';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export type ParamList = {
   ClassStacks: {
@@ -31,10 +31,7 @@ export type ParamList = {
   };
   ClassDetailsScreen: {classId: string; className: string};
   AbsenceRequestsList: {
-    screen: string;
-    params: {
-      classId: string;
-    };
+    classId: string;
   };
   ClassFeaturesStacks: {
     screen: string;
@@ -127,12 +124,7 @@ const ClassDetailsScreen = () => {
               imageSource={require('../../assets/images/XinNghiPhep.png')}
               reverse={true}
               onPress={() =>
-                navigation.navigate('AbsenceRequestsList', {
-                  screen: 'AbsenceRequestsList',
-                  params: {
-                    classId: classId,
-                  },
-                })
+                navigation.navigate('AbsenceRequestsList', {classId})
               }
             />
           )}

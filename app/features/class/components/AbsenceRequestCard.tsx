@@ -2,7 +2,7 @@ import { NavigationProp, useNavigation } from '@react-navigation/core';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Card, Text } from 'react-native-paper';
-import { AbsenceRequestInfo } from '../type';
+import { AbsenceRequestReponse } from '../type';
 import { Badge } from './Badge';
 
 type ParamsList = {
@@ -10,17 +10,24 @@ type ParamsList = {
     screen: string;
     params: {
       screen: string;
+      params: {
+        absenceRequest: AbsenceRequestReponse;
+      }
     };
   };
 };
 
-export const AbsenceRequestCard = ({title, status}: AbsenceRequestInfo) => {
+export const AbsenceRequestCard = ({
+  absenceRequest,
+}: {
+  absenceRequest: AbsenceRequestReponse;
+}) => {
   const navigation = useNavigation<NavigationProp<ParamsList>>();
 
   const statusMarkup =
-    status === 'ACCEPTED' ? (
+    absenceRequest.status === 'ACCEPTED' ? (
       <Badge mode="success">Chấp nhận</Badge>
-    ) : status === 'PENDING' ? (
+    ) : absenceRequest.status === 'PENDING' ? (
       <Badge mode="warning">Chưa duyệt</Badge>
     ) : (
       <Badge mode="critical">Từ chối</Badge>
@@ -35,10 +42,15 @@ export const AbsenceRequestCard = ({title, status}: AbsenceRequestInfo) => {
           screen: 'AbsenceRequest',
           params: {
             screen: 'AbsenceRequestManage',
+            params: {
+              absenceRequest,
+            },
           },
         })
       }>
-      <Card.Title title={<Text style={styles.cardTitle}>{title}</Text>} />
+      <Card.Title
+        title={<Text style={styles.cardTitle}>{absenceRequest.title}</Text>}
+      />
       {statusMarkup}
     </Card>
   );

@@ -1,11 +1,15 @@
-import { NavigationProp, useFocusEffect, useNavigation } from '@react-navigation/core';
+import {
+  NavigationProp,
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/core';
 import React, { useCallback, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { List } from 'react-native-paper';
 import { formatDateTime } from '../../../../utils/datetime';
+import { getAbsenceRequests } from '../../api';
 import { AbsenceRequestReponse } from '../../type';
 import { getDayOfWeek } from '../../utils/date-time-util';
-import { getAbsenceRequests } from '../../api';
 
 interface ParamsList {
   AbsenceRequest: {
@@ -16,7 +20,7 @@ interface ParamsList {
   };
 }
 
-export const AbsenceRequestTab = () => {
+export const AbsenceRequestTab = ({classId}: {classId: string}) => {
   const navigation = useNavigation<NavigationProp<ParamsList>>();
   const [absenceRequests, setAbsenceRequests] = useState<
     AbsenceRequestReponse[]
@@ -25,12 +29,12 @@ export const AbsenceRequestTab = () => {
   useFocusEffect(
     useCallback(() => {
       const fetchData = async () => {
-        const data = await getAbsenceRequests();
+        const data = await getAbsenceRequests(classId);
         setAbsenceRequests(data);
       };
 
       fetchData();
-    }, []),
+    }, [classId]),
   );
 
   const absenceRequestGroups = useMemo(() => {
@@ -66,35 +70,46 @@ export const AbsenceRequestTab = () => {
   return (
     <ScrollView>
       <View style={styles.container}>
-        {absenceRequestGroups.map((group, index) => (
-          <List.Accordion
-            key={index}
-            title={
-              <View style={styles.titleContainer}>
-                <Text style={styles.title}>{group.title}</Text>
-                <Text style={styles.subtitle}>{group.subtitle}</Text>
-              </View>
-            }
-            id={index}>
-            {group.items.map((item, i) => (
-              <List.Item
-                key={i}
-                title={item.title}
-                titleStyle={styles.itemTitle}
-                description={
-                  <View>
-                    <Text style={styles.nameSubtitle}>
-                      {item.student_account.first_name}{' '}
-                      {item.student_account.last_name}{' '}
-                      {item.student_account.student_id}
-                    </Text>
-                  </View>
-                }
-                onPress={() => navigation.navigate('AbsenceRequest', {screen: 'AbsenceRequestManage', params: {absenceRequest: item}})}
-              />
-            ))}
-          </List.Accordion>
-        ))}
+        {absenceRequestGroups.length ? (
+          absenceRequestGroups.map((group, index) => (
+            <List.Accordion
+              key={index}
+              title={
+                <View style={styles.titleContainer}>
+                  <Text style={styles.title}>{group.title}</Text>
+                  <Text style={styles.subtitle}>{group.subtitle}</Text>
+                </View>
+              }
+              id={index}>
+              {group.items.map((item, i) => (
+                <List.Item
+                  key={i}
+                  title={item.title}
+                  titleStyle={styles.itemTitle}
+                  description={
+                    <View>
+                      <Text style={styles.nameSubtitle}>
+                        {item.student_account.first_name}{' '}
+                        {item.student_account.last_name}{' '}
+                        {item.student_account.student_id}
+                      </Text>
+                    </View>
+                  }
+                  onPress={() =>
+                    navigation.navigate('AbsenceRequest', {
+                      screen: 'AbsenceRequestManage',
+                      params: {absenceRequest: item},
+                    })
+                  }
+                />
+              ))}
+            </List.Accordion>
+          ))
+        ) : (
+          <View style={styles.emptyState}>
+            <Text>Không có đơn xin nghỉ phép nào</Text>
+          </View>
+        )}
       </View>
     </ScrollView>
   );
@@ -126,5 +141,11 @@ const styles = StyleSheet.create({
   nameSubtitle: {
     fontSize: 12,
     fontWeight: '500',
+  },
+  emptyState: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
   },
 });

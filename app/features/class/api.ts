@@ -13,7 +13,7 @@ import {
 } from './type';
 
 export const getAbsenceRequests = async (
-  class_id = '000268',
+  class_id: string,
   status = null,
   page = 0,
   page_size = 10,
@@ -51,7 +51,7 @@ export const getAbsenceRequests = async (
 };
 
 export const getAbsenceRequestsForStudent = async (
-  class_id = '000268',
+  class_id: string,
   status: AbsenceRequestStatus | null = null,
   page = 0,
   page_size = 10,
@@ -97,18 +97,20 @@ export const createAbsenceRequest = async (
 ): Promise<void> => {
   try {
     const formData = new FormData();
-    formData.append('class_id', classId);
+    formData.append('classId', classId);
     Object.entries(absenceRequest).forEach(([key, value]) => {
-      if (key === 'file' && value) {
-        if (typeof value !== 'string') {
-          formData.append(key, {
-            uri: value.uri,
-            name: value.name,
-            type: value.type,
-          });
+      if (value) {
+        if (key === 'file') {
+          if (typeof value !== 'string') {
+            formData.append(key, {
+              uri: value.uri,
+              name: value.name,
+              type: value.type,
+            });
+          }
+        } else {
+          formData.append(key, value);
         }
-      } else {
-        formData.append(key, value);
       }
     });
 

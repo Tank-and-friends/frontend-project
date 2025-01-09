@@ -1,16 +1,15 @@
-import { NavigationProp, useFocusEffect, useNavigation } from '@react-navigation/core';
-import React, { useCallback, useState } from 'react';
 import {
-  ImageBackground,
-  ScrollView,
-  StyleSheet,
-  View
-} from 'react-native';
+  NavigationProp,
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/core';
+import React, {useCallback, useState} from 'react';
+import {ImageBackground, ScrollView, StyleSheet, View} from 'react-native';
 import IonIcons from 'react-native-vector-icons/Ionicons';
-import { getListClasses } from '../../apis/RegisterApi';
-import { TextField } from '../../components/TextField/TextField';
+import {getListClasses} from '../../apis/RegisterApi';
+import {TextField} from '../../components/TextField/TextField';
 import TopComponent from '../../components/TopComponent/TopComponent';
-import { ClassInfo } from '../../models/Register';
+import {ClassInfo} from '../../models/Register';
 import ClassRect from './components/ClassRect';
 
 export type ParamList = {
@@ -37,7 +36,7 @@ const ClassListScreen = () => {
     startTime: string,
     endTime: string,
     lecturerName: string,
-    classType: string
+    classType: string,
   ) => {
     navigation.navigate('ClassStacks', {
       screen: 'ClassDetails',
@@ -59,8 +58,8 @@ const ClassListScreen = () => {
           setClasses(res);
         }
       });
-    }, [])
-  )
+    }, []),
+  );
 
   return (
     <View style={styles.container}>
@@ -75,7 +74,7 @@ const ClassListScreen = () => {
         />
         <ScrollView contentContainerStyle={styles.classGroupContainer}>
           {classes.map((classItem, index) => (
-            <ClassRect 
+            <ClassRect
               key={index}
               className={classItem.class_name}
               classId={classItem.class_id}
@@ -89,11 +88,11 @@ const ClassListScreen = () => {
                   classItem.class_name,
                   classItem.start_date,
                   classItem.end_date,
-                  classItem.lecturer_name, 
-                  classItem.class_type
+                  classItem.lecturer_name,
+                  classItem.class_type,
                 )
               }
-            ></ClassRect>
+            />
           ))}
         </ScrollView>
       </ImageBackground>

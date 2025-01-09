@@ -56,7 +56,7 @@ export const AttendanceTab = ({classId}: Props) => {
           return `Buổi ${data.length - index} - ${formattedDate}`;
         });
 
-        const isNow = formattedData[0].includes(
+        const isNow = formattedData[0]?.includes(
           format(new Date(), 'dd/MM/yyyy'),
         );
 

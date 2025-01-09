@@ -43,14 +43,12 @@ export const TabNavigation = () => {
   return (
     <Tab.Navigator
       screenOptions={{headerShown: false}}
-      tabBar={renderBottomNavBar}>
+      tabBar={renderBottomNavBar}
+      initialRouteName="Classes">
       <Tab.Screen name="Notifications" component={NotificationScreen} />
       <Tab.Screen name="Messages" component={MessageScreen} />
       <Tab.Screen name="Classes" component={ClassListScreen} />
-      <Tab.Screen
-        name="Register"
-        component={ClassRegisterScreen}
-      />
+      <Tab.Screen name="Register" component={ClassRegisterScreen} />
       <Tab.Screen name="Calendar" component={ClassListScreen} />
     </Tab.Navigator>
   );

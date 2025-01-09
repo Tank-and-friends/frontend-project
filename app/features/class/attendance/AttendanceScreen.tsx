@@ -1,10 +1,10 @@
-import { ParamListBase, RouteProp, useNavigation } from '@react-navigation/core';
-import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { Appbar, TouchableRipple } from 'react-native-paper';
+import {ParamListBase, RouteProp, useNavigation} from '@react-navigation/core';
+import React, {useState} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
+import {Appbar, TouchableRipple} from 'react-native-paper';
 import FontAwesome6Icon from 'react-native-vector-icons/FontAwesome6';
-import { AbsenceRequestTab } from './components/AbsenceRequestTab';
-import { AttendanceTab } from './components/AttendanceTab';
+import {AbsenceRequestTab} from './components/AbsenceRequestTab';
+import {AttendanceTab} from './components/AttendanceTab';
 
 interface Props {
   route: RouteProp<ParamListBase, 'Attendance'> & {
@@ -17,7 +17,7 @@ interface Props {
 export const AttendanceScreen = ({route}: Props) => {
   const {classId} = route.params;
   const navigation = useNavigation();
-  const [tab, setTab] = useState('absence');
+  const [tab, setTab] = useState('attendance');
 
   return (
     <View style={styles.container}>
@@ -62,7 +62,11 @@ export const AttendanceScreen = ({route}: Props) => {
             </View>
           </TouchableRipple>
         </View>
-        {tab === 'attendance' ? <AttendanceTab classId={classId} /> : <AbsenceRequestTab />}
+        {tab === 'attendance' ? (
+          <AttendanceTab classId={classId} />
+        ) : (
+          <AbsenceRequestTab classId={classId} />
+        )}
       </View>
     </View>
   );

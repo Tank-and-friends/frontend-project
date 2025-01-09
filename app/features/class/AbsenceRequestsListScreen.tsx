@@ -1,14 +1,20 @@
 import {
   NavigationProp,
+  RouteProp,
   useFocusEffect,
   useNavigation,
+  useRoute,
 } from '@react-navigation/core';
 import React, {useCallback, useMemo, useState} from 'react';
 import {ImageBackground, ScrollView, StyleSheet, View} from 'react-native';
 import {Appbar, IconButton} from 'react-native-paper';
 import {AbsenceRequestsList} from './components/AbsenceRequestsList';
 import {Chip} from './components/Chip';
-import {AbsenceRequestReponse, AbsenceRequestStatus} from './type';
+import {
+  AbsenceRequestReponse,
+  AbsenceRequestsGroup,
+  AbsenceRequestStatus,
+} from './type';
 import {getAbsenceRequestsForStudent} from './api';
 
 type ParamsList = {
@@ -16,12 +22,20 @@ type ParamsList = {
     screen: string;
     params: {
       screen: string;
+      params: {
+        classId: string;
+      };
     };
+  };
+  AbsenceRequestsList: {
+    classId: string;
   };
 };
 
 export const AbsenceRequestsListScreen = () => {
   const navigation = useNavigation<NavigationProp<ParamsList>>();
+  const route = useRoute<RouteProp<ParamsList, 'AbsenceRequestsList'>>();
+  const {classId} = route.params;
   const [tab, setTab] = React.useState<AbsenceRequestStatus | null>(null);
 
   const [absenceRequests, setAbsenceRequests] = useState<
@@ -31,24 +45,31 @@ export const AbsenceRequestsListScreen = () => {
   useFocusEffect(
     useCallback(() => {
       const fetchData = async () => {
-        const data = await getAbsenceRequestsForStudent('000268', tab);
+        const data = await getAbsenceRequestsForStudent(classId, tab);
         setAbsenceRequests(data);
       };
 
       fetchData();
-    }, [tab]),
+    }, [classId, tab]),
   );
 
   const list = useMemo(() => {
-    return absenceRequests.map(item => ({
-      title: item.date,
-      items: [
-        {
-          title: item.title,
-          status: item.status,
-        },
-      ],
-    }));
+    const result: AbsenceRequestsGroup[] = [];
+
+    absenceRequests.forEach(item => {
+      const existingDate = result.find(entry => entry.title === item.date);
+
+      if (existingDate) {
+        existingDate.items.push(item);
+      } else {
+        result.push({
+          title: item.date,
+          items: [item],
+        });
+      }
+    });
+
+    return result;
   }, [absenceRequests]);
 
   return (
@@ -113,6 +134,7 @@ export const AbsenceRequestsListScreen = () => {
                 screen: 'AbsenceRequest',
                 params: {
                   screen: 'CreateAbsenceRequest',
+                  params: {classId},
                 },
               })
             }

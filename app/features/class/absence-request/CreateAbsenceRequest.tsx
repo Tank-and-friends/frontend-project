@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/core';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/core';
 import React from 'react';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import DocumentPicker, {
@@ -7,18 +7,26 @@ import DocumentPicker, {
 import { Appbar, Button } from 'react-native-paper';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome6';
 import { TextField } from '../../../components/TextField/TextField';
-import { AbsenceRequestForm } from '../type';
 import { createAbsenceRequest } from '../api';
+import { AbsenceRequestForm } from '../type';
+
+type ParamsList = {
+  CreateAbsenceRequest: {
+    classId: string;
+  };
+};
 
 export const CreateAbsenceRequest = () => {
   const navigation = useNavigation();
+  const route = useRoute<RouteProp<ParamsList, 'CreateAbsenceRequest'>>();
+  const {classId} = route.params;
   const [requestForm, setRequestForm] = React.useState<AbsenceRequestForm>({
     title: '',
     date: '',
-    file: undefined,
+    file: null,
     reason: '',
   });
-  const [file, setFile] = React.useState<DocumentPickerResponse | undefined>(undefined);
+  const [file, setFile] = React.useState<DocumentPickerResponse | null>(null);
 
   const handleChangeForm = (key: string, value: string) => {
     setRequestForm({
@@ -44,7 +52,8 @@ export const CreateAbsenceRequest = () => {
   };
 
   const handleSubmit = async () => {
-    await createAbsenceRequest('classId', {...requestForm, file});
+    await createAbsenceRequest(classId, {...requestForm, file});
+    navigation.goBack();
   };
 
   return (

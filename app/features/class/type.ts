@@ -11,14 +11,14 @@ export type AbsenceRequestInfo = {
 
 export type AbsenceRequestsGroup = {
   title: string;
-  items: AbsenceRequestInfo[];
+  items: AbsenceRequestReponse[];
 };
 
 export type AbsenceRequestForm = {
   title: string;
   date: string;
   reason: string;
-  file?: DocumentPickerResponse;
+  file: DocumentPickerResponse | null;
 };
 
 export type StudentAccount = {

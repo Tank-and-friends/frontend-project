@@ -1,11 +1,11 @@
 import { RouteProp, useNavigation } from '@react-navigation/core';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Appbar, Button } from 'react-native-paper';
 import { Badge } from '../components/Badge';
 import { AbsenceRequestReponse, AbsenceRequestStatus } from '../type';
 
-import { useAsyncStorage } from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ParamListBase } from '@react-navigation/native';
 import { FileItem } from '../../../components/FileItem';
 import { reviewAbsenceRequest } from '../api';
@@ -25,8 +25,17 @@ export const AbsenceRequestManage: React.FC<Props> = ({route}) => {
   const [status, setStatus] = useState<AbsenceRequestStatus | undefined>(
     absenceRequest.status,
   );
+  const [role, setRole] = useState('');
 
-  const role = useAsyncStorage('role');
+  useEffect(() => {
+    const fetchRole = async () => {
+      const _role = await AsyncStorage.getItem('role');
+      console.log(_role);
+
+      setRole(_role || '');
+    };
+    fetchRole();
+  }, []);
 
   const handleReviewAbsenceRequest = async (_status: AbsenceRequestStatus) => {
     try {
@@ -59,14 +68,12 @@ export const AbsenceRequestManage: React.FC<Props> = ({route}) => {
           titleStyle={styles.headerTitle}
           title="Chi tiết đơn xin nghỉ phép"
         />
-        {mode === 'view' ? (
+        {role === 'LECTURER' && mode === 'view' ? (
           <Appbar.Action
             icon={'square-edit-outline'}
             size={20}
             color="white"
-            onPress={async () =>
-              (await role.getItem()) === 'LECTURER' ? setMode('edit') : null
-            }
+            onPress={() => setMode('edit')}
           />
         ) : null}
       </Appbar.Header>
