@@ -121,7 +121,7 @@ export const submitSurvey = async (
       name: file.name, // Tên file
     });
 
-    formData.append('token', token);
+    formData.append('token', 'oqddVp');
     formData.append('assignmentId', assignmentId);
     formData.append('textResponse', textResponse);
 
